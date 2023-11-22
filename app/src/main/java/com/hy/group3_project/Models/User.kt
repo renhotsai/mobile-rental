@@ -14,22 +14,13 @@ class User(
     var role: Roles,
     private var password: String
 ): Serializable {
-    var isLogin: Boolean = false
     fun login(email: String, password: String): LoginStatus {
         if (this.email == email && this.password == password) {
-            this.isLogin = true
             return LoginStatus.Success
         } else {
-            this.isLogin = false
             return LoginStatus.PasswordError
         }
     }
-
-    fun logout(): Boolean {
-        this.isLogin = false
-        return true
-    }
-
     fun changePassword(
         currPassword: String,
         newPassword: String,
