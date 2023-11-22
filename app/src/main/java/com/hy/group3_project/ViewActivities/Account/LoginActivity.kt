@@ -1,8 +1,11 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
@@ -27,6 +30,23 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             login()
         }
+        binding.tvSignUp.setOnClickListener{
+            signUp()
+        }
+        binding.tvForgotPassword.setOnClickListener {
+           sendForgotPassword()
+        }
+    }
+
+    private fun sendForgotPassword() {
+
+    }
+
+
+    private fun signUp() {
+        val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun login() {
