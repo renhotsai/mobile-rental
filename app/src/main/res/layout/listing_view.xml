@@ -9,10 +9,11 @@
     <!-- Image on the left -->
     <ImageView
         android:id="@+id/listingImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="152dp"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/rental_1"/>
 
     <!-- Text fields and star icon to the right in a vertical LinearLayout -->
     <LinearLayout
@@ -59,10 +60,14 @@
 
     </LinearLayout>
 
-<RatingBar
-    android:id="@+id/fav_bar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:numStars="1"
-    android:stepSize="1.0"/>
+    <ToggleButton
+        android:id="@+id/favToggle"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:textOn="★"
+        android:textOff="☆"
+        android:background="@android:color/transparent"
+        android:checked="false"/>
+
 </LinearLayout>
