@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <!-- Default thumb (button) and track (filled-in area) colors -->
+        <item name="android:thumbTint">@color/switch_thumb_selector</item>
+        <!-- Track (filled-in area) color -->
+        <item name="android:trackTint">@color/switch_track_selector</item>
+    </style>
+</resources>
