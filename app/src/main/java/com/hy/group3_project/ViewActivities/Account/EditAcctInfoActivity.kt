@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,11 +29,13 @@ class EditAcctInfoActivity : AppCompatActivity() {
         val currentIntent = this@EditAcctInfoActivity.intent
         if (currentIntent != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                user = currentIntent.getSerializableExtra("extra_product_obj", User::class.java)!!
+                user = currentIntent.getSerializableExtra("extra_user", User::class.java)!!
             } else {
-                user = currentIntent.getSerializableExtra("extra_product_obj") as User
+                user = currentIntent.getSerializableExtra("extra_user") as User
             }
         }
+
+        setEditTextHint(user)
 
         //set click action
         binding.btnSave.setOnClickListener {
@@ -40,6 +43,23 @@ class EditAcctInfoActivity : AppCompatActivity() {
         }
     }
 
+    private fun setEditTextHint(user: User) {
+        binding.etEmail.hint = user.email
+        binding.etFirstName.hint = user.firstName
+        binding.etLastName.hint = user.lastName
+    }
+
+
+    private fun getUserList(): MutableList<User> {
+        var userList = mutableListOf<User>()
+        val gson = Gson()
+        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
+        if (userListFromSP != null) {
+            val typeToken = object : TypeToken<MutableList<User>>() {}.type
+            userList = gson.fromJson(userListFromSP, typeToken)
+        }
+        return userList
+    }
     private fun editAccountInfo() {
         val etFirstName = binding.etFirstName.text.toString()
         val etLastName = binding.etLastName.text.toString()
@@ -47,16 +67,13 @@ class EditAcctInfoActivity : AppCompatActivity() {
 
         val gson = Gson()
         // find user list
-        val typeToken = object : TypeToken<MutableList<User>>() {}.type
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null) ?: return
-        val userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken::class.java)
-
+        val userList = getUserList()
         //find user in user list
-        val userIndex = userList.indexOf(user)
+        user = userList.find { it.email == user.email }!!
 
         //update user in user list
         val changeAcctInfoStatus =
-            userList[userIndex].changeAcctInfo(etFirstName, etLastName, etEmail)
+            user.changeAcctInfo(etFirstName, etLastName, etEmail)
         if (changeAcctInfoStatus == EditAccountStatus.Success) {
             Toast.makeText(
                 this@EditAcctInfoActivity,

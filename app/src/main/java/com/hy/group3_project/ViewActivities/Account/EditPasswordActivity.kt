@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
@@ -29,9 +30,9 @@ class EditPasswordActivity : AppCompatActivity() {
         val currentIntent = this@EditPasswordActivity.intent
         if (currentIntent != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                user = currentIntent.getSerializableExtra("extra_product_obj", User::class.java)!!
+                user = currentIntent.getSerializableExtra("extra_user", User::class.java)!!
             } else {
-                user = currentIntent.getSerializableExtra("extra_product_obj") as User
+                user = currentIntent.getSerializableExtra("extra_user") as User
             }
         }
 
@@ -39,7 +40,16 @@ class EditPasswordActivity : AppCompatActivity() {
             editPassword()
         }
     }
-
+    private fun getUserList(): MutableList<User> {
+        var userList = mutableListOf<User>()
+        val gson = Gson()
+        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
+        if (userListFromSP != null) {
+            val typeToken = object : TypeToken<MutableList<User>>() {}.type
+            userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken)
+        }
+        return userList
+    }
     private fun editPassword() {
         val etCurrPassword = binding.etCurrentPassword
         val etNewPassword = binding.etPassword
@@ -58,46 +68,40 @@ class EditPasswordActivity : AppCompatActivity() {
             return
         }
 
-
-        val gson = Gson()
-        // find user list
-        val typeToken = object : TypeToken<MutableList<User>>() {}.type
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null) ?: return
-        val userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken::class.java)
-
+            val gson = Gson()
+            // find user list
+        val userList = getUserList()
         //find user in user list
-        val userIndex = userList.indexOf(user)
-
+        user = userList.find { it.email == user.email }!!
 
         val changePasswordStatus =
-            userList[userIndex].changePassword(
-                etCurrPassword.text.toString(),
-                etNewPassword.text.toString(),
-                etConfirmPassword.text.toString()
-            )
-        if (changePasswordStatus == EditPasswordStatus.Success) {
-            val userJson = gson.toJson(userList[userIndex])
-            prefEditor.putString("KEY_USER", userJson)
+            user.changePassword(
+                    etCurrPassword.text.toString(),
+                    etNewPassword.text.toString(),
+                    etConfirmPassword.text.toString()
+                )
+            if (changePasswordStatus == EditPasswordStatus.Success) {
+                val userJson = gson.toJson(user)
+                prefEditor.putString("KEY_USER", userJson)
 
-            val userListJson = gson.toJson(userList)
-            prefEditor.putString("KEY_USERLIST",userListJson)
+                val userListJson = gson.toJson(userList)
+                prefEditor.putString("KEY_USERLIST", userListJson)
 
-
-            prefEditor.apply()
-            Toast.makeText(
-                this@EditPasswordActivity,
-                "$changePasswordStatus",
-                Toast.LENGTH_LONG
-            ).show()
-            finish()
-        } else {
-            Toast.makeText(
-                this@EditPasswordActivity,
-                "Error:$changePasswordStatus",
-                Toast.LENGTH_LONG
-            ).show()
-            cleanEditTextView(editTexts)
-        }
+                prefEditor.apply()
+                Toast.makeText(
+                    this@EditPasswordActivity,
+                    "$changePasswordStatus",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
+            } else {
+                Toast.makeText(
+                    this@EditPasswordActivity,
+                    "Error:$changePasswordStatus",
+                    Toast.LENGTH_LONG
+                ).show()
+                cleanEditTextView(editTexts)
+            }
     }
 
     private fun cleanEditTextView(editTexts: List<EditText>) {

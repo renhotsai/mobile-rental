@@ -30,7 +30,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-
         //check empty values
         val editTexts = listOf<EditText>(binding.etEmail, binding.etPassword)
         var hasEmptyValues = false
@@ -44,12 +43,8 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        val userList = getUserList()
         //find email in user list
-        val gson = Gson()
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-
-        val typeToken = object : TypeToken<MutableList<User>>() {}.type
-        val userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken)
         val email = binding.etEmail.text.toString()
         val password = binding.etPassword.text.toString()
         val user = userList.find { it.email == email }
@@ -59,8 +54,9 @@ class LoginActivity : AppCompatActivity() {
         }
         val loginStatus = user.login(email, password)
         if (loginStatus == LoginStatus.Success) {
+            val gson = Gson()
             val userJson = gson.toJson(user)
-            prefEditor.putString("KEY_USER",userJson)
+            prefEditor.putString("KEY_USER", userJson)
             prefEditor.apply()
 
             Toast.makeText(this@LoginActivity, "Login $loginStatus", Toast.LENGTH_LONG).show()
@@ -78,5 +74,16 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getUserList(): MutableList<User> {
+        var userList = mutableListOf<User>()
+        val gson = Gson()
+        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
+        if (userListFromSP != null) {
+            val typeToken = object : TypeToken<MutableList<User>>() {}.type
+            userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken)
+        }
+        return userList
     }
 }
