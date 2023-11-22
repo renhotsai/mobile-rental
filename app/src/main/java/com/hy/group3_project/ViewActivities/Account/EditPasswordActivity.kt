@@ -38,6 +38,7 @@ class EditPasswordActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             editPassword()
+            finish()
         }
     }
     private fun getUserList(): MutableList<User> {

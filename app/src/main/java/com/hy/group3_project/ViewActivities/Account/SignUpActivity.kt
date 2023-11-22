@@ -1,5 +1,6 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +29,16 @@ class SignUpActivity : AppCompatActivity() {
         binding.btnSignUp.setOnClickListener {
             signup()
         }
+        binding.tvLogin.setOnClickListener {
+            login()
+        }
+    }
+
+
+    private fun login() {
+        val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun signup() {
