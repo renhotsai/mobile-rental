@@ -2,7 +2,6 @@ package com.hy.group3_project
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build.VERSION_CODES.P
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.gson.Gson
+import com.hy.group3_project.Enums.Roles
 import com.hy.group3_project.Models.User
 import com.hy.group3_project.ViewActivities.Account.EditAcctInfoActivity
 import com.hy.group3_project.ViewActivities.Account.EditPasswordActivity
@@ -21,7 +21,7 @@ import com.hy.group3_project.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var perfEditor: SharedPreferences.Editor
+    private lateinit var prefEditor: SharedPreferences.Editor
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,10 +30,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         
         this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.perfEditor = this.sharedPreferences.edit()
+        this.prefEditor = this.sharedPreferences.edit()
 
         setSupportActionBar(this.binding.tbOptionMenu)
+        createTestUser()
         checkLogin()
+    }
+
+    private fun createTestUser() {
+        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
+        if (userListFromSP==null) {
+            val userList = mutableListOf<User>(
+                User("Judith","Olivia","judith@gmail.com",Roles.Tenants,"1234"),
+                User("Michael","Caine","michael@gmail.com",Roles.Landlords,"1234"),
+                User("Julie","Andrews","julie@gmail.com",Roles.Tenants,"1234")
+            )
+            val gson = Gson()
+            val userListJson = gson.toJson(userList)
+            prefEditor.putString("KEY_USERLIST",userListJson)
+            prefEditor.apply()
+        }
     }
 
     override fun onResume() {
@@ -97,8 +113,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        perfEditor.remove("KEY_USER")
-        perfEditor.apply()
+        prefEditor.remove("KEY_USER")
+        prefEditor.apply()
         Toast.makeText(this@MainActivity, "Logout Success", Toast.LENGTH_LONG).show()
         invalidateOptionsMenu()
     }

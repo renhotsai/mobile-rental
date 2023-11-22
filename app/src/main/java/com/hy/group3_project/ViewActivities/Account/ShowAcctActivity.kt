@@ -11,13 +11,12 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.hy.group3_project.Models.User
 import com.hy.group3_project.R
-import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.databinding.ActivityShowAcctBinding
 
 class ShowAcctActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShowAcctBinding
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var perfEditor: SharedPreferences.Editor
+    private lateinit var prefEditor: SharedPreferences.Editor
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +25,7 @@ class ShowAcctActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.perfEditor = this.sharedPreferences.edit()
+        this.prefEditor = this.sharedPreferences.edit()
 
         setSupportActionBar(this.binding.tbOptionMenu)
 
@@ -97,8 +96,8 @@ class ShowAcctActivity : AppCompatActivity() {
         }
     }
     private fun logout() {
-        perfEditor.remove("KEY_USER")
-        perfEditor.apply()
+        prefEditor.remove("KEY_USER")
+        prefEditor.apply()
         Toast.makeText(this@ShowAcctActivity, "Logout Success", Toast.LENGTH_LONG).show()
         invalidateOptionsMenu()
     }
