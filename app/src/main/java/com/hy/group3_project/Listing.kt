@@ -22,7 +22,7 @@ data class  Listing(
 
     // Secondary constructor with default values
     constructor() : this(
-        img = "1",
+        img = "rental_1",
         price = "$ 2000",
         type = "Apartment",
         rooms = "3 Rooms | 2 Bath",

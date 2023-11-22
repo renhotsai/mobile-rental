@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
             Listing("rental_2", "$2200", "House", "4 Beds | 3 Baths", "789 DEF, Toronto", false),
             Listing("rental_3", "$1800", "Apartment", "2 Beds | 1.5 Baths", "456 XYZ, Toronto", true),
             Listing("rental_4", "$1500", "Basement", "1 Room | 1 Bath", "101 Elm St, Hamletville", false),
-            Listing("rental_5", "$2500", "House", "5 Beds | 4 Baths", "202 Maple St, Boroughburg", true)
+            Listing("rental_5", "$2500", "House", "5 Beds | 4 Baths", "202 Maple St, Boroughburg", true),
+            Listing()
         )
 
 
