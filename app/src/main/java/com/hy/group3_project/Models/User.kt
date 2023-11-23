@@ -68,11 +68,11 @@ class User(
         }
         return EditAccountStatus.Success
     }
-    fun showListingList(): MutableList<Listing> {
+    fun showList(): MutableList<Listing> {
         return this.listingList
     }
 
-    fun addFavoriteList(item: Listing): ResponseEnum {
+    fun addList(item: Listing): ResponseEnum {
         return try {
             this.listingList.add(item)
             ResponseEnum.Success
@@ -82,7 +82,7 @@ class User(
         }
     }
 
-    fun removeFavoriteList(pos:Int): ResponseEnum {
+    fun removeList(pos:Int): ResponseEnum {
         try{
             this.listingList.removeAt(pos)
             return ResponseEnum.Success
