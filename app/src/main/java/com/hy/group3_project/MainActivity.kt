@@ -43,10 +43,10 @@ class MainActivity : BaseActivity() {
 
 
         // -- filter functionality
+        val myPopup = MyPopup(this)
         binding.filterBtn.setOnClickListener(){
             // for popup
-            val myPopup = MyPopup(this)
-
+            MyPopup(this)
             myPopup.show()
         }
 
@@ -60,20 +60,30 @@ class MainActivity : BaseActivity() {
                 property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-            // Update the adapter with the filtered list
-            adapter.updatePropertyDataset(displayedProperties)
+            if (myPopup.isApplied) {
+                // For functionality with filterSelected
+                val filterConfig = myPopup.filterConfig
+                val filteredWithConfig = displayedProperties.filter { property ->
+                    // Apply additional filters based on the filterConfig
+                    val propertyTypeMatch = filterConfig.propertyType?.equals(property.type, ignoreCase = true) ?: true
+                    val bedsMatch = filterConfig.beds?.let { it == property.rooms } ?: true
+                    val bathsMatch = filterConfig.baths?.let { it == property.bath } ?: true
+                    val isPetFriendlyMatch = !filterConfig.isPetFriendly ?: property.isPetFriendly
+                    val hasParkingMatch = !filterConfig.hasParking ?: property.hasParking
 
+                    propertyTypeMatch && bedsMatch && bathsMatch && isPetFriendlyMatch && hasParkingMatch
+                }
+
+                // Update the adapter with the filtered list
+                adapter.updatePropertyDataset(filteredWithConfig)
+            }else {
+                // for functionality without filterSelected
+                adapter.updatePropertyDataset(displayedProperties)
+            }
 
 
         }
 
-        // -- filter functionality
-        binding.filterBtn.setOnClickListener(){
-            // for popup
-            val myPopup = MyPopup(this)
-
-            myPopup.show()
-        }
     }
 
     fun rowClicked(position: Int) {
