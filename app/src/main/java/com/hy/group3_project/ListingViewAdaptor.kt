@@ -11,9 +11,16 @@ import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class ListingViewAdaptor(var listingData: List<Listing>) : RecyclerView.Adapter<ListingViewAdaptor.ListingViewHolder>(){
+class ListingViewAdaptor(var listingData: List<Listing>,
+    private val addFavHandler: (Int) -> Unit, private val removeFavHandler: (Int) -> Unit, private val showDetailViewHandler: (Int) -> Unit
+) : RecyclerView.Adapter<ListingViewAdaptor.ListingViewHolder>(){
     inner class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
+        init {
+            itemView.setOnClickListener{
+                showDetailViewHandler(adapterPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListingViewHolder {
@@ -33,14 +40,26 @@ class ListingViewAdaptor(var listingData: List<Listing>) : RecyclerView.Adapter<
         val rooms = holder.itemView.findViewById<TextView>(R.id.rooms)
         val location = holder.itemView.findViewById<TextView>(R.id.location)
         val image = holder.itemView.findViewById<ImageView>(R.id.listingImage)
-        val fav = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
+        val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
 
         // set data to rv
         price.text = listingData[position].price
         propertyType.text = listingData[position].type
         rooms.text = listingData[position].rooms
         location.text = listingData[position].location
-        fav.isChecked = listingData[position].isFavorite
+
+        // for fav to stop functino running at the start
+        favToggle.setOnCheckedChangeListener(null)
+        favToggle.isChecked = listingData[position].isFavorite
+
+        // for fav functionality
+        favToggle.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                addFavHandler(position)
+            } else {
+                removeFavHandler(position)
+            }
+        }
 
 
         // for image

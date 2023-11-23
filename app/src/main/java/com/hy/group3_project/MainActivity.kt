@@ -28,21 +28,22 @@ class MainActivity : BaseActivity() {
         )
 
 
-        // setup the adapter
-        val adapter = ListingViewAdaptor(listingList)
+        //  the adapter
+        val adapter = ListingViewAdaptor(listingList, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
         binding.rv.setAdapter(adapter)
 
-        // configure the recycler view
+        //  the recycler view
         binding.rv.layoutManager = LinearLayoutManager(this)
 
 
-        // add a line between each row item
+        // for a line between each row item
         binding.rv.addItemDecoration(
             DividerItemDecoration(
                 this,
                 LinearLayoutManager.VERTICAL
             )
         )
+
 
         // -- filter functionality
         binding.filterBtn.setOnClickListener(){
@@ -51,5 +52,24 @@ class MainActivity : BaseActivity() {
 
             myPopup.show()
         }
+    }
+
+    fun addFav (rowPosition: Int){
+        val snackbar = Snackbar.make(binding.rootLayout, "Added to Favorite", Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    fun removeFav (rowPosition: Int){
+        val snackbar = Snackbar.make(binding.rootLayout, "Removed from Favorite", Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    fun showDetailView (rowPosition: Int){
+
+//        val intent = Intent(this, TargetActivity::class.java)
+//        startActivity(intent)
+
+        val snackbar = Snackbar.make(binding.rootLayout, "Will redirect to new view", Snackbar.LENGTH_LONG)
+        snackbar.show()
     }
 }

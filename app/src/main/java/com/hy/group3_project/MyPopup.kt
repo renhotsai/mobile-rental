@@ -31,12 +31,6 @@ class MyPopup(context: Context) {
 
             val filterConfig = getFilterData()
 
-            // Log the filter data
-            Log.d("FilterData", "Selected Property Type: ${filterConfig.propertyType}")
-            Log.d("FilterData", "Selected Beds: ${filterConfig.beds}")
-            Log.d("FilterData", "Selected Baths: ${filterConfig.baths}")
-            Log.d("FilterData", "Pet Friendly: ${filterConfig.isPetFriendly}")
-            Log.d("FilterData", "Has Parking: ${filterConfig.hasParking}")
         }
 
         // Handle negative button click
