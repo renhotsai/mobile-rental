@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.hy.group3_project.Enums.Roles
 import com.hy.group3_project.Models.User
@@ -52,21 +53,22 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        // setup the adapter
-        val adapter = ListingViewAdaptor(listingList)
+        //  the adapter
+        val adapter = ListingViewAdaptor(listingList, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
         binding.rv.setAdapter(adapter)
 
-        // configure the recycler view
+        //  the recycler view
         binding.rv.layoutManager = LinearLayoutManager(this)
 
 
-        // add a line between each row item
+        // for a line between each row item
         binding.rv.addItemDecoration(
             DividerItemDecoration(
                 this,
                 LinearLayoutManager.VERTICAL
             )
         )
+
 
         // -- filter functionality
         binding.filterBtn.setOnClickListener(){
@@ -185,5 +187,24 @@ class MainActivity : AppCompatActivity() {
         if (userFromSP != null) {
             user = gson.fromJson(userFromSP, User::class.java)
         }
+    }
+
+    fun addFav (rowPosition: Int){
+        val snackbar = Snackbar.make(binding.rootLayout, "Added to Favorite", Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    fun removeFav (rowPosition: Int){
+        val snackbar = Snackbar.make(binding.rootLayout, "Removed from Favorite", Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    fun showDetailView (rowPosition: Int){
+
+//        val intent = Intent(this, TargetActivity::class.java)
+//        startActivity(intent)
+
+        val snackbar = Snackbar.make(binding.rootLayout, "Will redirect to new view", Snackbar.LENGTH_LONG)
+        snackbar.show()
     }
 }
