@@ -2,8 +2,8 @@ package com.hy.group3_project
 
 class FilterData(
     val propertyType: String?,
-    val beds: Int?,
-    val baths: Int?,
+    val beds: String?,
+    val baths: String?,
     val isPetFriendly: Boolean?,
     val hasParking: Boolean?
 ) {
