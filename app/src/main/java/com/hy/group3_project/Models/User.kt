@@ -1,9 +1,12 @@
 package com.hy.group3_project.Models
 
+import android.util.Log
 import com.hy.group3_project.Enums.EditAccountStatus
 import com.hy.group3_project.Enums.EditPasswordStatus
 import com.hy.group3_project.Enums.LoginStatus
+import com.hy.group3_project.Enums.ResponseEnum
 import com.hy.group3_project.Enums.Roles
+import com.hy.group3_project.Listing
 import java.io.Serializable
 
 
@@ -13,7 +16,10 @@ class User(
     var email: String,
     var role: Roles,
     private var password: String
+
 ): Serializable {
+    private var listingList:MutableList<Listing> = mutableListOf()
+
     fun login(email: String, password: String): LoginStatus {
         if (this.email == email && this.password == password) {
             return LoginStatus.Success
@@ -61,6 +67,29 @@ class User(
             this.email = email
         }
         return EditAccountStatus.Success
+    }
+    fun showList(): MutableList<Listing> {
+        return this.listingList
+    }
+
+    fun addList(item: Listing): ResponseEnum {
+        return try {
+            this.listingList.add(item)
+            ResponseEnum.Success
+        } catch (ex:Exception){
+            Log.e("Tenant","$ex")
+            ResponseEnum.Fail
+        }
+    }
+
+    fun removeList(pos:Int): ResponseEnum {
+        try{
+            this.listingList.removeAt(pos)
+            return ResponseEnum.Success
+        }catch (ex:Exception){
+            Log.e("Tenant","$ex")
+            return ResponseEnum.Fail
+        }
     }
 
     override fun toString(): String {
