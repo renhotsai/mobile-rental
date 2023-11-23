@@ -1,5 +1,6 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -51,9 +52,15 @@ class ShowPropertyActivity : AppCompatActivity() {
 
     }
 
-    fun rowClicked(position:Int) {
-        var selectedProperty:Property = propertyDataSource.get(position)
+    fun rowClicked(position: Int) {
+        val selectedProperty: Property = propertyDataSource[position]
+        val propertyDetailIntent = Intent(this@ShowPropertyActivity, PropertyDetailActivity::class.java)
+
+        propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
+
+        startActivity(propertyDetailIntent)
     }
+
 
     // Helper function to retrieve properties from SharedPreferences
     override fun onResume() {

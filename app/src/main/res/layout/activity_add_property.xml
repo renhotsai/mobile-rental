@@ -86,6 +86,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Parking"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        />
+    <Spinner
+        android:id="@+id/spinner_parking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:entries="@array/pet"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Property Price"
         android:textSize="20sp"
         android:layout_marginLeft="20dp"
@@ -112,7 +126,24 @@
         android:id="@+id/editPropertyDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter property address"
+        android:hint="Enter property description"
+        android:textSize="18sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="text"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Property City"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        />
+    <EditText
+        android:id="@+id/editPropertyCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter property City"
         android:textSize="18sp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -144,7 +175,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:text="Rent availability"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+         />
 
 
     <LinearLayout

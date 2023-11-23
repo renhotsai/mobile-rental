@@ -39,7 +39,7 @@ class PropertyAdapter (
         val propertyImage = context.resources.getIdentifier(currProperty.imageFileName, "drawable", context.packageName)
 
 
-        val ivProperty = holder.itemView.findViewById<ImageView>(R.id.imageView3)
+        val ivProperty = holder.itemView.findViewById<ImageView>(R.id.listingImage)
         ivProperty.setImageResource(propertyImage)
 
         val propertyPrice = holder.itemView.findViewById<TextView>(R.id.propertyPrice)
@@ -49,18 +49,15 @@ class PropertyAdapter (
 
         propertyPrice.text = formattedPrice
 
-        val bedText = holder.itemView.findViewById<TextView>(R.id.bedText)
-        bedText.text = currProperty.beds.toString()
+        val bedText = holder.itemView.findViewById<TextView>(R.id.bedAndBathAndCatAndParking)
 
-        val bathText = holder.itemView.findViewById<TextView>(R.id.bathText)
-        bathText.text = currProperty.baths.toString()
+        val concatenatedText = "${currProperty.beds} | ${currProperty.baths} | ${if (!currProperty.petFriendly) "Pet" else "No Pets"}"
+        bedText.text = concatenatedText
 
-        val petFriendlyText = holder.itemView.findViewById<TextView>(R.id.petFriendlyText)
-        val petFriendlyStatus = if (currProperty.petFriendly) "" else "Pets"
-        petFriendlyText.text = petFriendlyStatus
+        val propertyLocation = holder.itemView.findViewById<TextView>(R.id.location)
 
-        val addressText = holder.itemView.findViewById<TextView>(R.id.addressText)
-        addressText.text = currProperty.propertyAddress.toString()
+        val locationConcatenatedText = "${currProperty.propertyAddress}, ${currProperty.propertyCity}"
+        propertyLocation.text = locationConcatenatedText
     }
 
 
