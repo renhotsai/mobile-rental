@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.hy.group3_project.Enums.Roles
 import com.hy.group3_project.Models.User
+import com.hy.group3_project.ViewActivities.Account.AddPropertyActivity
 import com.hy.group3_project.ViewActivities.Account.EditAcctInfoActivity
 import com.hy.group3_project.ViewActivities.Account.EditPasswordActivity
 import com.hy.group3_project.ViewActivities.Account.LoginActivity
 import com.hy.group3_project.ViewActivities.Account.ShowAcctActivity
+import com.hy.group3_project.ViewActivities.Account.ShowPropertyActivity
 import com.hy.group3_project.ViewActivities.Account.SignUpActivity
 import com.hy.group3_project.databinding.ActivityMainBinding
 
@@ -66,6 +68,15 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        // -- filter functionality
+        binding.filterBtn.setOnClickListener(){
+            // for popup
+            val myPopup = MyPopup(this)
+
+            myPopup.show()
+        }
+
+
     }
 
     private fun createTestUser() {
@@ -101,6 +112,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_item_post_rental -> {
+                val intent = Intent(this@MainActivity, AddPropertyActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            R.id.menu_item_property_list -> {
+                val intent = Intent(this@MainActivity, ShowPropertyActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            R.id.menu_item_rent_property -> {
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
             R.id.menu_item_signup -> {
                 val intent = Intent(this@MainActivity, SignUpActivity::class.java)
                 startActivity(intent)

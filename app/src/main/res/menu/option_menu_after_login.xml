@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_item_post_rental"
+        android:title="Rent Your Property"/>
+    <item
+        android:id="@+id/menu_item_property_list"
+        android:title="Property List"/>
+    <item
         android:id="@+id/menu_item_account_info"
         android:title="Account Info"/>
     <item
