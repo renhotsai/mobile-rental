@@ -15,8 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:title="4 Rent" />
 
-
-
     <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
