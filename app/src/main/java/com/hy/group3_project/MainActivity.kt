@@ -17,7 +17,6 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: PropertyAdapter
 
-    private var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
     private var displayedProperties: List<Property> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +27,16 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(this.binding.tbOptionMenu)
 
         // Setup adapter
-        adapter = PropertyAdapter(
-            propertyDataSource
-        ) { pos -> rowClicked(pos) }
+
+
+            adapter = PropertyAdapter(
+                propertyDataSource,
+                {pos-> addFav(pos) },
+                {pos-> removeFav(pos)},
+                {pos->viewRowDetail(pos)},
+                isLandlord
+            )
+
         // ----- data for recycle view
         binding.rvProperties.adapter = adapter
         binding.rvProperties.layoutManager = LinearLayoutManager(this)
@@ -85,32 +91,6 @@ class MainActivity : BaseActivity() {
         }
 
     }
-
-    fun rowClicked(position: Int) {
-        val selectedProperty: Property = propertyDataSource[position]
-        val propertyDetailIntent = Intent(this@MainActivity, PropertyDetailActivity::class.java)
-
-        propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
-
-        // Assuming you have a method to get the user's role, replace "getUserRole()" with the actual method call.
-
-        // Pass some item to PropertyDetailActivity based on user role
-        propertyDetailIntent.putExtra("BLOCK_UPDATE_DELETE", "Main page block access update and delete")
-
-
-        startActivity(propertyDetailIntent)
-    }
-
-    fun addFav (rowPosition: Int){
-        val snackbar = Snackbar.make(binding.rootLayout, "Added to Favorite", Snackbar.LENGTH_LONG)
-        snackbar.show()
-    }
-
-    fun removeFav (rowPosition: Int){
-        val snackbar = Snackbar.make(binding.rootLayout, "Removed from Favorite", Snackbar.LENGTH_LONG)
-        snackbar.show()
-    }
-
 
     override fun onResume() {
         super.onResume()

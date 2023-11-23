@@ -72,6 +72,15 @@
 
     </LinearLayout>
 
+    <ToggleButton
+        android:id="@+id/favToggle"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:textOn="★"
+        android:textOff="☆"
+        android:background="@android:color/transparent"
+        android:checked="false"/>
 
 
 </LinearLayout>

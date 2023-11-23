@@ -18,7 +18,7 @@ class User(
     private var password: String
 
 ): Serializable {
-    private var listingList:MutableList<Listing> = mutableListOf()
+    private var propertyList:MutableList<Property> = mutableListOf()
 
     fun login(email: String, password: String): LoginStatus {
         if (this.email == email && this.password == password) {
@@ -68,13 +68,16 @@ class User(
         }
         return EditAccountStatus.Success
     }
-    fun showList(): MutableList<Listing> {
-        return this.listingList
+    fun showList(): MutableList<Property> {
+        return this.propertyList
     }
 
-    fun addList(item: Listing): ResponseEnum {
+    fun addList(item: Property): ResponseEnum {
         return try {
-            this.listingList.add(item)
+            if(this.propertyList ==null){
+                this.propertyList = mutableListOf<Property>()
+            }
+            this.propertyList.add(item)
             ResponseEnum.Success
         } catch (ex:Exception){
             Log.e("Tenant","$ex")
@@ -82,9 +85,11 @@ class User(
         }
     }
 
-    fun removeList(pos:Int): ResponseEnum {
+    fun removeList(propertyId:String): ResponseEnum {
         try{
-            this.listingList.removeAt(pos)
+            val property = propertyList.find { it.id == propertyId }
+            val index = propertyList.indexOf(property)
+            this.propertyList.removeAt(index)
             return ResponseEnum.Success
         }catch (ex:Exception){
             Log.e("Tenant","$ex")
@@ -93,6 +98,6 @@ class User(
     }
 
     override fun toString(): String {
-        return "User(firstName='$firstName', lastName='$lastName', email='$email', password='$password')"
+        return "User(firstName='$firstName', lastName='$lastName', email='$email', role=$role, password='$password', propertyList=$propertyList)"
     }
 }
