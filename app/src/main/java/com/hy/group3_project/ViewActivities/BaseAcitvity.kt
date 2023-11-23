@@ -30,6 +30,7 @@ open class BaseActivity : AppCompatActivity() {
 
     //test data
     private fun createTestUser() {
+
         val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
         if (userListFromSP == null) {
             val userList = mutableListOf<User>(
@@ -45,6 +46,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         // Initialize shared preferences
         this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
