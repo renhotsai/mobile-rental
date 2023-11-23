@@ -1,22 +1,16 @@
 package com.hy.group3_project.ViewActivities.Account
 
 
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowPropertyBinding
-//import com.hy.group3_project.adapters.PropertyAdapter
 
 class ShowPropertyActivity : BaseActivity() {
 

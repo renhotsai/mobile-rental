@@ -68,6 +68,8 @@ class PropertyAdapter (
 
         val locationConcatenatedText = "${currProperty.propertyAddress}, ${currProperty.propertyCity}"
         propertyLocation.text = locationConcatenatedText
+
+
     }
 
 

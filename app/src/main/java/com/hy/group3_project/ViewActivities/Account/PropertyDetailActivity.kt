@@ -51,6 +51,8 @@ class PropertyDetailActivity : BaseActivity() {
             binding.parkingText.text = if (!selectedProperty.propertyParking) "Parking" else "No Parking"
             binding.addressCity.text = "${selectedProperty.propertyAddress}, ${selectedProperty.propertyCity}"
             binding.propertyDescription.text = selectedProperty.propertyDesc
+            binding.contactInfo.text = "Contact Information: ${selectedProperty.contactInfo}"
+
         }
 
         binding.btnUpdate.setOnClickListener {

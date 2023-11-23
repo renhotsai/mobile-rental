@@ -14,9 +14,10 @@ class Property {
     var propertyDesc: String
     var propertyCity: String
     var propertyAddress: String
+    var contactInfo: String
     var rentAvailability: Boolean
     constructor(imageFileName: String, propertyType:String, beds:String, baths:String, petFriendly:Boolean, propertyParking: Boolean,
-                propertyPrice: Int, propertyDesc: String, propertyCity: String, propertyAddress: String, rentAvailability: Boolean) {
+                propertyPrice: Int, propertyDesc: String, propertyCity: String, propertyAddress: String, contactInfo: String, rentAvailability: Boolean) {
         this.id = UUID.randomUUID().toString()
         this.imageFileName = imageFileName
         this.propertyType = propertyType
@@ -28,6 +29,7 @@ class Property {
         this.propertyDesc = propertyDesc
         this.propertyCity = propertyCity
         this.propertyAddress = propertyAddress
+        this.contactInfo = contactInfo
         this.rentAvailability = rentAvailability
     }
 
