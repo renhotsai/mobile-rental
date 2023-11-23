@@ -172,6 +172,24 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:inputType="text"/>
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact Information"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        />
+    <EditText
+        android:id="@+id/editContactInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter contact information"
+        android:textSize="18sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="text"/>
 
     <Switch
         android:id="@+id/swRentAv"

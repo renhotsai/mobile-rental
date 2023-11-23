@@ -41,6 +41,7 @@ class AddPropertyActivity : BaseActivity() {
         val propertyDesc = binding.editPropertyDesc.text.toString()
         val propertyCity = binding.editPropertyCity.text.toString()
         val propertyAddress = binding.editPropertyAddress.text.toString()
+        val propertyContactInfo = binding.editContactInfo.text.toString()
         val propertyAvailability = binding.swRentAv.isChecked
 
         if (propertyBeds != "" && propertyPrice != 0 &&
@@ -61,6 +62,7 @@ class AddPropertyActivity : BaseActivity() {
                 propertyDesc,
                 propertyCity,
                 propertyAddress,
+                propertyContactInfo,
                 propertyAvailability
             )
 
