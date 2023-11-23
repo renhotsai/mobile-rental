@@ -58,7 +58,7 @@ class MainActivity : BaseActivity() {
 
         // -- Search functionality
 
-        binding.searchButton.setOnClickListener(){
+        binding.searchButton.setOnClickListener() {
             val searchText: String? = binding.searchText.text?.toString()?.trim()
 
             // Filter the original propertyDataSource based on the search text
@@ -69,26 +69,28 @@ class MainActivity : BaseActivity() {
             if (myPopup.isApplied) {
                 // For functionality with filterSelected
                 val filterConfig = myPopup.filterConfig
+
                 val filteredWithConfig = displayedProperties.filter { property ->
+                    val bedsNumeric = property.beds?.toIntOrNull() ?: 0
+                    val bathsNumeric = property.baths?.toIntOrNull() ?: 0
+
                     // Apply additional filters based on the filterConfig
-                    val propertyTypeMatch = filterConfig.propertyType?.equals(property.type, ignoreCase = true) ?: true
-                    val bedsMatch = filterConfig.beds?.let { it == property.rooms } ?: true
-                    val bathsMatch = filterConfig.baths?.let { it == property.bath } ?: true
-                    val isPetFriendlyMatch = !filterConfig.isPetFriendly ?: property.isPetFriendly
-                    val hasParkingMatch = !filterConfig.hasParking ?: property.hasParking
+                    val propertyTypeMatch = filterConfig.propertyType?.equals(property.propertyType, ignoreCase = true) ?: true
+                    val bedsMatch = filterConfig.beds?.let { it == bedsNumeric } ?: true
+                    val bathsMatch = filterConfig.baths?.let { it == bathsNumeric } ?: true
+                    val isPetFriendlyMatch = filterConfig.isPetFriendly ?: property.petFriendly
+                    val hasParkingMatch = filterConfig.hasParking ?: property.propertyParking
 
                     propertyTypeMatch && bedsMatch && bathsMatch && isPetFriendlyMatch && hasParkingMatch
                 }
 
-                // Update the adapter with the filtered list
                 adapter.updatePropertyDataset(filteredWithConfig)
-            }else {
-                // for functionality without filterSelected
+            } else {
+                // For functionality without filterSelected
                 adapter.updatePropertyDataset(displayedProperties)
             }
-
-
         }
+
 
     }
 

@@ -38,8 +38,9 @@ class MyPopup(context: Context) {
         }
 
         // Handle negative button click
-        builder.setNegativeButton("Cancel") { _, _ ->
+        builder.setNegativeButton("Reset") { _, _ ->
             isApplied = false
+            resetFilterFields()
         }
 
         dialog = builder.create()
@@ -47,6 +48,15 @@ class MyPopup(context: Context) {
 
     fun show() {
         dialog.show()
+    }
+
+    private fun resetFilterFields() {
+        // Clear the checked radio buttons and checkboxes
+        propertyTypeGroup.clearCheck()
+        bedsGroup.clearCheck()
+        bathsGroup.clearCheck()
+        checkBoxPetFriendly.isChecked = false
+        checkBoxParking.isChecked = false
     }
 
     // Function to retrieve filter data from UI elements
