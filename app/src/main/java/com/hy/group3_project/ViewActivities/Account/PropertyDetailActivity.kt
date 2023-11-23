@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Models.Property
@@ -20,7 +21,13 @@ class PropertyDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPropertyDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val extraItem = intent.getStringExtra("BLOCK_UPDATE_DELETE")
 
+        if (extraItem != null) {
+            // Do something with the extra item, e.g., make a button invisible
+            binding.btnUpdate.visibility = View.INVISIBLE
+            binding.btnDelete.visibility = View.INVISIBLE
+        }
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
@@ -43,8 +50,6 @@ class PropertyDetailActivity : BaseActivity() {
             binding.petFriendlyText.text = if (!selectedProperty.petFriendly) "Pets" else "No Pets"
             binding.parkingText.text = if (!selectedProperty.propertyParking) "Parking" else "No Parking"
             binding.addressCity.text = "${selectedProperty.propertyAddress}, ${selectedProperty.propertyCity}"
-
-
             binding.propertyDescription.text = selectedProperty.propertyDesc
         }
 

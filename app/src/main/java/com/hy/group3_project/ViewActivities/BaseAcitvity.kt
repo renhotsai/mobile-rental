@@ -160,6 +160,10 @@ open class BaseActivity : AppCompatActivity() {
         redirectMain()
     }
 
+    fun getUserRole(): Roles {
+        return this.user.role;
+    }
+
     fun checkLogin() {
         val gson = Gson()
         val userFromSP = sharedPreferences.getString("KEY_USER", null)

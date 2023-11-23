@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.hy.group3_project.Listing
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.R
 import java.text.NumberFormat
@@ -30,6 +31,15 @@ class PropertyAdapter (
     override fun getItemCount(): Int {
         return propertyList.size
     }
+
+    fun updatePropertyDataset(newList: List<Property>?) {
+        propertyList.clear()
+        newList?.let {
+            propertyList.addAll(it)
+        }
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
         // get the current property
         val currProperty: Property = propertyList.get(position)
