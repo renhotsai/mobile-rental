@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Property Type -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Type"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:id="@+id/propertyTypeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbApartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apartment"/>
+
+        <RadioButton
+            android:id="@+id/rbBasement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Basement"/>
+
+        <RadioButton
+            android:id="@+id/rbHouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="House"/>
+
+        <RadioButton
+            android:id="@+id/rbCondo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Condo"/>
+
+        <RadioButton
+            android:id="@+id/rbTownhouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Townhouse"/>
+    </RadioGroup>
+
+    <!-- Beds -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Beds"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/bedsGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbStudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Studio"/>
+
+        <RadioButton
+            android:id="@+id/rb1Bed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Bed"/>
+
+        <RadioButton
+            android:id="@+id/rb2Bed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 Bed"/>
+
+        <RadioButton
+            android:id="@+id/rb3Bed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 Bed"/>
+
+        <RadioButton
+            android:id="@+id/rb3BedPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 Bed +"/>
+    </RadioGroup>
+
+    <!-- Baths -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Baths"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/bathsGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb0Bath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Bath"/>
+
+        <RadioButton
+            android:id="@+id/rb1Bath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Bath"/>
+
+        <RadioButton
+            android:id="@+id/rb2Bath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 Bath"/>
+
+        <RadioButton
+            android:id="@+id/rb2BathPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 Bath +"/>
+    </RadioGroup>
+
+    <!-- Pet Friendly -->
+    <CheckBox
+        android:id="@+id/checkBoxPetFriendly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pet Friendly"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Parking -->
+    <CheckBox
+        android:id="@+id/checkBoxParking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parking"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
+</ScrollView>

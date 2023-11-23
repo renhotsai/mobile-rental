@@ -66,6 +66,15 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        // -- filter functionality
+        binding.filterBtn.setOnClickListener(){
+            // for popup
+            val myPopup = MyPopup(this)
+
+            myPopup.show()
+        }
+
+
     }
 
     private fun createTestUser() {
