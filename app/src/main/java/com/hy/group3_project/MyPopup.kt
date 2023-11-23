@@ -46,8 +46,8 @@ class MyPopup(context: Context) {
     // Function to retrieve filter data from UI elements
     private fun getFilterData(): FilterData {
         val selectedPropertyType = view.findViewById<RadioButton>(propertyTypeGroup.checkedRadioButtonId)?.text.toString()
-        val selectedBeds = view.findViewById<RadioButton>(bedsGroup.checkedRadioButtonId)?.text.toString()
-        val selectedBaths = view.findViewById<RadioButton>(bathsGroup.checkedRadioButtonId)?.text.toString()
+        val selectedBeds = view.findViewById<RadioButton>(bedsGroup.checkedRadioButtonId)?.tag?.toString()?.toIntOrNull()
+        val selectedBaths = view.findViewById<RadioButton>(bathsGroup.checkedRadioButtonId)?.tag?.toString()?.toIntOrNull()
         val isPetFriendly = checkBoxPetFriendly.isChecked
         val hasParking = checkBoxParking.isChecked
 

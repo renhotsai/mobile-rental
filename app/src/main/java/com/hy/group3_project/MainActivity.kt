@@ -8,6 +8,8 @@ import com.hy.group3_project.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: ListingViewAdaptor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -16,20 +18,44 @@ class MainActivity : BaseActivity() {
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
-        // -----for recycle view
+        // ----- data for recycle view
 
         val listingList: List<Listing> = mutableListOf(
-            Listing("rental_1", "$2000", "Apartment", "3 Rooms | 2 Bath", "123 ABC, Toronto", false),
-            Listing("rental_2", "$2200", "House", "4 Beds | 3 Baths", "789 DEF, Toronto", false),
-            Listing("rental_3", "$1800", "Apartment", "2 Beds | 1.5 Baths", "456 XYZ, Toronto", true),
-            Listing("rental_4", "$1500", "Basement", "1 Room | 1 Bath", "101 Elm St, Hamletville", false),
-            Listing("rental_5", "$2500", "House", "5 Beds | 4 Baths", "202 Maple St, Boroughburg", true),
+            Listing("rental_1", 2000, "Apartment", 3 , 2 , "123 ABC, Toronto", false),
+            Listing("rental_2", 2200, "House", 4 , 2 ,"789 DEF, Toronto", false),
+            Listing("rental_3", 1800, "Apartment", 2 ,2, "456 XYZ, Toronto", true),
+            Listing("rental_4", 1500, "Basement", 1 , 1 , "101 Elm St, Hamletville", false),
+            Listing("rental_5", 2500, "House", 5 ,4 , "202 Maple St, Boroughburg", true),
             Listing()
         )
 
+        var listForAdaptor = listingList
 
-        //  the adapter
-        val adapter = ListingViewAdaptor(listingList, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
+        // -- filter functionality
+        binding.filterBtn.setOnClickListener(){
+            // for popup
+            val myPopup = MyPopup(this)
+
+            myPopup.show()
+        }
+
+        // -- Search functionality
+
+        binding.searchButton.setOnClickListener(){
+            val searchText: String? = binding.searchText.text?.toString()
+
+            val filteredList = listingList.filter { listing ->
+                listing.location?.contains(searchText ?: "", ignoreCase = true) == true
+            }
+
+            listForAdaptor = filteredList
+            adapter.notifyDataSetChanged()
+
+        }
+
+
+        // --- the adapter for rv
+        adapter = ListingViewAdaptor(listForAdaptor, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
         binding.rv.setAdapter(adapter)
 
         //  the recycler view

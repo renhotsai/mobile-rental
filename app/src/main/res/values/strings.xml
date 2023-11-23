@@ -8,19 +8,16 @@
     </string-array>
     <string-array name="beds">
         <item>Studio</item>
-        <item>1 bed</item>
+        <item>1 ed</item>
         <item>2 beds</item>
         <item>3 beds</item>
-        <item>4 beds</item>
-        <item>5 beds</item>
-        <item>6 beds +</item>
+        <item>3 beds+</item>
     </string-array>
     <string-array name="baths">
-        <item>0 Bath</item>
-        <item>1 Bath</item>
-        <item>2 Baths</item>
-        <item>3 Baths</item>
-        <item>4 Baths+</item>
+        <item>0 bath</item>
+        <item>1 bath</item>
+        <item>2 baths</item>
+        <item>2 baths+</item>
     </string-array>
     <string-array name="pet">
         <item>Yes</item>

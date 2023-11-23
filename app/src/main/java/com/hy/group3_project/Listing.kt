@@ -4,9 +4,10 @@ import java.sql.Struct
 
 data class  Listing(
     val img: String,
-    val price: String,
+    val price: Int,
     val type: String,
-    val rooms: String,
+    val rooms: Int,
+    val bath: Int,
     val location: String,
     val isFavorite: Boolean
 ) {
@@ -23,9 +24,10 @@ data class  Listing(
     // Secondary constructor with default values
     constructor() : this(
         img = "rental_1",
-        price = "$ 2000",
+        price = 2000,
         type = "Apartment",
-        rooms = "3 Rooms | 2 Bath",
+        rooms = 3,
+        bath = 2,
         location = "123 ABC, Toronto",
         isFavorite = false
     )
