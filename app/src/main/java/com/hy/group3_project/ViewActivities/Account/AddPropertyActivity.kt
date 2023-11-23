@@ -10,16 +10,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.R
+import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityAddPropertyBinding
 import kotlin.random.Random
 
-class AddPropertyActivity : AppCompatActivity() {
+class AddPropertyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddPropertyBinding
-
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var prefEditor: SharedPreferences.Editor
-
     var savedProperties: MutableList<Property> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,9 +24,8 @@ class AddPropertyActivity : AppCompatActivity() {
         this.binding = ActivityAddPropertyBinding.inflate(layoutInflater)
         setContentView(this.binding.root)
 
-        // Initialize shared preferences
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
+        //set option menu
+        setSupportActionBar(this.binding.tbOptionMenu)
 
         this.binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
 
@@ -98,9 +94,8 @@ class AddPropertyActivity : AppCompatActivity() {
                     applicationContext,
                     android.R.color.holo_red_light
                 )
-            )
-
-            snackbar.show()
+                snackbar.show()
+            }
         }
     }
 }

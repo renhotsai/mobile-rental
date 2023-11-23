@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_option_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:title="4 Rent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
   <!-- Image View -->
   <ImageView
       android:id="@+id/imageView3"

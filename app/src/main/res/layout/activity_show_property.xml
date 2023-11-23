@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".ViewActivities.Account.ShowPropertyActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_option_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="4 Rent" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

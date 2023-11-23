@@ -1,5 +1,6 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -10,21 +11,19 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Enums.EditAccountStatus
 import com.hy.group3_project.Models.User
+import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityEditAcctInfoBinding
 
 
-class EditAcctInfoActivity : AppCompatActivity() {
+class EditAcctInfoActivity : BaseActivity() {
     private lateinit var binding: ActivityEditAcctInfoBinding
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var prefEditor: SharedPreferences.Editor
-    private lateinit var user: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditAcctInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
+        //set option menu
+        setSupportActionBar(this.binding.tbOptionMenu)
 
         val currentIntent = this@EditAcctInfoActivity.intent
         if (currentIntent != null) {
@@ -47,18 +46,6 @@ class EditAcctInfoActivity : AppCompatActivity() {
         binding.etEmail.hint = user.email
         binding.etFirstName.hint = user.firstName
         binding.etLastName.hint = user.lastName
-    }
-
-
-    private fun getUserList(): MutableList<User> {
-        var userList = mutableListOf<User>()
-        val gson = Gson()
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-        if (userListFromSP != null) {
-            val typeToken = object : TypeToken<MutableList<User>>() {}.type
-            userList = gson.fromJson(userListFromSP, typeToken)
-        }
-        return userList
     }
     private fun editAccountInfo() {
         val etFirstName = binding.etFirstName.text.toString()

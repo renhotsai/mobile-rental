@@ -13,18 +13,15 @@ import com.hy.group3_project.Models.Property
 import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
 import java.text.NumberFormat
 
-class PropertyDetailActivity : AppCompatActivity() {
-    lateinit var binding: ActivityPropertyDetailBinding
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var prefEditor: SharedPreferences.Editor
-
+class PropertyDetailActivity : BaseActivity() {
+    lateinit var binding:ActivityPropertyDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.binding = ActivityPropertyDetailBinding.inflate(layoutInflater)
+        binding = ActivityPropertyDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
+        //set option menu
+        setSupportActionBar(this.binding.tbOptionMenu)
 
         val propertyId = intent.getStringExtra("PROPERTY_ID")
 

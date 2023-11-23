@@ -12,7 +12,6 @@
     <item
         android:id="@+id/menu_item_edit_account_info"
         android:title="Edit Account Info" />
-
     <item
         android:id="@+id/menu_item_edit_password"
         android:title="Edit Password" />
