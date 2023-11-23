@@ -104,8 +104,8 @@
             android:id="@+id/rb3BedPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3 Bed +"
-            android:tag="4" />
+            android:text="3 Bed+"
+            android:tag="3" />
     </RadioGroup>
 
     <!-- Baths -->
@@ -148,7 +148,7 @@
             android:id="@+id/rb2BathPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 Bath +"
+            android:text="2 Bath+"
             android:tag="3" />
     </RadioGroup>
 

@@ -2,10 +2,8 @@ package com.hy.group3_project
 
 import android.app.AlertDialog
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.CheckBox
-import android.widget.Filter
 import android.widget.RadioButton
 import android.widget.RadioGroup
 
@@ -62,8 +60,8 @@ class MyPopup(context: Context) {
     // Function to retrieve filter data from UI elements
     private fun getFilterData(): FilterData {
         val selectedPropertyType = view.findViewById<RadioButton>(propertyTypeGroup.checkedRadioButtonId)?.text.toString()
-        val selectedBeds = view.findViewById<RadioButton>(bedsGroup.checkedRadioButtonId)?.tag?.toString()?.toIntOrNull()
-        val selectedBaths = view.findViewById<RadioButton>(bathsGroup.checkedRadioButtonId)?.tag?.toString()?.toIntOrNull()
+        val selectedBeds = view.findViewById<RadioButton>(bedsGroup.checkedRadioButtonId)?.text.toString()
+        val selectedBaths = view.findViewById<RadioButton>(bathsGroup.checkedRadioButtonId)?.text.toString()
         val isPetFriendly = checkBoxPetFriendly.isChecked
         val hasParking = checkBoxParking.isChecked
 

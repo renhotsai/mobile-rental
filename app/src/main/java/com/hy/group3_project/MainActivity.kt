@@ -65,14 +65,14 @@ class MainActivity : BaseActivity() {
                 // For functionality with filterSelected
                 val filterConfig = myPopup.filterConfig
 
-                val filteredWithConfig = displayedProperties.filter { property ->
+                val filteredWithConfig = propertyDataSource.filter { property ->
                     val bedsNumeric = property.beds?.toIntOrNull() ?: 0
                     val bathsNumeric = property.baths?.toIntOrNull() ?: 0
 
                     // Apply additional filters based on the filterConfig
                     val propertyTypeMatch = filterConfig.propertyType?.equals(property.propertyType, ignoreCase = true) ?: true
-                    val bedsMatch = filterConfig.beds?.let { it == bedsNumeric } ?: true
-                    val bathsMatch = filterConfig.baths?.let { it == bathsNumeric } ?: true
+                    val bedsMatch = filterConfig.beds?.let { it == property.beds } ?: true
+                    val bathsMatch = filterConfig.baths?.let { it == property.baths } ?: true
                     val isPetFriendlyMatch = filterConfig.isPetFriendly ?: property.petFriendly
                     val hasParkingMatch = filterConfig.hasParking ?: property.propertyParking
 
