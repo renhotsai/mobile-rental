@@ -43,9 +43,9 @@ class ListingViewAdaptor(var listingData: List<Listing>,
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
 
         // set data to rv
-        price.text = listingData[position].price
+        price.text = "$ ${listingData[position].price}"
         propertyType.text = listingData[position].type
-        rooms.text = listingData[position].rooms
+        rooms.text = "${listingData[position].rooms} Rooms | ${listingData[position].bath} Bath"
         location.text = listingData[position].location
 
         // for fav to stop functino running at the start
@@ -58,6 +58,7 @@ class ListingViewAdaptor(var listingData: List<Listing>,
                 addFavHandler(position)
             } else {
                 removeFavHandler(position)
+
             }
         }
 

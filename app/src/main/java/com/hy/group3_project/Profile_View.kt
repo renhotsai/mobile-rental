@@ -11,6 +11,8 @@ import com.hy.group3_project.databinding.ActivityProfileViewBinding
 class Profile_View : AppCompatActivity() {
 
     private lateinit var binding : ActivityProfileViewBinding
+    private lateinit var adapter: ListingViewAdaptor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileViewBinding.inflate(layoutInflater)
@@ -20,7 +22,7 @@ class Profile_View : AppCompatActivity() {
         val listingForProfile : List<Listing> = mutableListOf(Listing(), Listing(), Listing())
 
         //  the adapter
-        val adapter = ListingViewAdaptor(listingForProfile, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
+        adapter = ListingViewAdaptor(listingForProfile, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
         binding.rv.setAdapter(adapter)
 
         //  the recycler view
@@ -42,8 +44,10 @@ class Profile_View : AppCompatActivity() {
     }
 
     fun removeFav (rowPosition: Int){
+
         val snackbar = Snackbar.make(binding.rootLayout, "Removed from Favorite", Snackbar.LENGTH_LONG)
         snackbar.show()
+        adapter.notifyDataSetChanged()
     }
 
     fun showDetailView (rowPosition: Int){

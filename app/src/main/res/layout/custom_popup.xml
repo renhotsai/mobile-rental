@@ -76,31 +76,36 @@
             android:id="@+id/rbStudio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Studio"/>
+            android:text="Studio"
+            android:tag="0" />
 
         <RadioButton
             android:id="@+id/rb1Bed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 Bed"/>
+            android:text="1 Bed"
+            android:tag="1" />
 
         <RadioButton
             android:id="@+id/rb2Bed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 Bed"/>
+            android:text="2 Bed"
+            android:tag="2" />
 
         <RadioButton
             android:id="@+id/rb3Bed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3 Bed"/>
+            android:text="3 Bed"
+            android:tag="3" />
 
         <RadioButton
             android:id="@+id/rb3BedPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3 Bed +"/>
+            android:text="3 Bed +"
+            android:tag="4" />
     </RadioGroup>
 
     <!-- Baths -->
@@ -122,26 +127,31 @@
             android:id="@+id/rb0Bath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 Bath"/>
+            android:text="0 Bath"
+            android:tag="0" />
 
         <RadioButton
             android:id="@+id/rb1Bath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 Bath"/>
+            android:text="1 Bath"
+            android:tag="1" />
 
         <RadioButton
             android:id="@+id/rb2Bath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 Bath"/>
+            android:text="2 Bath"
+            android:tag="2" />
 
         <RadioButton
             android:id="@+id/rb2BathPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 Bath +"/>
+            android:text="2 Bath +"
+            android:tag="3" />
     </RadioGroup>
+
 
     <!-- Pet Friendly -->
     <CheckBox
