@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.CheckBox
+import android.widget.Filter
 import android.widget.RadioButton
 import android.widget.RadioGroup
 
@@ -20,6 +21,8 @@ class MyPopup(context: Context) {
     private val bathsGroup: RadioGroup = view.findViewById(R.id.bathsGroup)
     private val checkBoxPetFriendly: CheckBox = view.findViewById(R.id.checkBoxPetFriendly)
     private val checkBoxParking: CheckBox = view.findViewById(R.id.checkBoxParking)
+    var isApplied = false
+    lateinit var filterConfig : FilterData
 
     init {
         val builder = AlertDialog.Builder(context)
@@ -29,12 +32,15 @@ class MyPopup(context: Context) {
         // Handle positive button click
         builder.setPositiveButton("Apply") { _, _ ->
 
-            val filterConfig = getFilterData()
+            isApplied = true
+             filterConfig = getFilterData()
 
         }
 
         // Handle negative button click
-        builder.setNegativeButton("Cancel") { _, _ -> }
+        builder.setNegativeButton("Cancel") { _, _ ->
+            isApplied = false
+        }
 
         dialog = builder.create()
     }
