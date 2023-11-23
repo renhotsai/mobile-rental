@@ -1,5 +1,6 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +12,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
 import com.hy.group3_project.Models.Property
+import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowPropertyBinding
 //import com.hy.group3_project.adapters.PropertyAdapter
 
-class ShowPropertyActivity : AppCompatActivity() {
+class ShowPropertyActivity : BaseActivity() {
 
     lateinit var binding: ActivityShowPropertyBinding
     lateinit var adapter: PropertyAdapter
@@ -22,16 +24,13 @@ class ShowPropertyActivity : AppCompatActivity() {
     // Mutable list to store properties
     private var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
 
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var prefEditor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowPropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configure shared preferences
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
+        //set option menu
+        setSupportActionBar(this.binding.tbOptionMenu)
 
         // Setup adapter
         adapter = PropertyAdapter(

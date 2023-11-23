@@ -1,5 +1,6 @@
 package com.hy.group3_project.ViewActivities.Account
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -8,27 +9,24 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
+import androidx.core.content.ContextCompat.startActivity
 import com.google.gson.Gson
 import com.hy.group3_project.Models.User
 import com.hy.group3_project.R
+import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowAcctBinding
 
-class ShowAcctActivity : AppCompatActivity() {
+class ShowAcctActivity : BaseActivity() {
     private lateinit var binding: ActivityShowAcctBinding
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var prefEditor: SharedPreferences.Editor
-    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowAcctBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
-
+        //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
-
 
         val currentIntent = this@ShowAcctActivity.intent
         if (currentIntent != null) {
@@ -41,8 +39,10 @@ class ShowAcctActivity : AppCompatActivity() {
 
         setAcctInfo()
     }
-
-
+    override fun onResume() {
+        super.onResume()
+        setAcctInfo()
+    }
     private fun setAcctInfo() {
         checkLogin()
         if (user != null) {
@@ -50,55 +50,5 @@ class ShowAcctActivity : AppCompatActivity() {
             binding.tvFirstName.text = user.firstName
             binding.tvLastName.text = user.lastName
         }
-    }
-    private fun checkLogin() {
-        val gson = Gson()
-        val userFromSP = sharedPreferences.getString("KEY_USER", null)
-        if (userFromSP != null) {
-            user = gson.fromJson(userFromSP, User::class.java)
-        }
-    }
-
-    override fun onResume() {
-        setAcctInfo()
-        invalidateOptionsMenu()
-        super.onResume()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.option_menu_after_login, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-
-            R.id.menu_item_edit_account_info -> {
-                val intent = Intent(this@ShowAcctActivity, EditAcctInfoActivity::class.java)
-                intent.putExtra("extra_user",user)
-                startActivity(intent)
-                return true
-            }
-
-            R.id.menu_item_edit_password -> {
-                val intent = Intent(this@ShowAcctActivity, EditPasswordActivity::class.java)
-                intent.putExtra("extra_user",user)
-                startActivity(intent)
-                return true
-            }
-
-            R.id.menu_item_logout -> {
-                logout()
-                finish()
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-    private fun logout() {
-        prefEditor.remove("KEY_USER")
-        prefEditor.apply()
-        Toast.makeText(this@ShowAcctActivity, "Logout Success", Toast.LENGTH_LONG).show()
-        invalidateOptionsMenu()
     }
 }
