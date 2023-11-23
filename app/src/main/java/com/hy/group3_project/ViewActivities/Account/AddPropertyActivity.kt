@@ -1,15 +1,14 @@
 package com.hy.group3_project.ViewActivities.Account
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Models.Property
-import com.hy.group3_project.R
 import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityAddPropertyBinding
 import kotlin.random.Random
@@ -17,17 +16,15 @@ import kotlin.random.Random
 class AddPropertyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddPropertyBinding
-    var savedProperties: MutableList<Property> = mutableListOf()
+    private var savedProperties: MutableList<Property> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.binding = ActivityAddPropertyBinding.inflate(layoutInflater)
-        setContentView(this.binding.root)
+        binding = ActivityAddPropertyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        //set option menu
-        setSupportActionBar(this.binding.tbOptionMenu)
-
-        this.binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
+        setSupportActionBar(binding.tbOptionMenu)
+        binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
 
         binding.btnCreate.setOnClickListener {
             saveData()
@@ -35,16 +32,16 @@ class AddPropertyActivity : BaseActivity() {
     }
 
     private fun saveData() {
-        val propertyType = this.binding.spinnerPropertyType.selectedItem.toString()
-        val propertyBeds = this.binding.spinnerBeds.selectedItem.toString()
-        val propertyBaths = this.binding.spinnerBaths.selectedItem.toString()
-        val propertyPet = this.binding.spinnerPet.selectedItem.toString().toBoolean()
-        val propertyParking = this.binding.spinnerParking.selectedItem.toString().toBoolean()
-        val propertyPrice = this.binding.editPropertyPrice.text.toString().toInt()
-        val propertyDesc = this.binding.editPropertyDesc.text.toString()
-        val propertyCity = this.binding.editPropertyCity.text.toString()
-        val propertyAddress = this.binding.editPropertyAddress.text.toString()
-        val propertyAvailability = this.binding.swRentAv.isChecked
+        val propertyType = binding.spinnerPropertyType.selectedItem.toString()
+        val propertyBeds = binding.spinnerBeds.selectedItem.toString()
+        val propertyBaths = binding.spinnerBaths.selectedItem.toString()
+        val propertyPet = binding.spinnerPet.selectedItem.toString().toBoolean()
+        val propertyParking = binding.spinnerParking.selectedItem.toString().toBoolean()
+        val propertyPrice = binding.editPropertyPrice.text.toString().toInt()
+        val propertyDesc = binding.editPropertyDesc.text.toString()
+        val propertyCity = binding.editPropertyCity.text.toString()
+        val propertyAddress = binding.editPropertyAddress.text.toString()
+        val propertyAvailability = binding.swRentAv.isChecked
 
         if (propertyBeds != "" && propertyPrice != 0 &&
             propertyBaths != "" && propertyDesc != "" && propertyAddress != "") {
@@ -67,35 +64,43 @@ class AddPropertyActivity : BaseActivity() {
                 propertyAvailability
             )
 
-            // Add this property to the list of properties
+            // Retrieve existing list of properties from SharedPreferences
+            val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
+            val gson = Gson()
+
+            if (propertyListFromSP != "") {
+                // Convert the JSON string to a list of properties
+                val typeToken = object : TypeToken<List<Property>>() {}.type
+                savedProperties = gson.fromJson<List<Property>>(propertyListFromSP, typeToken).toMutableList()
+            }
+
+            // Add the new property to the existing list
             savedProperties.add(propertyToAdd)
 
-            // Save this list of properties back to SharedPreferences
-            val gson = Gson()
-            val listAsString = gson.toJson(savedProperties)
-            this.prefEditor.putString("KEY_PROPERTY_DATASOURCE", listAsString)
+            // Convert the updated list to a JSON string
+            val updatedListAsString = gson.toJson(savedProperties)
 
-            // Commit the changes made to SharedPreferences
-            this.prefEditor.apply()
+            // Save the updated list back to SharedPreferences
+            prefEditor.putString("KEY_PROPERTY_DATASOURCE", updatedListAsString)
+            prefEditor.apply()
 
             // Start the ShowPropertyActivity
             val showPropertyIntent = Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)
             startActivity(showPropertyIntent)
 
         } else {
-            val snackbar =
-                Snackbar.make(
-                    binding.addPropertyLayout,
-                    "Error: All fields must be filled in",
-                    Snackbar.LENGTH_LONG
-                )
+            val snackbar = Snackbar.make(
+                binding.addPropertyLayout,
+                "Error: All fields must be filled in",
+                Snackbar.LENGTH_LONG
+            )
             snackbar.setBackgroundTint(
                 ContextCompat.getColor(
                     applicationContext,
                     android.R.color.holo_red_light
                 )
-                snackbar.show()
-            }
+            )
+            snackbar.show()
         }
     }
 }
