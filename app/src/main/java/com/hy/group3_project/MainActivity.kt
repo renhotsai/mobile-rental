@@ -30,8 +30,6 @@ class MainActivity : BaseActivity() {
             Listing()
         )
 
-        var listForAdaptor = listingList
-
         // -- filter functionality
         binding.filterBtn.setOnClickListener(){
             // for popup
@@ -49,14 +47,13 @@ class MainActivity : BaseActivity() {
                 listing.location?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-            listForAdaptor = filteredList
-            adapter.notifyDataSetChanged()
+            adapter.updateDataset(filteredList)
 
         }
 
 
         // --- the adapter for rv
-        adapter = ListingViewAdaptor(listForAdaptor, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
+        adapter = ListingViewAdaptor(listingList, {pos -> addFav(pos) }, {pos -> removeFav(pos) }, {pos -> showDetailView(pos) })
         binding.rv.setAdapter(adapter)
 
         //  the recycler view

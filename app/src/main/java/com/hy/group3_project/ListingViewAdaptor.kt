@@ -14,6 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 class ListingViewAdaptor(var listingData: List<Listing>,
     private val addFavHandler: (Int) -> Unit, private val removeFavHandler: (Int) -> Unit, private val showDetailViewHandler: (Int) -> Unit
 ) : RecyclerView.Adapter<ListingViewAdaptor.ListingViewHolder>(){
+
+    // for search and filter
+    fun updateDataset(newList: List<Listing>) {
+        listingData = newList
+        notifyDataSetChanged()
+    }
     inner class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         init {
