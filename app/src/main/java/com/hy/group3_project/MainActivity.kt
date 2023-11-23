@@ -52,7 +52,7 @@ class MainActivity : BaseActivity() {
 
         // -- Search functionality
 
-        binding.searchButton.setOnClickListener(){
+        binding.searchButton.setOnClickListener() {
             val searchText: String? = binding.searchText.text?.toString()?.trim()
 
             // Filter the original propertyDataSource based on the search text
@@ -67,6 +67,7 @@ class MainActivity : BaseActivity() {
                 val filteredWithConfig = displayedProperties.filter { property ->
                     val bedsNumeric = property.beds?.toIntOrNull() ?: 0
                     val bathsNumeric = property.baths?.toIntOrNull() ?: 0
+
                     // Apply additional filters based on the filterConfig
                     val propertyTypeMatch = filterConfig.propertyType?.equals(property.propertyType, ignoreCase = true) ?: true
                     val bedsMatch = filterConfig.beds?.let { it == bedsNumeric } ?: true
@@ -77,15 +78,13 @@ class MainActivity : BaseActivity() {
                     propertyTypeMatch && bedsMatch && bathsMatch && isPetFriendlyMatch && hasParkingMatch
                 }
 
-
                 adapter.updatePropertyDataset(filteredWithConfig)
-            }else {
-                // for functionality without filterSelected
+            } else {
+                // For functionality without filterSelected
                 adapter.updatePropertyDataset(displayedProperties)
             }
-
-
         }
+
 
     }
 
