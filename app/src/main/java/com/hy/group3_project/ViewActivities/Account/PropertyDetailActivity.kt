@@ -53,6 +53,13 @@ class PropertyDetailActivity : BaseActivity() {
             binding.propertyDescription.text = selectedProperty.propertyDesc
             binding.contactInfo.text = "Contact Information: ${selectedProperty.contactInfo}"
 
+
+            if (selectedProperty.rentAvailability) {
+                binding.availability.text = "Available"
+            } else {
+                binding.availability.text = "Not available"
+            }
+
         }
 
         binding.btnUpdate.setOnClickListener {

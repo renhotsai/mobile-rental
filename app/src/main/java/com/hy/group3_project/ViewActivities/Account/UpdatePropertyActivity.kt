@@ -63,6 +63,7 @@ class UpdatePropertyActivity : AppCompatActivity() {
             binding.editPropertyPrice.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyPrice.toString())
             binding.editPropertyDesc.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyDesc)
             binding.editPropertyAddress.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyAddress)
+            binding.swRentAv.isChecked = selectedProperty.rentAvailability
         }
 
         binding.btnUpdate.setOnClickListener {
@@ -76,7 +77,7 @@ class UpdatePropertyActivity : AppCompatActivity() {
             val updatedPropertyDesc = binding.editPropertyDesc.text.toString()
             val updatedPropertyCity = binding.editPropertyCity.text.toString()
             val updatedPropertyAddress = binding.editPropertyAddress.text.toString()
-
+            val updatedPropertyAvailability = binding.swRentAv.isChecked
             // Update the selectedProperty with the new values
             selectedProperty?.apply {
                 Log.d("UpdatePropertyActivity", "Before Update: $this")
@@ -90,7 +91,7 @@ class UpdatePropertyActivity : AppCompatActivity() {
                 propertyDesc = updatedPropertyDesc
                 propertyCity = updatedPropertyCity
                 propertyAddress = updatedPropertyAddress
-
+                rentAvailability = updatedPropertyAvailability
             }
 
             val index = propertyList.indexOfFirst { it.id == selectedProperty?.id }
