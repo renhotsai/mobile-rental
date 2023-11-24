@@ -28,7 +28,7 @@ class ShowPropertyActivity : BaseActivity() {
 
         // Setup adapter
         adapter = PropertyAdapter(
-            propertyDataSource,
+            user.showList(),
             {pos-> addFav(pos) },
             {pos-> removeFav(pos)},
             {pos->viewRowDetail(pos)},
@@ -50,30 +50,15 @@ class ShowPropertyActivity : BaseActivity() {
 
     }
 
-    fun rowClicked(position: Int) {
-        val selectedProperty: Property = propertyDataSource[position]
-        val propertyDetailIntent = Intent(this@ShowPropertyActivity, PropertyDetailActivity::class.java)
-
-        propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
-
-        startActivity(propertyDetailIntent)
-    }
 
 
     // Helper function to retrieve properties from SharedPreferences
     override fun onResume() {
         super.onResume()
 
-        val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
+        propertyDataSource.clear()
+        propertyDataSource.addAll(user.showList())
+        adapter.notifyDataSetChanged()
 
-        if (propertyListFromSP != "") {
-            val gson = Gson()
-            val typeToken = object: TypeToken<List<Property>>() {}.type
-            val propertiesList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken)
-
-            propertyDataSource.clear()
-            propertyDataSource.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
-        }
     }
 }
