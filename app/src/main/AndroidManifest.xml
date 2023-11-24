@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group3_Project"
         tools:targetApi="31">
+
         <activity
             android:name=".ViewActivities.Account.UpdatePropertyActivity"
             android:exported="false" />

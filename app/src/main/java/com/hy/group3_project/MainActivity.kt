@@ -17,29 +17,29 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: PropertyAdapter
 
-    private var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
+
+    private var originalPropertyList: MutableList<Property> = mutableListOf()
     private var displayedProperties: List<Property> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //set option menu
+        // set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
         // Setup adapter
-
-
-            adapter = PropertyAdapter(
-                propertyDataSource,
-                {pos-> addFav(pos) },
-                {pos-> removeFav(pos)},
-                {pos->viewRowDetail(pos)},
-                isLandlord,
-                isLogin,
-                { redirectLogin() }
-            )
+        adapter = PropertyAdapter(
+            propertyDataSource,
+            { pos -> addFav(pos) },
+            { pos -> removeFav(pos) },
+            { pos -> viewRowDetail(pos) },
+            isLandlord,
+            isLogin,
+            { redirectLogin() }
+        )
 
         // ----- data for recycle view
         binding.rvProperties.adapter = adapter
@@ -51,17 +51,14 @@ class MainActivity : BaseActivity() {
             )
         )
 
-
         // -- filter functionality
         val myPopup = MyPopup(this)
-        binding.filterBtn.setOnClickListener(){
-            // for popup
+        binding.filterBtn.setOnClickListener() {
             MyPopup(this)
             myPopup.show()
         }
 
         // -- Search functionality
-
         binding.searchButton.setOnClickListener() {
             val searchText: String? = binding.searchText.text?.toString()
 
@@ -69,11 +66,8 @@ class MainActivity : BaseActivity() {
                 property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-
             adapter.updatePropertyDataset(displayedProperties)
         }
-
-
     }
 
     override fun onResume() {
@@ -86,9 +80,14 @@ class MainActivity : BaseActivity() {
             val typeToken = object : TypeToken<List<Property>>() {}.type
             val propertiesList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken)
 
-            propertyDataSource.clear()
-            propertyDataSource.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
+            // Update both original and displayed lists
+            originalPropertyList.clear()
+            originalPropertyList.addAll(propertiesList)
+
+            displayedProperties = originalPropertyList
+
+            // Update the adapter with the new data
+            adapter.updatePropertyDataset(displayedProperties)
         }
     }
 }
