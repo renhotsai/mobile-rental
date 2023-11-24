@@ -1,8 +1,10 @@
 package com.hy.group3_project
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
@@ -14,27 +16,29 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: PropertyAdapter
 
+
+    private var originalPropertyList: MutableList<Property> = mutableListOf()
     private var displayedProperties: List<Property> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //set option menu
+        // set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
         // Setup adapter
-
-
-            adapter = PropertyAdapter(
-                propertyDataSource,
-                {pos-> addFav(pos) },
-                {pos-> removeFav(pos)},
-                {pos->viewRowDetail(pos)},
-                isLandlord,
-                isLogin,
-                { redirectLogin() }
-            )
+        adapter = PropertyAdapter(
+            propertyDataSource,
+            { pos -> addFav(pos) },
+            { pos -> removeFav(pos) },
+            { pos -> viewRowDetail(pos) },
+            isLandlord,
+            isLogin,
+            { redirectLogin() }
+        )
 
         // ----- data for recycle view
         binding.rvProperties.adapter = adapter
@@ -46,51 +50,23 @@ class MainActivity : BaseActivity() {
             )
         )
 
-
         // -- filter functionality
         val myPopup = MyPopup(this)
-        binding.filterBtn.setOnClickListener(){
-            // for popup
+        binding.filterBtn.setOnClickListener() {
             MyPopup(this)
             myPopup.show()
         }
 
         // -- Search functionality
-
         binding.searchButton.setOnClickListener() {
-            val searchText: String? = binding.searchText.text?.toString()?.trim()
+            val searchText: String? = binding.searchText.text?.toString()
 
-            // Filter the original propertyDataSource based on the search text
-            displayedProperties = propertyDataSource.filter { property ->
+            displayedProperties = originalPropertyList.filter { property ->
                 property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-            if (myPopup.isApplied) {
-                // For functionality with filterSelected
-                val filterConfig = myPopup.filterConfig
-
-                val filteredWithConfig = displayedProperties.filter { property ->
-                    val bedsNumeric = property.beds?.toIntOrNull() ?: 0
-                    val bathsNumeric = property.baths?.toIntOrNull() ?: 0
-
-                    // Apply additional filters based on the filterConfig
-                    val propertyTypeMatch = filterConfig.propertyType?.equals(property.propertyType, ignoreCase = true) ?: true
-                    val bedsMatch = filterConfig.beds?.let { it == bedsNumeric } ?: true
-                    val bathsMatch = filterConfig.baths?.let { it == bathsNumeric } ?: true
-                    val isPetFriendlyMatch = filterConfig.isPetFriendly ?: property.petFriendly
-                    val hasParkingMatch = filterConfig.hasParking ?: property.propertyParking
-
-                    propertyTypeMatch && bedsMatch && bathsMatch && isPetFriendlyMatch && hasParkingMatch
-                }
-
-                adapter.updatePropertyDataset(filteredWithConfig)
-            } else {
-                // For functionality without filterSelected
-                adapter.updatePropertyDataset(displayedProperties)
-            }
+            adapter.updatePropertyDataset(displayedProperties)
         }
-
-
     }
 
     override fun onResume() {
@@ -103,9 +79,14 @@ class MainActivity : BaseActivity() {
             val typeToken = object : TypeToken<List<Property>>() {}.type
             val propertiesList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken)
 
-            propertyDataSource.clear()
-            propertyDataSource.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
+            // Update both original and displayed lists
+            originalPropertyList.clear()
+            originalPropertyList.addAll(propertiesList)
+
+            displayedProperties = originalPropertyList
+
+            // Update the adapter with the new data
+            adapter.updatePropertyDataset(displayedProperties)
         }
     }
 }
