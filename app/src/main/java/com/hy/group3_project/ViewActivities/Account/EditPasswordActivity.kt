@@ -38,7 +38,6 @@ class EditPasswordActivity : BaseActivity() {
 
         binding.btnSave.setOnClickListener {
             editPassword()
-            finish()
         }
     }
 
