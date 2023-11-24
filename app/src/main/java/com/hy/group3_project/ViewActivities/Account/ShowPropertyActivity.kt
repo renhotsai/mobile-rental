@@ -18,8 +18,6 @@ class ShowPropertyActivity : BaseActivity() {
     lateinit var adapter: PropertyAdapter
 
     // Mutable list to store properties
-    private var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowPropertyBinding.inflate(layoutInflater)
@@ -30,8 +28,14 @@ class ShowPropertyActivity : BaseActivity() {
 
         // Setup adapter
         adapter = PropertyAdapter(
-            propertyDataSource
-        ) { pos -> rowClicked(pos) }
+            propertyDataSource,
+            {pos-> addFav(pos) },
+            {pos-> removeFav(pos)},
+            {pos->viewRowDetail(pos)},
+            isLandlord,
+            isLogin,
+            { redirectLogin() }
+        )
 
         // Setup RecyclerView
         binding.rvProperties.adapter = adapter
