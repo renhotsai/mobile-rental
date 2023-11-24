@@ -5,40 +5,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.menu.MenuView.ItemView
+import android.widget.ToggleButton
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.hy.group3_project.Listing
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.R
 import java.text.NumberFormat
 
 
-class PropertyAdapter (
-    private val propertyList: MutableList<Property>,
-    private val rowClickHandler: (Int) -> Unit) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
-        inner class PropertyViewHolder(itemView: View): RecyclerView.ViewHolder (itemView) {
-            init {
-                itemView.setOnClickListener {
-                    rowClickHandler(adapterPosition)
-                }
+class PropertyAdapter(
+    private var propertyList: MutableList<Property>,
+    var addFavHandler: (Int) -> Unit,
+    var removeFavHandler: (Int) -> Unit,
+    var showDetailViewHandler: (Int) -> Unit,
+    var isLandlord: Boolean,
+    var isLogin: Boolean,
+    var redirectLogin: () -> Unit,
+) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+    inner class PropertyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                showDetailViewHandler(adapterPosition)
             }
         }
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
-            val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_item_property, parent, false)
-            return PropertyViewHolder(view)
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
+        val view: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.row_item_property, parent, false)
+        return PropertyViewHolder(view)
+    }
+
     override fun getItemCount(): Int {
         return propertyList.size
     }
 
-    fun updatePropertyDataset(newList: List<Property>?) {
-        propertyList.clear()
-        newList?.let {
-            propertyList.addAll(it)
-        }
-        notifyDataSetChanged()
-    }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
         // get the current property
@@ -46,7 +47,11 @@ class PropertyAdapter (
 
         // Populate the views with property details
         val context = holder.itemView.context
-        val propertyImage = context.resources.getIdentifier(currProperty.imageFileName, "drawable", context.packageName)
+        val propertyImage = context.resources.getIdentifier(
+            currProperty.imageFileName,
+            "drawable",
+            context.packageName
+        )
 
 
         val ivProperty = holder.itemView.findViewById<ImageView>(R.id.listingImage)
@@ -61,16 +66,39 @@ class PropertyAdapter (
 
         val bedText = holder.itemView.findViewById<TextView>(R.id.bedAndBathAndCatAndParking)
 
-        val concatenatedText = "${currProperty.beds} | ${currProperty.baths} | ${if (!currProperty.petFriendly) "Pet" else "No Pets"}"
+        val concatenatedText =
+            "${currProperty.beds} | ${currProperty.baths} | ${if (!currProperty.petFriendly) "Pet" else "No Pets"}"
         bedText.text = concatenatedText
 
         val propertyLocation = holder.itemView.findViewById<TextView>(R.id.location)
 
-        val locationConcatenatedText = "${currProperty.propertyAddress}, ${currProperty.propertyCity}"
+        val locationConcatenatedText =
+            "${currProperty.propertyAddress}, ${currProperty.propertyCity}"
         propertyLocation.text = locationConcatenatedText
 
-
+        val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
+        if (isLandlord) {
+            favToggle.isVisible = false
+        } else {
+            favToggle.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    if (!isLogin) {
+                        redirectLogin()
+                    } else {
+                        addFavHandler(position)
+                    }
+                } else {
+                    removeFavHandler(position)
+                }
+            }
+        }
     }
 
-
+    fun updatePropertyDataset(newList: List<Property>?) {
+        propertyList.clear()
+        newList?.let {
+            propertyList.addAll(it)
+        }
+        notifyDataSetChanged()
+    }
 }

@@ -26,7 +26,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tb_option_menu"
       app:srcCompat="@drawable/rental_4" />
 
   <!-- Property Price TextView -->

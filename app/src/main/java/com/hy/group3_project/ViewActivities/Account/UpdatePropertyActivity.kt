@@ -10,19 +10,15 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.R
+import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
 
-class UpdatePropertyActivity : AppCompatActivity() {
+class UpdatePropertyActivity : BaseActivity() {
     lateinit var binding: ActivityUpdatePropertyBinding
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var prefEditor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.binding = ActivityUpdatePropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
-        this.prefEditor = this.sharedPreferences.edit()
 
         val propertyId = intent.getStringExtra("PROPERTY_ID")
 

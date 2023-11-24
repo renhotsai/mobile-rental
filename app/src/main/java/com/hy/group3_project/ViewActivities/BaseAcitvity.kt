@@ -12,12 +12,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Enums.Roles
 import com.hy.group3_project.MainActivity
+import com.hy.group3_project.Models.Property
 import com.hy.group3_project.Models.User
 import com.hy.group3_project.R
 import com.hy.group3_project.ViewActivities.Account.AddPropertyActivity
 import com.hy.group3_project.ViewActivities.Account.EditAcctInfoActivity
 import com.hy.group3_project.ViewActivities.Account.EditPasswordActivity
 import com.hy.group3_project.ViewActivities.Account.LoginActivity
+import com.hy.group3_project.ViewActivities.Account.PropertyDetailActivity
 import com.hy.group3_project.ViewActivities.Account.ShowAcctActivity
 import com.hy.group3_project.ViewActivities.Account.ShowPropertyActivity
 import com.hy.group3_project.ViewActivities.Account.SignUpActivity
@@ -27,6 +29,9 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var prefEditor: SharedPreferences.Editor
     lateinit var user: User
     var isLogin: Boolean = false
+    var isLandlord: Boolean = false
+    var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
+
 
     //test data
     private fun createTestUser() {
@@ -68,6 +73,7 @@ open class BaseActivity : AppCompatActivity() {
                 Roles.Tenant -> {
                     menuInflater.inflate(R.menu.option_menu_tenant, menu)
                 }
+
                 Roles.Landlord -> {
                     menuInflater.inflate(R.menu.option_menu_landlord, menu)
                 }
@@ -148,6 +154,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun redirectLogin() {
+        Log.d("TAG","Star Clicked")
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
@@ -170,6 +177,7 @@ open class BaseActivity : AppCompatActivity() {
         if (userFromSP != null) {
             this.user = gson.fromJson(userFromSP, User::class.java)
             this.isLogin = true
+            this.isLandlord = user.role == Roles.Landlord
         }
     }
 
@@ -177,16 +185,76 @@ open class BaseActivity : AppCompatActivity() {
         var userList = mutableListOf<User>()
         val gson = Gson()
         val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-        Log.d("TAG","$userListFromSP")
         if (userListFromSP != null) {
             val typeToken = object : TypeToken<MutableList<User>>() {}.type
             userList = gson.fromJson(userListFromSP, typeToken)
         }
         return userList
     }
+
     fun redirectMain() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun viewRowDetail(position: Int) {
+        val selectedProperty: Property = propertyDataSource[position]
+        val propertyDetailIntent = Intent(this, PropertyDetailActivity::class.java)
+
+        propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
+
+        // Assuming you have a method to get the user's role, replace "getUserRole()" with the actual method call.
+
+        // Pass some item to PropertyDetailActivity based on user role
+        propertyDetailIntent.putExtra(
+            "BLOCK_UPDATE_DELETE",
+            "Main page block access update and delete"
+        )
+
+
+        startActivity(propertyDetailIntent)
+    }
+
+    fun addFav(position: Int) {
+        if (isLogin && !isLandlord) {
+            Log.d("UserList","Add FavList")
+            val selectedProperty: Property = propertyDataSource[position]
+            var userList = getUserList()
+            var user = userList.find { it.email == user.email }
+
+            Log.d("UserList","$user")
+            user!!.addList(selectedProperty)
+
+            Log.d("UserList","$user")
+            updateData(user, userList)
+        }
+    }
+
+    fun removeFav(position: Int) {
+        if (isLogin && !isLandlord) {
+            Log.d("UserList","Remove FavList")
+            var userList = getUserList()
+            var user = userList.find { it.email == user.email }
+
+            Log.d("UserList","$user")
+            val propertyId = propertyDataSource[position].id
+            user!!.removeList(propertyId)
+
+            Log.d("UserList","$user")
+            updateData(user, userList)
+        }
+    }
+
+    fun updateData(user: User, userList: MutableList<User>) {
+        val gson = Gson()
+        val userJson = gson.toJson(user)
+        prefEditor.putString("KEY_USER", userJson)
+
+        val userListJson = gson.toJson(userList)
+        prefEditor.putString("KEY_USERLIST", userListJson)
+
+        prefEditor.apply()
+        Log.d("UserList","$userJson")
     }
 }
