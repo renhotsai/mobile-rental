@@ -18,6 +18,7 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: PropertyAdapter
 
     private var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
+    private var originalPropertyList: MutableList<Property> = mutableListOf()
     private var displayedProperties: List<Property> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,36 +55,14 @@ class MainActivity : BaseActivity() {
         // -- Search functionality
 
         binding.searchButton.setOnClickListener() {
-            val searchText: String? = binding.searchText.text?.toString()?.trim()
+            val searchText: String? = binding.searchText.text?.toString()
 
-            // Filter the original propertyDataSource based on the search text
-            displayedProperties = propertyDataSource.filter { property ->
+            displayedProperties = originalPropertyList.filter { property ->
                 property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-            if (myPopup.isApplied) {
-                // For functionality with filterSelected
-                val filterConfig = myPopup.filterConfig
 
-                val filteredWithConfig = propertyDataSource.filter { property ->
-                    val bedsNumeric = property.beds?.toIntOrNull() ?: 0
-                    val bathsNumeric = property.baths?.toIntOrNull() ?: 0
-
-                    // Apply additional filters based on the filterConfig
-                    val propertyTypeMatch = filterConfig.propertyType?.equals(property.propertyType, ignoreCase = true) ?: true
-                    val bedsMatch = filterConfig.beds?.let { it == property.beds } ?: true
-                    val bathsMatch = filterConfig.baths?.let { it == property.baths } ?: true
-                    val isPetFriendlyMatch = filterConfig.isPetFriendly ?: property.petFriendly
-                    val hasParkingMatch = filterConfig.hasParking ?: property.propertyParking
-
-                    propertyTypeMatch && bedsMatch && bathsMatch && isPetFriendlyMatch && hasParkingMatch
-                }
-
-                adapter.updatePropertyDataset(filteredWithConfig)
-            } else {
-                // For functionality without filterSelected
-                adapter.updatePropertyDataset(displayedProperties)
-            }
+            adapter.updatePropertyDataset(displayedProperties)
         }
 
 
@@ -125,9 +104,15 @@ class MainActivity : BaseActivity() {
             val typeToken = object : TypeToken<List<Property>>() {}.type
             val propertiesList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken)
 
-            propertyDataSource.clear()
-            propertyDataSource.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
+            // Update originalPropertyList with the loaded properties
+            originalPropertyList.clear()
+            originalPropertyList.addAll(propertiesList)
+
+            // Initialize the displayed properties with the original list
+            displayedProperties = originalPropertyList
+
+            adapter.updatePropertyDataset(displayedProperties)
         }
     }
+
 }
