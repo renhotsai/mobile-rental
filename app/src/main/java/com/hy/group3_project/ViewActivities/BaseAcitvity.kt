@@ -18,6 +18,7 @@ import com.hy.group3_project.R
 import com.hy.group3_project.ViewActivities.Account.AddPropertyActivity
 import com.hy.group3_project.ViewActivities.Account.EditAcctInfoActivity
 import com.hy.group3_project.ViewActivities.Account.EditPasswordActivity
+import com.hy.group3_project.ViewActivities.Account.FavoriteActivity
 import com.hy.group3_project.ViewActivities.Account.LoginActivity
 import com.hy.group3_project.ViewActivities.Account.PropertyDetailActivity
 import com.hy.group3_project.ViewActivities.Account.ShowAcctActivity
@@ -86,7 +87,15 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_item_home->{
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
             R.id.menu_item_favorite_list -> {
+                val intent = Intent(this, FavoriteActivity::class.java)
+                startActivity(intent)
                 return true
             }
 
