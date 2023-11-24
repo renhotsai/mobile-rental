@@ -9,7 +9,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
 import com.hy.group3_project.Models.Property
-import com.hy.group3_project.ViewActivities.Account.PropertyDetailActivity
 import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityMainBinding
 
