@@ -24,21 +24,16 @@ class PropertyDetailActivity : BaseActivity() {
         setContentView(binding.root)
 
 
+
+//set option menu
+
+        val extraItem = intent.getStringExtra("BLOCK_UPDATE_DELETE")
+
         if (extraItem != null) {
             // Do something with the extra item, e.g., make a button invisible
             binding.btnUpdate.visibility = View.INVISIBLE
             binding.btnDelete.visibility = View.INVISIBLE
         }
-
-//set option menu
-
-//        val extraItem = intent.getStringExtra("BLOCK_UPDATE_DELETE")
-//
-//        if (extraItem != null) {
-//            // Do something with the extra item, e.g., make a button invisible
-//            binding.btnUpdate.visibility = View.INVISIBLE
-//            binding.btnDelete.visibility = View.INVISIBLE
-//        }
         //set option menu
 
         setSupportActionBar(this.binding.tbOptionMenu)

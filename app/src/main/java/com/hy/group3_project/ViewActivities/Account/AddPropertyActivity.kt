@@ -3,6 +3,7 @@ package com.hy.group3_project.ViewActivities.Account
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -85,7 +86,11 @@ class AddPropertyActivity : BaseActivity() {
             // Save the updated list back to SharedPreferences
             prefEditor.putString("KEY_PROPERTY_DATASOURCE", updatedListAsString)
             prefEditor.apply()
+            var userList = getUserList()
+            var user = userList.find { it.email == user.email }
 
+            user!!.addList(propertyToAdd)
+            updateData(user,userList)
             // Start the ShowPropertyActivity
             val showPropertyIntent = Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)
             startActivity(showPropertyIntent)
