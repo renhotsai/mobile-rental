@@ -6,13 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.hy.group3_project.Enums.Roles
-import com.hy.group3_project.Listing
 import com.hy.group3_project.Models.Property
-import com.hy.group3_project.Models.User
 import com.hy.group3_project.R
 import java.text.NumberFormat
 
@@ -22,7 +18,9 @@ class PropertyAdapter(
     var addFavHandler: (Int) -> Unit,
     var removeFavHandler: (Int) -> Unit,
     var showDetailViewHandler: (Int) -> Unit,
-    var isLandlord:Boolean
+    var isLandlord: Boolean,
+    var isLogin: Boolean,
+    var redirectLogin: () -> Unit,
 ) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
     inner class PropertyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
@@ -81,10 +79,14 @@ class PropertyAdapter(
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
         if (isLandlord) {
             favToggle.isVisible = false
-        }else{
+        } else {
             favToggle.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    addFavHandler(position)
+                    if (!isLogin) {
+                        redirectLogin()
+                    } else {
+                        addFavHandler(position)
+                    }
                 } else {
                     removeFavHandler(position)
                 }

@@ -1,15 +1,12 @@
 package com.hy.group3_project
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
 import com.hy.group3_project.Models.Property
-import com.hy.group3_project.ViewActivities.Account.PropertyDetailActivity
 import com.hy.group3_project.ViewActivities.BaseActivity
 import com.hy.group3_project.databinding.ActivityMainBinding
 
@@ -34,7 +31,9 @@ class MainActivity : BaseActivity() {
                 {pos-> addFav(pos) },
                 {pos-> removeFav(pos)},
                 {pos->viewRowDetail(pos)},
-                isLandlord
+                isLandlord,
+                isLogin,
+                { redirectLogin() }
             )
 
         // ----- data for recycle view

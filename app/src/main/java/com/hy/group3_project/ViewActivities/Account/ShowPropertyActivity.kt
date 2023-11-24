@@ -32,7 +32,9 @@ class ShowPropertyActivity : BaseActivity() {
             {pos-> addFav(pos) },
             {pos-> removeFav(pos)},
             {pos->viewRowDetail(pos)},
-            isLandlord
+            isLandlord,
+            isLogin,
+            { redirectLogin() }
         )
 
         // Setup RecyclerView

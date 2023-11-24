@@ -154,6 +154,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun redirectLogin() {
+        Log.d("TAG","Star Clicked")
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
