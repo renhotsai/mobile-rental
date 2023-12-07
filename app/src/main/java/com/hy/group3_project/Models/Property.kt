@@ -16,6 +16,7 @@ class Property {
     var propertyAddress: String
     var contactInfo: String
     var rentAvailability: Boolean
+    var isFavorite:Boolean = false
     constructor(imageFileName: String, propertyType:String, beds:String, baths:String, petFriendly:Boolean, propertyParking: Boolean,
                 propertyPrice: Int, propertyDesc: String, propertyCity: String, propertyAddress: String, contactInfo: String, rentAvailability: Boolean) {
         this.id = UUID.randomUUID().toString()
@@ -34,6 +35,6 @@ class Property {
     }
 
     override fun toString(): String {
-        return super.toString()
+        return "Property(id='$id', imageFileName='$imageFileName', propertyType='$propertyType', beds='$beds', baths='$baths', petFriendly=$petFriendly, propertyParking=$propertyParking, propertyPrice=$propertyPrice, propertyDesc='$propertyDesc', propertyCity='$propertyCity', propertyAddress='$propertyAddress', contactInfo='$contactInfo', rentAvailability=$rentAvailability, isFavorite=$isFavorite)"
     }
 }

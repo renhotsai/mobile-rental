@@ -48,7 +48,6 @@ class SignUpActivity : BaseActivity() {
         val etConfirmPassword = binding.etConfirmPassword
         val isReadPrivacy = binding.cbPrivacy.isChecked
 
-        Log.d("TAG","Role :$role")
         //check privacy
         if (!isReadPrivacy) {
             binding.cbPrivacy.error = "Please read the Privacy Policy"

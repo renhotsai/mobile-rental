@@ -87,7 +87,7 @@ class AddPropertyActivity : BaseActivity() {
             prefEditor.putString("KEY_PROPERTY_DATASOURCE", updatedListAsString)
             prefEditor.apply()
             var userList = getUserList()
-            var user = userList.find { it.email == user.email }
+            var user = userList.find { it.email == user!!.email }
 
             user!!.addList(propertyToAdd)
             updateData(user,userList)

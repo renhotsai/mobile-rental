@@ -28,7 +28,7 @@ import com.hy.group3_project.ViewActivities.Account.SignUpActivity
 open class BaseActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
-    lateinit var user: User
+    var user: User? = null
     var isLogin: Boolean = false
     var isLandlord: Boolean = false
     var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
@@ -70,7 +70,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (isLogin) {
-            when (user.role) {
+            when (user!!.role) {
                 Roles.Tenant -> {
                     menuInflater.inflate(R.menu.option_menu_tenant, menu)
                 }
@@ -163,7 +163,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun redirectLogin() {
-        Log.d("TAG","Star Clicked")
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
@@ -176,17 +175,13 @@ open class BaseActivity : AppCompatActivity() {
         redirectMain()
     }
 
-    fun getUserRole(): Roles {
-        return this.user.role;
-    }
-
     fun checkLogin() {
         val gson = Gson()
         val userFromSP = sharedPreferences.getString("KEY_USER", null)
         if (userFromSP != null) {
             this.user = gson.fromJson(userFromSP, User::class.java)
             this.isLogin = true
-            this.isLandlord = user.role == Roles.Landlord
+            this.isLandlord = user!!.role == Roles.Landlord
         }
     }
 
@@ -230,7 +225,7 @@ open class BaseActivity : AppCompatActivity() {
             Log.d("UserList","Add FavList")
             val selectedProperty: Property = propertyDataSource[position]
             var userList = getUserList()
-            var user = userList.find { it.email == user.email }
+            var user = userList.find { it.email == user!!.email }
 
             Log.d("UserList","$user")
             user!!.addList(selectedProperty)
@@ -244,7 +239,7 @@ open class BaseActivity : AppCompatActivity() {
         if (isLogin && !isLandlord) {
             Log.d("UserList","Remove FavList")
             var userList = getUserList()
-            var user = userList.find { it.email == user.email }
+            var user = userList.find { it.email == user!!.email }
 
             Log.d("UserList","$user")
             val propertyId = propertyDataSource[position].id

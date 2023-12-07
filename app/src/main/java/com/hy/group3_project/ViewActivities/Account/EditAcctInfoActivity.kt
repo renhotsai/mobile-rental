@@ -34,7 +34,7 @@ class EditAcctInfoActivity : BaseActivity() {
             }
         }
 
-        setEditTextHint(user)
+        setEditTextHint(user!!)
 
         //set click action
         binding.btnSave.setOnClickListener {
@@ -56,11 +56,11 @@ class EditAcctInfoActivity : BaseActivity() {
         // find user list
         val userList = getUserList()
         //find user in user list
-        user = userList.find { it.email == user.email }!!
+        user = userList.find { it.email == user!!.email }!!
 
         //update user in user list
         val changeAcctInfoStatus =
-            user.changeAcctInfo(etFirstName, etLastName, etEmail)
+            user!!.changeAcctInfo(etFirstName, etLastName, etEmail)
         if (changeAcctInfoStatus == EditAccountStatus.Success) {
             Toast.makeText(
                 this@EditAcctInfoActivity,

@@ -19,6 +19,7 @@ class FavoriteActivity : BaseActivity() {
     private lateinit var adapter: PropertyAdapter
 
     private var displayedProperties: List<Property> = emptyList()
+    private var favoriteList: MutableList<Property> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoriteBinding.inflate(layoutInflater)
@@ -31,13 +32,14 @@ class FavoriteActivity : BaseActivity() {
 
 
         adapter = PropertyAdapter(
-            user.showList(),
+            user!!.showList(),
             { pos -> addFav(pos) },
             { pos -> removeFav(pos) },
             { pos -> viewRowDetail(pos) },
             isLandlord,
             isLogin,
-            { redirectLogin() }
+            { redirectLogin() },
+            user!!.showList()
         )
 
         // ----- data for recycle view
@@ -54,7 +56,7 @@ class FavoriteActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         propertyDataSource.clear()
-        propertyDataSource.addAll(user.showList())
+        propertyDataSource.addAll(user!!.showList())
         adapter.notifyDataSetChanged()
     }
 }

@@ -41,10 +41,10 @@ class PropertyDetailActivity : BaseActivity() {
         val propertyId = intent.getStringExtra("PROPERTY_ID")
 
         if (isLogin) {
-            val property = user.showList()?.find {
+            val property = user!!.showList()?.find {
                 it.id == propertyId
             }
-            if (property != null && user.role == Roles.Landlord) {
+            if (property != null && user!!.role == Roles.Landlord) {
                 binding.btnUpdate.visibility = View.VISIBLE
                 binding.btnDelete.visibility = View.VISIBLE
             }
