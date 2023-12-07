@@ -1,5 +1,6 @@
 package com.hy.group3_project.Adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.hy.group3_project.Models.Property
 import com.hy.group3_project.R
+import com.hy.group3_project.ViewActivities.Account.FavoriteActivity
 import java.text.NumberFormat
 
 
@@ -21,6 +23,7 @@ class PropertyAdapter(
     var isLandlord: Boolean,
     var isLogin: Boolean,
     var redirectLogin: () -> Unit,
+    private var favoriteList: MutableList<Property>?,
 ) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
     inner class PropertyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
@@ -42,6 +45,7 @@ class PropertyAdapter(
 
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
+
         // get the current property
         val currProperty: Property = propertyList.get(position)
 
@@ -77,6 +81,17 @@ class PropertyAdapter(
         propertyLocation.text = locationConcatenatedText
 
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
+        if (propertyList[position].isFavorite) {
+            favToggle.isChecked = true
+        }
+
+        if (favoriteList != null) {
+            if (favoriteList!!.find { it.id == propertyList[position].id } != null) {
+                favToggle.isChecked = true
+            }
+        }
+
+
         if (isLandlord) {
             favToggle.isVisible = false
         } else {
@@ -94,10 +109,15 @@ class PropertyAdapter(
         }
     }
 
-    fun updatePropertyDataset(newList: List<Property>?) {
+    fun updatePropertyDataset(newList: List<Property>?, newFavoriteList:List<Property>?) {
         propertyList.clear()
         newList?.let {
             propertyList.addAll(it)
+        }
+
+        favoriteList?.clear()
+        newFavoriteList?.let{
+            favoriteList?.addAll(it)
         }
         notifyDataSetChanged()
     }

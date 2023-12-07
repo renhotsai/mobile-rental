@@ -2,6 +2,7 @@ package com.hy.group3_project
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +20,7 @@ class MainActivity : BaseActivity() {
 
     private var originalPropertyList: MutableList<Property> = mutableListOf()
     private var displayedProperties: List<Property> = emptyList()
+    private var favoriteList: MutableList<Property> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,10 @@ class MainActivity : BaseActivity() {
         // set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
+        if (user != null) {
+            favoriteList = user!!.showList()
+        }
+
         // Setup adapter
         adapter = PropertyAdapter(
             propertyDataSource,
@@ -37,7 +43,8 @@ class MainActivity : BaseActivity() {
             { pos -> viewRowDetail(pos) },
             isLandlord,
             isLogin,
-            { redirectLogin() }
+            { redirectLogin() },
+            favoriteList
         )
 
         // ----- data for recycle view
@@ -65,7 +72,7 @@ class MainActivity : BaseActivity() {
                 property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
-            adapter.updatePropertyDataset(displayedProperties)
+            adapter.updatePropertyDataset(displayedProperties,favoriteList)
         }
     }
 
@@ -84,9 +91,13 @@ class MainActivity : BaseActivity() {
             originalPropertyList.addAll(propertiesList)
 
             displayedProperties = originalPropertyList
+            if (user != null) {
+                favoriteList = user!!.showList()
+            }
+
 
             // Update the adapter with the new data
-            adapter.updatePropertyDataset(displayedProperties)
+            adapter.updatePropertyDataset(displayedProperties,favoriteList)
         }
     }
 }

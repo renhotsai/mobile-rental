@@ -28,13 +28,14 @@ class ShowPropertyActivity : BaseActivity() {
 
         // Setup adapter
         adapter = PropertyAdapter(
-            user.showList(),
+            user!!.showList(),
             {pos-> addFav(pos) },
             {pos-> removeFav(pos)},
             {pos->viewRowDetail(pos)},
             isLandlord,
             isLogin,
-            { redirectLogin() }
+            { redirectLogin() },
+            user!!.showList()
         )
 
         // Setup RecyclerView
@@ -57,7 +58,7 @@ class ShowPropertyActivity : BaseActivity() {
         super.onResume()
 
         propertyDataSource.clear()
-        propertyDataSource.addAll(user.showList())
+        propertyDataSource.addAll(user!!.showList())
         adapter.notifyDataSetChanged()
 
     }
