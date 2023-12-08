@@ -70,7 +70,7 @@ class PropertyDetailActivity : BaseActivity() {
             binding.addressCity.text =
                 "${selectedProperty.propertyAddress}, ${selectedProperty.propertyCity}"
             binding.propertyDescription.text = selectedProperty.propertyDesc
-            binding.contactInfo.text = "Contact Information: ${selectedProperty.contactInfo}"
+            binding.contactInfo.text = "Contact: ${selectedProperty.contactInfo}"
 
 
             if (selectedProperty.rentAvailability) {
