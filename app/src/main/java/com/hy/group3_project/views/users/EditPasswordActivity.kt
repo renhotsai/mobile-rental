@@ -1,18 +1,13 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.users
 
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.Enums.EditPasswordStatus
-import com.hy.group3_project.Models.User
-import com.hy.group3_project.ViewActivities.BaseActivity
+import com.hy.group3_project.models.enums.EditPasswordStatus
+import com.hy.group3_project.models.users.User
+import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityEditPasswordBinding
 
 

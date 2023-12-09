@@ -1,4 +1,4 @@
-package com.hy.group3_project.ViewActivities
+package com.hy.group3_project
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,20 +10,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.Enums.Roles
-import com.hy.group3_project.MainActivity
-import com.hy.group3_project.Models.Property
-import com.hy.group3_project.Models.User
-import com.hy.group3_project.R
-import com.hy.group3_project.ViewActivities.Account.AddPropertyActivity
-import com.hy.group3_project.ViewActivities.Account.EditAcctInfoActivity
-import com.hy.group3_project.ViewActivities.Account.EditPasswordActivity
-import com.hy.group3_project.ViewActivities.Account.FavoriteActivity
-import com.hy.group3_project.ViewActivities.Account.LoginActivity
-import com.hy.group3_project.ViewActivities.Account.PropertyDetailActivity
-import com.hy.group3_project.ViewActivities.Account.ShowAcctActivity
-import com.hy.group3_project.ViewActivities.Account.ShowPropertyActivity
-import com.hy.group3_project.ViewActivities.Account.SignUpActivity
+import com.hy.group3_project.models.enums.Roles
+import com.hy.group3_project.models.properties.Property
+import com.hy.group3_project.models.users.User
+import com.hy.group3_project.views.properties.AddPropertyActivity
+import com.hy.group3_project.views.users.EditAcctInfoActivity
+import com.hy.group3_project.views.users.EditPasswordActivity
+import com.hy.group3_project.views.users.LoginActivity
+import com.hy.group3_project.views.properties.PropertyDetailActivity
+import com.hy.group3_project.views.users.ShowAcctActivity
+import com.hy.group3_project.views.properties.ShowPropertyActivity
+import com.hy.group3_project.views.users.FavoriteActivity
+import com.hy.group3_project.views.users.SignUpActivity
 
 open class BaseActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
@@ -87,7 +85,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_item_home->{
+            R.id.menu_item_home ->{
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 return true

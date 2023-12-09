@@ -1,12 +1,13 @@
-package com.hy.group3_project
+package com.hy.group3_project.views.users
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.databinding.ActivityProfileViewBinding
+import com.hy.group3_project.models.adapters.ListingViewAdaptor
+import com.hy.group3_project.models.properties.Listing
 
 class Profile_View : AppCompatActivity() {
 

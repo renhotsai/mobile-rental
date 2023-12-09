@@ -1,6 +1,4 @@
-package com.hy.group3_project
-
-import java.sql.Struct
+package com.hy.group3_project.models.properties
 
 data class  Listing(
     val img: String,

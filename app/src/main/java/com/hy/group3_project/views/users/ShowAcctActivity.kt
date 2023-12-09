@@ -1,20 +1,9 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.users
 
-import android.content.Context.MODE_PRIVATE
-import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
-import androidx.core.content.ContextCompat.startActivity
-import com.google.gson.Gson
-import com.hy.group3_project.Models.User
-import com.hy.group3_project.R
-import com.hy.group3_project.ViewActivities.BaseActivity
+import com.hy.group3_project.models.users.User
+import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowAcctBinding
 
 class ShowAcctActivity : BaseActivity() {

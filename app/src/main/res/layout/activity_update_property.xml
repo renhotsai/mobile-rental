@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:id="@+id/addPropertyLayout"
         android:orientation="vertical"
-        tools:context=".ViewActivities.Account.AddPropertyActivity">
+        tools:context=".views.properties.AddPropertyActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_option_menu"

@@ -1,17 +1,14 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.properties
 
 
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.Enums.Roles
-import com.hy.group3_project.Models.Property
-import com.hy.group3_project.ViewActivities.BaseActivity
+import com.hy.group3_project.models.enums.Roles
+import com.hy.group3_project.models.properties.Property
+import com.hy.group3_project.BaseActivity
 
 import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
 import java.text.NumberFormat

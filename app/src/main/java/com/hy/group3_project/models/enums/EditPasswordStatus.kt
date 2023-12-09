@@ -1,4 +1,4 @@
-package com.hy.group3_project.Enums
+package com.hy.group3_project.models.enums
 
 enum class EditPasswordStatus {
     Success,

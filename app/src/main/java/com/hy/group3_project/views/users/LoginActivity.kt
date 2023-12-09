@@ -1,11 +1,11 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.users
 
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
-import com.hy.group3_project.Enums.LoginStatus
-import com.hy.group3_project.ViewActivities.BaseActivity
+import com.hy.group3_project.models.enums.LoginStatus
+import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityLoginBinding
 
 

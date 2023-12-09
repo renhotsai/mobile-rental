@@ -1,6 +1,5 @@
-package com.hy.group3_project.Adapters
+package com.hy.group3_project.models.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,8 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.hy.group3_project.Models.Property
+import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.R
-import com.hy.group3_project.ViewActivities.Account.FavoriteActivity
 import java.text.NumberFormat
 
 
