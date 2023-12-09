@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "617576063432",
+    "project_id": "mads4006-project-group2",
+    "storage_bucket": "mads4006-project-group2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617576063432:android:abe964b0fa313d76a6a0fd",
+        "android_client_info": {
+          "package_name": "com.hy.group3_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAELbL0z7FklAldCHwb7lxtknumn0N0Bb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
