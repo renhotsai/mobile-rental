@@ -1,4 +1,4 @@
-package com.hy.group3_project
+package com.hy.group3_project.views
 
 import android.app.AlertDialog
 import android.content.Context
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.hy.group3_project.models.properties.FilterData
+import com.hy.group3_project.R
 
 
 class MyPopup(context: Context) {

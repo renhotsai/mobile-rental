@@ -1,16 +1,14 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.properties
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.Models.Property
-import com.hy.group3_project.ViewActivities.BaseActivity
+import com.hy.group3_project.models.properties.Property
+import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityAddPropertyBinding
 import kotlin.random.Random
 

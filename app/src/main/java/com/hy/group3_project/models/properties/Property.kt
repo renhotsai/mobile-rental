@@ -1,4 +1,4 @@
-package com.hy.group3_project.Models
+package com.hy.group3_project.models.properties
 
 import java.util.UUID
 

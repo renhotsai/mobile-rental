@@ -1,44 +1,42 @@
-package com.hy.group3_project.ViewActivities.Account
+package com.hy.group3_project.views.users
 
-
-import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.Adapters.PropertyAdapter
-import com.hy.group3_project.Models.Property
-import com.hy.group3_project.ViewActivities.BaseActivity
-import com.hy.group3_project.databinding.ActivityShowPropertyBinding
+import com.hy.group3_project.models.adapters.PropertyAdapter
+import com.hy.group3_project.models.properties.Property
+import com.hy.group3_project.BaseActivity
+import com.hy.group3_project.databinding.ActivityFavoriteBinding
 
-class ShowPropertyActivity : BaseActivity() {
+class FavoriteActivity : BaseActivity() {
+    private lateinit var binding: ActivityFavoriteBinding
+    private lateinit var adapter: PropertyAdapter
 
-    lateinit var binding: ActivityShowPropertyBinding
-    lateinit var adapter: PropertyAdapter
-
-    // Mutable list to store properties
+    private var displayedProperties: List<Property> = emptyList()
+    private var favoriteList: MutableList<Property> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityShowPropertyBinding.inflate(layoutInflater)
+        binding = ActivityFavoriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
         // Setup adapter
+
+
         adapter = PropertyAdapter(
             user!!.showList(),
-            {pos-> addFav(pos) },
-            {pos-> removeFav(pos)},
-            {pos->viewRowDetail(pos)},
+            { pos -> addFav(pos) },
+            { pos -> removeFav(pos) },
+            { pos -> viewRowDetail(pos) },
             isLandlord,
             isLogin,
             { redirectLogin() },
             user!!.showList()
         )
 
-        // Setup RecyclerView
+        // ----- data for recycle view
         binding.rvProperties.adapter = adapter
         binding.rvProperties.layoutManager = LinearLayoutManager(this)
         binding.rvProperties.addItemDecoration(
@@ -47,19 +45,12 @@ class ShowPropertyActivity : BaseActivity() {
                 LinearLayoutManager.VERTICAL
             )
         )
-
-
     }
 
-
-
-    // Helper function to retrieve properties from SharedPreferences
     override fun onResume() {
         super.onResume()
-
         propertyDataSource.clear()
         propertyDataSource.addAll(user!!.showList())
         adapter.notifyDataSetChanged()
-
     }
 }

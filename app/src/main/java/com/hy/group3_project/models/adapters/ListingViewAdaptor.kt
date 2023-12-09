@@ -1,18 +1,17 @@
-package com.hy.group3_project
+package com.hy.group3_project.models.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.ToggleButton
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.hy.group3_project.models.properties.Listing
+import com.hy.group3_project.R
 
 class ListingViewAdaptor(var listingData: List<Listing>,
-    private val addFavHandler: (Int) -> Unit, private val removeFavHandler: (Int) -> Unit, private val showDetailViewHandler: (Int) -> Unit
+                         private val addFavHandler: (Int) -> Unit, private val removeFavHandler: (Int) -> Unit, private val showDetailViewHandler: (Int) -> Unit
 ) : RecyclerView.Adapter<ListingViewAdaptor.ListingViewHolder>(){
 
     // for search and filter

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ViewActivities.Account.LoginActivity">
+    tools:context=".views.users.LoginActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_option_menu"

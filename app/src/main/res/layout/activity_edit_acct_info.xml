@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".ViewActivities.Account.EditAcctInfoActivity"
+    tools:context=".views.users.EditAcctInfoActivity"
     >
 
     <androidx.appcompat.widget.Toolbar

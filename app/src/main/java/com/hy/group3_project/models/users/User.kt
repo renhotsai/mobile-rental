@@ -1,12 +1,12 @@
-package com.hy.group3_project.Models
+package com.hy.group3_project.models.users
 
 import android.util.Log
-import com.hy.group3_project.Enums.EditAccountStatus
-import com.hy.group3_project.Enums.EditPasswordStatus
-import com.hy.group3_project.Enums.LoginStatus
-import com.hy.group3_project.Enums.ResponseEnum
-import com.hy.group3_project.Enums.Roles
-import com.hy.group3_project.Listing
+import com.hy.group3_project.models.enums.EditAccountStatus
+import com.hy.group3_project.models.enums.EditPasswordStatus
+import com.hy.group3_project.models.enums.LoginStatus
+import com.hy.group3_project.models.enums.ResponseEnum
+import com.hy.group3_project.models.enums.Roles
+import com.hy.group3_project.models.properties.Property
 import java.io.Serializable
 
 

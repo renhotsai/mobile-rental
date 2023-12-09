@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ViewActivities.Account.ShowAcctActivity">
+    tools:context=".views.users.ShowAcctActivity">
 
 
     <androidx.appcompat.widget.Toolbar

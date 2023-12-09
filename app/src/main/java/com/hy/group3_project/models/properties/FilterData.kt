@@ -1,4 +1,4 @@
-package com.hy.group3_project
+package com.hy.group3_project.models.properties
 
 class FilterData(
     val propertyType: String?,
