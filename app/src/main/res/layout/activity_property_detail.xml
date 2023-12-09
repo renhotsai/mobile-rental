@@ -13,7 +13,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:title="4 Rent" />
+        app:title="4 Rent"
+
+        />
 
 
   <!-- Image View -->
@@ -36,8 +38,9 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:text="Property Price"
-      android:textSize="22sp"
+      android:textSize="30sp"
       android:textStyle="bold"
+
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.073"
       app:layout_constraintStart_toStartOf="parent"
@@ -48,9 +51,11 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="18dp"
-      android:layout_marginTop="8dp"
-      android:text="Property Type"
+      android:layout_marginTop="20dp"
       android:textSize="20dp"
+      android:drawableLeft="@android:drawable/ic_menu_view"
+      android:drawablePadding="8dp"
+
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/propertyPrice" />
@@ -61,9 +66,10 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="18dp"
       android:layout_marginTop="8dp"
-      android:text="Property Description"
+      android:layout_marginRight="16dp"
       android:textSize="20dp"
-      app:layout_constraintEnd_toEndOf="parent"
+      android:drawableLeft="@android:drawable/ic_menu_info_details"
+      android:drawablePadding="8dp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/propertyType" />
 
@@ -76,12 +82,16 @@
       android:orientation="horizontal"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/propertyDescription">
+      app:layout_constraintTop_toBottomOf="@id/propertyDescription"
+      >
 
     <TextView
         android:id="@+id/bedText"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_info_details"
+        android:drawablePadding="8dp"
         android:text="Bed"
         android:textSize="20dp" />
 
@@ -118,7 +128,8 @@
       android:layout_marginStart="18dp"
       android:layout_marginTop="8dp"
       android:layout_marginEnd="30dp"
-      android:text="Address, City"
+      android:drawableLeft="@android:drawable/ic_menu_myplaces"
+      android:drawablePadding="8dp"
       android:textSize="20dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="1.0"
@@ -131,12 +142,14 @@
       android:layout_marginStart="18dp"
       android:layout_marginTop="8dp"
       android:layout_marginEnd="30dp"
-      android:text="Contact Info"
       android:textSize="20dp"
+      android:drawableLeft="@android:drawable/ic_menu_call"
+      android:drawablePadding="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="1.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/addressCity" />
+
   <TextView
       android:id="@+id/availability"
       android:layout_width="0dp"
@@ -146,10 +159,14 @@
       android:layout_marginEnd="30dp"
       android:text="Contact Info"
       android:textSize="20dp"
-      app:layout_constraintEnd_toEndOf="parent"
+      android:background="@drawable/border_background"
+      android:padding="16dp"
+      android:gravity="center"
       app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintTop_toBottomOf="@id/contactInfo"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/contactInfo" />
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"/>
 
   <!-- Buttons fixed at the bottom -->
   <LinearLayout
