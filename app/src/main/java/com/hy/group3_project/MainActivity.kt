@@ -1,11 +1,8 @@
 package com.hy.group3_project
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.Adapters.PropertyAdapter
