@@ -5,11 +5,10 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.BaseActivity
+import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityAddPropertyBinding
+import com.hy.group3_project.models.properties.Property
 import kotlin.random.Random
 
 class AddPropertyActivity : BaseActivity() {
@@ -17,12 +16,15 @@ class AddPropertyActivity : BaseActivity() {
     private lateinit var binding: ActivityAddPropertyBinding
     private var savedProperties: MutableList<Property> = mutableListOf()
 
+    lateinit var propertyRepository: PropertyRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.tbOptionMenu)
+        this.propertyRepository = PropertyRepository(applicationContext)
         binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
 
         binding.btnCreate.setOnClickListener {
@@ -43,8 +45,10 @@ class AddPropertyActivity : BaseActivity() {
         val propertyContactInfo = binding.editContactInfo.text.toString()
         val propertyAvailability = binding.swRentAv.isChecked
 
+
         if (propertyBeds != "" && propertyPrice != 0 &&
-            propertyBaths != "" && propertyDesc != "" && propertyAddress != "") {
+            propertyBaths != "" && propertyDesc != "" && propertyAddress != ""
+        ) {
 
             // Generate random number for the property
             val randomNumber = Random.nextInt(1, 6)
@@ -65,32 +69,16 @@ class AddPropertyActivity : BaseActivity() {
                 propertyAvailability
             )
 
-            // Retrieve existing list of properties from SharedPreferences
-            val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
-            val gson = Gson()
+            propertyRepository.addPropertyToDB(propertyToAdd)
 
-            if (propertyListFromSP != "") {
-                // Convert the JSON string to a list of properties
-                val typeToken = object : TypeToken<List<Property>>() {}.type
-                savedProperties = gson.fromJson<List<Property>>(propertyListFromSP, typeToken).toMutableList()
-            }
-
-            // Add the new property to the existing list
-            savedProperties.add(propertyToAdd)
-
-            // Convert the updated list to a JSON string
-            val updatedListAsString = gson.toJson(savedProperties)
-
-            // Save the updated list back to SharedPreferences
-            prefEditor.putString("KEY_PROPERTY_DATASOURCE", updatedListAsString)
-            prefEditor.apply()
             var userList = getUserList()
             var user = userList.find { it.email == user!!.email }
 
             user!!.addList(propertyToAdd)
-            updateData(user,userList)
+            updateData(user, userList)
             // Start the ShowPropertyActivity
-            val showPropertyIntent = Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)
+            val showPropertyIntent =
+                Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)
             startActivity(showPropertyIntent)
 
         } else {

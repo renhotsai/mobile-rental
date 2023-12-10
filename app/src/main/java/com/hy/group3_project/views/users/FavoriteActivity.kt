@@ -3,10 +3,10 @@ package com.hy.group3_project.views.users
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hy.group3_project.models.adapters.PropertyAdapter
-import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityFavoriteBinding
+import com.hy.group3_project.models.adapters.PropertyAdapter
+import com.hy.group3_project.models.properties.Property
 
 class FavoriteActivity : BaseActivity() {
     private lateinit var binding: ActivityFavoriteBinding

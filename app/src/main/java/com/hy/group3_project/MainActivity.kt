@@ -3,8 +3,7 @@ package com.hy.group3_project
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
 import com.hy.group3_project.models.properties.Property
@@ -15,9 +14,11 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: PropertyAdapter
 
 
-    private var originalPropertyList: MutableList<Property> = mutableListOf()
+    private var displayedPropertyList: MutableList<Property> = mutableListOf()
     private var displayedProperties: List<Property> = emptyList()
     private var favoriteList: MutableList<Property> = mutableListOf()
+
+    private lateinit var propertyRepository:PropertyRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +29,15 @@ class MainActivity : BaseActivity() {
         // set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
+        this.propertyRepository = PropertyRepository(applicationContext)
+
         if (user != null) {
             favoriteList = user!!.showList()
         }
 
         // Setup adapter
         adapter = PropertyAdapter(
-            propertyDataSource,
+            displayedPropertyList,
             { pos -> addFav(pos) },
             { pos -> removeFav(pos) },
             { pos -> viewRowDetail(pos) },
@@ -65,8 +68,8 @@ class MainActivity : BaseActivity() {
         binding.searchButton.setOnClickListener() {
             val searchText: String? = binding.searchText.text?.toString()
 
-            displayedProperties = originalPropertyList.filter { property ->
-                property.propertyAddress?.contains(searchText ?: "", ignoreCase = true) == true
+            displayedProperties = displayedPropertyList.filter { property ->
+                property.address?.contains(searchText ?: "", ignoreCase = true) == true
             }
 
             adapter.updatePropertyDataset(displayedProperties,favoriteList)
@@ -76,25 +79,14 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
-
-        if (propertyListFromSP != "") {
-            val gson = Gson()
-            val typeToken = object : TypeToken<List<Property>>() {}.type
-            val propertiesList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken)
-
-            // Update both original and displayed lists
-            originalPropertyList.clear()
-            originalPropertyList.addAll(propertiesList)
-
-            displayedProperties = originalPropertyList
-            if (user != null) {
-                favoriteList = user!!.showList()
+        propertyRepository.retrieveAllProperties()
+        propertyRepository.allProperties.observe(this, androidx.lifecycle.Observer {
+            propertiesList ->
+            if(propertiesList !=null){
+                displayedPropertyList.clear()
+                displayedPropertyList.addAll(propertiesList)
+                adapter.notifyDataSetChanged()
             }
-
-
-            // Update the adapter with the new data
-            adapter.updatePropertyDataset(displayedProperties,favoriteList)
-        }
+        })
     }
 }

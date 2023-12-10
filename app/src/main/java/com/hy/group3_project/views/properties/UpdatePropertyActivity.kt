@@ -1,14 +1,12 @@
 package com.hy.group3_project.views.properties
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
+import com.hy.group3_project.models.properties.Property
 
 class UpdatePropertyActivity : BaseActivity() {
     lateinit var binding: ActivityUpdatePropertyBinding
@@ -22,8 +20,9 @@ class UpdatePropertyActivity : BaseActivity() {
         val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
 
         val gson = Gson()
-        val typeToken = object: TypeToken<List<Property>>() {}.type
-        val propertyList = gson.fromJson<List<Property>>(propertyListFromSP, typeToken).toMutableList()
+        val typeToken = object : TypeToken<List<Property>>() {}.type
+        val propertyList =
+            gson.fromJson<List<Property>>(propertyListFromSP, typeToken).toMutableList()
 
         val selectedProperty = propertyList.find { it.id == propertyId }
 
@@ -37,11 +36,13 @@ class UpdatePropertyActivity : BaseActivity() {
                 val propertyParking = listOf("Yes", "No")
 
                 // Get the index of the property type in the list
-                val indexOfPropertyType = propertyTypesList.indexOf(selectedProperty.propertyType)
+                val indexOfPropertyType = propertyTypesList.indexOf(selectedProperty.type)
                 val indexOfPropertyBed = propertyBedList.indexOf(selectedProperty.beds)
                 val indexOfPropertyBath = propertyBathList.indexOf(selectedProperty.baths)
-                val indexOfPropertyPet = propertyPet.indexOf(selectedProperty.petFriendly.toString())
-                val indexOfPropertyParking = propertyParking.indexOf(selectedProperty.propertyParking.toString())
+                val indexOfPropertyPet =
+                    propertyPet.indexOf(selectedProperty.petFriendly.toString())
+                val indexOfPropertyParking =
+                    propertyParking.indexOf(selectedProperty.canParking.toString())
 
                 // Set the selection in the spinner
                 binding.spinnerPropertyType.setSelection(indexOfPropertyType)
@@ -52,60 +53,16 @@ class UpdatePropertyActivity : BaseActivity() {
             }
 
 
-            binding.editPropertyCity.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyCity)
-            binding.editPropertyPrice.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyPrice.toString())
-            binding.editPropertyDesc.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyDesc)
-            binding.editPropertyAddress.text = Editable.Factory.getInstance().newEditable(selectedProperty.propertyAddress)
-            binding.swRentAv.isChecked = selectedProperty.rentAvailability
+            binding.editPropertyCity.text =
+                Editable.Factory.getInstance().newEditable(selectedProperty.city)
+            binding.editPropertyPrice.text =
+                Editable.Factory.getInstance().newEditable(selectedProperty.price.toString())
+            binding.editPropertyDesc.text =
+                Editable.Factory.getInstance().newEditable(selectedProperty.desc)
+            binding.editPropertyAddress.text =
+                Editable.Factory.getInstance().newEditable(selectedProperty.address)
+            binding.swRentAv.isChecked = selectedProperty.availability
         }
-
-        binding.btnUpdate.setOnClickListener {
-            // Get the updated values from UI elements
-            val updatedPropertyType = binding.spinnerPropertyType.selectedItem.toString()
-            val updatedPropertyBeds = binding.spinnerBeds.selectedItem.toString()
-            val updatedPropertyBaths = binding.spinnerBaths.selectedItem.toString()
-            val updatedPropertyPet = binding.spinnerPet.selectedItem.toString().toBoolean()
-            val updatedPropertyParking = binding.spinnerParking.selectedItem.toString().toBoolean()
-            val updatedPropertyPrice = binding.editPropertyPrice.text.toString().toInt()
-            val updatedPropertyDesc = binding.editPropertyDesc.text.toString()
-            val updatedPropertyCity = binding.editPropertyCity.text.toString()
-            val updatedPropertyAddress = binding.editPropertyAddress.text.toString()
-            val updatedPropertyAvailability = binding.swRentAv.isChecked
-            // Update the selectedProperty with the new values
-            selectedProperty?.apply {
-                Log.d("UpdatePropertyActivity", "Before Update: $this")
-
-                propertyType = updatedPropertyType
-                beds = updatedPropertyBeds
-                baths = updatedPropertyBaths
-                petFriendly = updatedPropertyPet
-                propertyParking = updatedPropertyParking
-                propertyPrice = updatedPropertyPrice
-                propertyDesc = updatedPropertyDesc
-                propertyCity = updatedPropertyCity
-                propertyAddress = updatedPropertyAddress
-                rentAvailability = updatedPropertyAvailability
-            }
-
-            val index = propertyList.indexOfFirst { it.id == selectedProperty?.id }
-            if (index != -1) {
-                propertyList[index] = selectedProperty!!
-            }
-
-            // Save the updated property list to SharedPreferences
-            val jsonPropertyList = gson.toJson(propertyList)
-            prefEditor.putString("KEY_PROPERTY_DATASOURCE", jsonPropertyList)
-            prefEditor.apply()
-
-            val propertyUpdateIntent = Intent(this@UpdatePropertyActivity, PropertyDetailActivity::class.java)
-
-            propertyUpdateIntent.putExtra("PROPERTY_ID", selectedProperty?.id)
-
-            startActivity(propertyUpdateIntent)
-
-        }
-
-
-
     }
+
 }
