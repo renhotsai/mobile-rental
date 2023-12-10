@@ -6,11 +6,10 @@ import android.os.Bundle
 import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.hy.group3_project.BaseActivity
+import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
 import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
-import com.hy.group3_project.BaseActivity
-
-import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
 import java.text.NumberFormat
 
 class PropertyDetailActivity : BaseActivity() {
@@ -56,21 +55,21 @@ class PropertyDetailActivity : BaseActivity() {
 
         if (selectedProperty != null) {
             val formattedPrice =
-                NumberFormat.getCurrencyInstance().format(selectedProperty.propertyPrice)
+                NumberFormat.getCurrencyInstance().format(selectedProperty.price)
             binding.propertyPrice.text = formattedPrice
-            binding.propertyType.text = selectedProperty.propertyType
+            binding.propertyType.text = selectedProperty.type
             binding.bedText.text = selectedProperty.beds
             binding.bathText.text = selectedProperty.baths
             binding.petFriendlyText.text = if (!selectedProperty.petFriendly) "Pets" else "No Pets"
             binding.parkingText.text =
-                if (!selectedProperty.propertyParking) "Parking" else "No Parking"
+                if (!selectedProperty.canParking) "Parking" else "No Parking"
             binding.addressCity.text =
-                "${selectedProperty.propertyAddress}, ${selectedProperty.propertyCity}"
-            binding.propertyDescription.text = selectedProperty.propertyDesc
+                "${selectedProperty.address}, ${selectedProperty.city}"
+            binding.propertyDescription.text = selectedProperty.desc
             binding.contactInfo.text = "Contact: ${selectedProperty.contactInfo}"
 
 
-            if (selectedProperty.rentAvailability) {
+            if (selectedProperty.availability) {
                 binding.availability.text = "Available"
             } else {
                 binding.availability.text = "Not available"

@@ -14,13 +14,13 @@ import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.models.users.User
 import com.hy.group3_project.views.properties.AddPropertyActivity
+import com.hy.group3_project.views.properties.PropertyDetailActivity
+import com.hy.group3_project.views.properties.ShowPropertyActivity
 import com.hy.group3_project.views.users.EditAcctInfoActivity
 import com.hy.group3_project.views.users.EditPasswordActivity
-import com.hy.group3_project.views.users.LoginActivity
-import com.hy.group3_project.views.properties.PropertyDetailActivity
-import com.hy.group3_project.views.users.ShowAcctActivity
-import com.hy.group3_project.views.properties.ShowPropertyActivity
 import com.hy.group3_project.views.users.FavoriteActivity
+import com.hy.group3_project.views.users.LoginActivity
+import com.hy.group3_project.views.users.ShowAcctActivity
 import com.hy.group3_project.views.users.SignUpActivity
 
 open class BaseActivity : AppCompatActivity() {

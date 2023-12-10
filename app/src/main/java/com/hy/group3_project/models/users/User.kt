@@ -77,7 +77,7 @@ class User(
             if(this.propertyList ==null){
                 this.propertyList = mutableListOf<Property>()
             }
-            item.isFavorite = true
+            item.isFavourite = true
             this.propertyList.add(item)
             ResponseEnum.Success
         } catch (ex:Exception){

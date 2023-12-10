@@ -8,8 +8,8 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.R
+import com.hy.group3_project.models.properties.Property
 import java.text.NumberFormat
 
 
@@ -50,7 +50,7 @@ class PropertyAdapter(
         // Populate the views with property details
         val context = holder.itemView.context
         val propertyImage = context.resources.getIdentifier(
-            currProperty.imageFileName,
+            currProperty.imageName,
             "drawable",
             context.packageName
         )
@@ -62,7 +62,7 @@ class PropertyAdapter(
         val propertyPrice = holder.itemView.findViewById<TextView>(R.id.propertyPrice)
 
         // Format the property price with a dollar sign and comma separator
-        val formattedPrice = NumberFormat.getCurrencyInstance().format(currProperty.propertyPrice)
+        val formattedPrice = NumberFormat.getCurrencyInstance().format(currProperty.price)
 
         propertyPrice.text = formattedPrice
 
@@ -75,11 +75,11 @@ class PropertyAdapter(
         val propertyLocation = holder.itemView.findViewById<TextView>(R.id.location)
 
         val locationConcatenatedText =
-            "${currProperty.propertyAddress}, ${currProperty.propertyCity}"
+            "${currProperty.address}, ${currProperty.city}"
         propertyLocation.text = locationConcatenatedText
 
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
-        if (propertyList[position].isFavorite) {
+        if (propertyList[position].isFavourite) {
             favToggle.isChecked = true
         }
 

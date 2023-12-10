@@ -4,9 +4,9 @@ package com.hy.group3_project.views.properties
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hy.group3_project.models.adapters.PropertyAdapter
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowPropertyBinding
+import com.hy.group3_project.models.adapters.PropertyAdapter
 
 class ShowPropertyActivity : BaseActivity() {
 
