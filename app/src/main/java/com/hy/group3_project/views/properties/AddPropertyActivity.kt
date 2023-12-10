@@ -16,8 +16,6 @@ class AddPropertyActivity : BaseActivity() {
     private lateinit var binding: ActivityAddPropertyBinding
     private var savedProperties: MutableList<Property> = mutableListOf()
 
-    lateinit var propertyRepository: PropertyRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPropertyBinding.inflate(layoutInflater)

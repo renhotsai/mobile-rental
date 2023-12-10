@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.hy.group3_project.controllers.properties.PropertyRepository
+import com.hy.group3_project.models.adapters.PropertyAdapter
 import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.models.users.User
@@ -29,8 +31,10 @@ open class BaseActivity : AppCompatActivity() {
     var user: User? = null
     var isLogin: Boolean = false
     var isLandlord: Boolean = false
-    var propertyDataSource: MutableList<Property> = mutableListOf<Property>()
+    lateinit var propertyRepository: PropertyRepository
+    var propertyList: MutableList<Property> = mutableListOf()
 
+    lateinit var adapter: PropertyAdapter
 
     //test data
     private fun createTestUser() {
@@ -56,14 +60,29 @@ open class BaseActivity : AppCompatActivity() {
         this.sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
         this.prefEditor = this.sharedPreferences.edit()
 
+        this.propertyRepository = PropertyRepository(applicationContext)
+
         createTestUser()
         checkLogin()
     }
 
     override fun onResume() {
+        super.onResume()
         checkLogin()
         invalidateOptionsMenu()
-        super.onResume()
+    }
+
+    fun loadAllData() {
+        propertyRepository.retrieveAllProperties()
+        propertyRepository.allProperties.observe(
+            this,
+            androidx.lifecycle.Observer { propertiesList ->
+                if (propertiesList != null) {
+                    propertyList.clear()
+                    propertyList.addAll(propertiesList)
+                    adapter.notifyDataSetChanged()
+                }
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -85,7 +104,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_item_home ->{
+            R.id.menu_item_home -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 return true
@@ -201,7 +220,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun viewRowDetail(position: Int) {
-        val selectedProperty: Property = propertyDataSource[position]
+        val selectedProperty: Property = propertyList[position]
         val propertyDetailIntent = Intent(this, PropertyDetailActivity::class.java)
 
         propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
@@ -220,30 +239,30 @@ open class BaseActivity : AppCompatActivity() {
 
     fun addFav(position: Int) {
         if (isLogin && !isLandlord) {
-            Log.d("UserList","Add FavList")
-            val selectedProperty: Property = propertyDataSource[position]
+            Log.d("UserList", "Add FavList")
+            val selectedProperty: Property = propertyList[position]
             var userList = getUserList()
             var user = userList.find { it.email == user!!.email }
 
-            Log.d("UserList","$user")
+            Log.d("UserList", "$user")
             user!!.addList(selectedProperty)
 
-            Log.d("UserList","$user")
+            Log.d("UserList", "$user")
             updateData(user, userList)
         }
     }
 
     fun removeFav(position: Int) {
         if (isLogin && !isLandlord) {
-            Log.d("UserList","Remove FavList")
+            Log.d("UserList", "Remove FavList")
             var userList = getUserList()
             var user = userList.find { it.email == user!!.email }
 
-            Log.d("UserList","$user")
-            val propertyId = propertyDataSource[position].id
+            Log.d("UserList", "$user")
+            val propertyId = propertyList[position].id
             user!!.removeList(propertyId)
 
-            Log.d("UserList","$user")
+            Log.d("UserList", "$user")
             updateData(user, userList)
         }
     }
@@ -257,6 +276,6 @@ open class BaseActivity : AppCompatActivity() {
         prefEditor.putString("KEY_USERLIST", userListJson)
 
         prefEditor.apply()
-        Log.d("UserList","$userJson")
+        Log.d("UserList", "$userJson")
     }
 }
