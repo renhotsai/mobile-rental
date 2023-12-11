@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.firestore
 import com.hy.group3_project.models.properties.Property
+import kotlinx.coroutines.tasks.await
 
 class PropertyRepository(private val context: Context) {
 
@@ -35,6 +36,7 @@ class PropertyRepository(private val context: Context) {
 
 
     var allProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
+
 
 //    private var loggedInUserEmail = ""
 //    private var sharedPrefs : SharedPreferences
@@ -66,16 +68,13 @@ class PropertyRepository(private val context: Context) {
             data[FIELD_IS_FAVOURITE] = newProperty.isFavourite
 
             //for adding document to nested collection
-            db.collection(COLLECTION_PROPERTIES)
-                .document(newProperty.id)
-                .set(data)
+            db.collection(COLLECTION_PROPERTIES).document(newProperty.id).set(data)
                 .addOnSuccessListener { docRef ->
                     Log.d(
                         TAG,
                         "addPropertyToDB: Document successfully added with ID : ${newProperty.id}"
                     )
-                }
-                .addOnFailureListener { ex ->
+                }.addOnFailureListener { ex ->
                     Log.e(
                         TAG,
                         "addPropertyToDB: Exception occurred while adding a document : $ex",
@@ -114,8 +113,7 @@ class PropertyRepository(private val context: Context) {
                             val currentDocument: Property =
                                 docChanges.document.toObject(Property::class.java)
                             Log.d(
-                                TAG,
-                                "retrieveAllProperties: currentDocument : $currentDocument."
+                                TAG, "retrieveAllProperties: currentDocument : $currentDocument."
 
                             )
 
@@ -141,8 +139,7 @@ class PropertyRepository(private val context: Context) {
 
                     } else {
                         Log.d(
-                            TAG,
-                            "retrieveAllProperties: No data in the result after retrieving"
+                            TAG, "retrieveAllProperties: No data in the result after retrieving"
                         )
                     }
                 })
@@ -153,56 +150,20 @@ class PropertyRepository(private val context: Context) {
         }
     }
 
-    /*
-        fun filterExpenses(amount: Double, persons: Int) {
-            if (loggedInUserEmail.isNotEmpty()) {
-                try {
-                    db.collection(COLLECTION_USERS)
-                        .document(loggedInUserEmail)
-                        .collection(COLLECTION_EXPENSES)
-                        .whereGreaterThan(FIELD_CHECK_AMOUNT, amount)
-                        .whereLessThan(FIELD_PERSONS, persons)
-                        .addSnapshotListener(EventListener { result, error ->
-                            //check for result or errors and update UI accordingly
-                            if (error != null) {
-                                Log.e(
-                                    TAG,
-                                    "filterExpenses: Listening to Expenses collection failed due to error : $error",
-                                )
-                                return@EventListener
-                            }
 
-                            if (result != null) {
-                                Log.d(
-                                    TAG,
-                                    "filterExpenses: Number of documents retrieved : ${result.size()}"
-                                )
-
-                                val tempList: MutableList<Property> = ArrayList<Property>()
-
-                                for (docChanges in result.documentChanges) {
-
-                                    val currentDocument: Property =
-                                        docChanges.document.toObject(Property::class.java)
-                                    Log.d(TAG, "filterExpenses: currentDocument : $currentDocument")
-
-                                    //do necessary changes to your local list of objects
-                                    tempList.add(currentDocument)
-                                }//for
-                                Log.d(TAG, "filterExpenses: tempList : $tempList")
-                                //replace the value in allExpenses
-                                allExpenses.postValue(tempList)
-
-                            } else {
-                                Log.d(TAG, "filterExpenses: No data in the result after retrieving")
-                            }
-                        })
-                } catch (ex: java.lang.Exception) {
-                    Log.e(TAG, "filterExpenses: Unable to filter expenses : $ex")
-                }
-            }
+     suspend fun findProperty(propertyId: String):Property? {
+        return try {
+            val documentSnapshot = db.collection(COLLECTION_PROPERTIES)
+                .document(propertyId)
+                .get().await()
+            val property = documentSnapshot.toObject(Property::class.java)
+            property
+        } catch (ex: java.lang.Exception) {
+            Log.e(TAG, "filterExpenses: Unable to filter expenses : $ex")
+            null
         }
-    */
+    }
+
     fun updateProperty(propertyToUpdate: Property) {
         val data: MutableMap<String, Any> = HashMap();
 
@@ -222,13 +183,10 @@ class PropertyRepository(private val context: Context) {
         data[FIELD_IS_FAVOURITE] = propertyToUpdate.isFavourite
 
         try {
-            db.collection(COLLECTION_PROPERTIES)
-                .document(propertyToUpdate.id)
-                .update(data)
+            db.collection(COLLECTION_PROPERTIES).document(propertyToUpdate.id).update(data)
                 .addOnSuccessListener { docRef ->
                     Log.d(TAG, "updateProperty: Document updated successfully : $docRef")
-                }
-                .addOnFailureListener { ex ->
+                }.addOnFailureListener { ex ->
                     Log.e(TAG, "updateProperty: Failed to update document : $ex")
                 }
         } catch (ex: Exception) {
@@ -238,13 +196,10 @@ class PropertyRepository(private val context: Context) {
 
     fun deleteProperty(propertyToDelete: Property) {
         try {
-            db.collection(COLLECTION_PROPERTIES)
-                .document(propertyToDelete.id)
-                .delete()
+            db.collection(COLLECTION_PROPERTIES).document(propertyToDelete.id).delete()
                 .addOnSuccessListener { docRef ->
                     Log.d(TAG, "deleteProperty: Document deleted successfully : $docRef")
-                }
-                .addOnFailureListener { ex ->
+                }.addOnFailureListener { ex ->
                     Log.e(TAG, "deleteProperty: Failed to delete document : $ex")
                 }
         } catch (ex: Exception) {

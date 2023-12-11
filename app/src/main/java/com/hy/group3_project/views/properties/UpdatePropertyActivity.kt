@@ -2,30 +2,19 @@ package com.hy.group3_project.views.properties
 
 import android.os.Bundle
 import android.text.Editable
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
-import com.hy.group3_project.models.properties.Property
 
 class UpdatePropertyActivity : BaseActivity() {
     lateinit var binding: ActivityUpdatePropertyBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.binding = ActivityUpdatePropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val propertyId = intent.getStringExtra("PROPERTY_ID")
-
-        val propertyListFromSP = sharedPreferences.getString("KEY_PROPERTY_DATASOURCE", "")
-
-        val gson = Gson()
-        val typeToken = object : TypeToken<List<Property>>() {}.type
-        val propertyList =
-            gson.fromJson<List<Property>>(propertyListFromSP, typeToken).toMutableList()
-
+        val propertyId = intent.getStringExtra("PROPERTY_ID")!!
         val selectedProperty = propertyList.find { it.id == propertyId }
-
         if (selectedProperty != null) {
             if (selectedProperty != null) {
                 // Assuming you have a List of property types
@@ -64,5 +53,4 @@ class UpdatePropertyActivity : BaseActivity() {
             binding.swRentAv.isChecked = selectedProperty.availability
         }
     }
-
 }

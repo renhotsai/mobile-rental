@@ -10,7 +10,6 @@ import com.hy.group3_project.models.properties.Property
 
 class FavoriteActivity : BaseActivity() {
     private lateinit var binding: ActivityFavoriteBinding
-    private lateinit var adapter: PropertyAdapter
 
     private var displayedProperties: List<Property> = emptyList()
     private var favoriteList: MutableList<Property> = mutableListOf()
@@ -49,8 +48,8 @@ class FavoriteActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        propertyDataSource.clear()
-        propertyDataSource.addAll(user!!.showList())
+        propertyList.clear()
+        propertyList.addAll(user!!.showList())
         adapter.notifyDataSetChanged()
     }
 }

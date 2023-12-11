@@ -11,7 +11,6 @@ import com.hy.group3_project.models.adapters.PropertyAdapter
 class ShowPropertyActivity : BaseActivity() {
 
     lateinit var binding: ActivityShowPropertyBinding
-    lateinit var adapter: PropertyAdapter
 
     // Mutable list to store properties
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +52,8 @@ class ShowPropertyActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        propertyDataSource.clear()
-        propertyDataSource.addAll(user!!.showList())
+        propertyList.clear()
+        propertyList.addAll(user!!.showList())
         adapter.notifyDataSetChanged()
 
     }
