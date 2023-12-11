@@ -38,7 +38,7 @@ class EditAcctInfoActivity : BaseActivity() {
     }
 
     private fun setEditTextHint(user: User) {
-        binding.etEmail.hint = user.email
+//        binding.etEmail.hint = user.email
         binding.etFirstName.hint = user.firstName
         binding.etLastName.hint = user.lastName
     }
@@ -51,7 +51,7 @@ class EditAcctInfoActivity : BaseActivity() {
         // find user list
         val userList = getUserList()
         //find user in user list
-        user = userList.find { it.email == user!!.email }!!
+        user = userList.find { it.id == user!!.id }!!
 
         //update user in user list
         val changeAcctInfoStatus =

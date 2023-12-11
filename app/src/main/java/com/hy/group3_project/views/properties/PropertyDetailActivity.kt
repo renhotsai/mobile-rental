@@ -40,7 +40,7 @@ class PropertyDetailActivity : BaseActivity() {
             val property = user!!.showList()?.find {
                 it.id == propertyId
             }
-            if (property != null && user!!.role == Roles.Landlord) {
+            if (property != null && user!!.role == Roles.Landlord.toString()) {
                 binding.btnUpdate.visibility = View.VISIBLE
                 binding.btnDelete.visibility = View.VISIBLE
             }

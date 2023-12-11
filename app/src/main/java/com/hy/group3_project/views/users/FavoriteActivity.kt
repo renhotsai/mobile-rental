@@ -25,16 +25,16 @@ class FavoriteActivity : BaseActivity() {
         // Setup adapter
 
 
-        adapter = PropertyAdapter(
-            user!!.showList(),
-            { pos -> addFav(pos) },
-            { pos -> removeFav(pos) },
-            { pos -> viewRowDetail(pos) },
-            isLandlord,
-            isLogin,
-            { redirectLogin() },
-            user!!.showList()
-        )
+//        adapter = PropertyAdapter(
+//            user!!.showList(),
+//            { pos -> addFav(pos) },
+//            { pos -> removeFav(pos) },
+//            { pos -> viewRowDetail(pos) },
+//            isLandlord,
+//            isLogin,
+//            { redirectLogin() },
+//            user!!.showList()
+//        )
 
         // ----- data for recycle view
         binding.rvProperties.adapter = adapter

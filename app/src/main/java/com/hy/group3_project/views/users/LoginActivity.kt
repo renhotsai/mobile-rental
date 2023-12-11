@@ -1,8 +1,12 @@
 package com.hy.group3_project.views.users
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.gson.Gson
 import com.hy.group3_project.models.enums.LoginStatus
 import com.hy.group3_project.BaseActivity
@@ -10,7 +14,9 @@ import com.hy.group3_project.databinding.ActivityLoginBinding
 
 
 class LoginActivity : BaseActivity() {
+    private val TAG = "LOGIN_ACTIVITY";
     lateinit var binding: ActivityLoginBinding
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -18,6 +24,7 @@ class LoginActivity : BaseActivity() {
 
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
+        auth = Firebase.auth
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -58,32 +65,44 @@ class LoginActivity : BaseActivity() {
         //find email in user list
         val email = binding.etEmail.text.toString()
         val password = binding.etPassword.text.toString()
-        val user = userList.find { it.email == email }
-        if (user == null) {
-            Toast.makeText(this@LoginActivity, "Email not registered", Toast.LENGTH_LONG).show()
-            return
-        }
-        val loginStatus = user.login(email, password)
-        if (loginStatus == LoginStatus.Success) {
-            val gson = Gson()
-            val userJson = gson.toJson(user)
-            prefEditor.putString("KEY_USER", userJson)
-            prefEditor.apply()
 
-            Toast.makeText(this@LoginActivity, "Login $loginStatus", Toast.LENGTH_LONG).show()
-            finish()
-        } else {
-            when (loginStatus) {
-                LoginStatus.PasswordError -> {
-                    Toast.makeText(this@LoginActivity, "Password Error", Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                else -> {
-                    Toast.makeText(this@LoginActivity, "Unknown Error", Toast.LENGTH_LONG).show()
-                    return
-                }
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { authResult ->
+                // Sign in success, update UI with signed-in user's information
+                Log.d(TAG, "login successful")
+                finish()
             }
-        }
+            .addOnFailureListener { exception ->
+                // Sign in fails, displays a message to the user
+                Log.e(TAG, "signInWithEmail:failure", exception)
+            }
+
+//        val user = userList.find { it.email == email }
+//        if (user == null) {
+//            Toast.makeText(this@LoginActivity, "Email not registered", Toast.LENGTH_LONG).show()
+//            return
+//        }
+//        val loginStatus = user.login(email, password)
+//        if (loginStatus == LoginStatus.Success) {
+//            val gson = Gson()
+//            val userJson = gson.toJson(user)
+//            prefEditor.putString("KEY_USER", userJson)
+//            prefEditor.apply()
+//
+//            Toast.makeText(this@LoginActivity, "Login $loginStatus", Toast.LENGTH_LONG).show()
+//            finish()
+//        } else {
+//            when (loginStatus) {
+//                LoginStatus.PasswordError -> {
+//                    Toast.makeText(this@LoginActivity, "Password Error", Toast.LENGTH_LONG).show()
+//                    return
+//                }
+//
+//                else -> {
+//                    Toast.makeText(this@LoginActivity, "Unknown Error", Toast.LENGTH_LONG).show()
+//                    return
+//                }
+//            }
+//        }
     }
 }

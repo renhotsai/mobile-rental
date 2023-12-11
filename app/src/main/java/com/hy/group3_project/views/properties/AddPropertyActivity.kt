@@ -72,10 +72,10 @@ class AddPropertyActivity : BaseActivity() {
             propertyRepository.addPropertyToDB(propertyToAdd)
 
             var userList = getUserList()
-            var user = userList.find { it.email == user!!.email }
+//            var user = userList.find { it.email == user!!.email }
 
             user!!.addList(propertyToAdd)
-            updateData(user, userList)
+//            updateData(user, userList)
             // Start the ShowPropertyActivity
             val showPropertyIntent =
                 Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)

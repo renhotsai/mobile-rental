@@ -35,7 +35,7 @@ class ShowAcctActivity : BaseActivity() {
     private fun setAcctInfo() {
         checkLogin()
         if (user != null) {
-            binding.tvEmail.text = user!!.email
+//            binding.tvEmail.text = user!!.email
             binding.tvFirstName.text = user!!.firstName
             binding.tvLastName.text = user!!.lastName
         }

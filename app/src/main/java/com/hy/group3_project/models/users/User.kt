@@ -5,28 +5,29 @@ import com.hy.group3_project.models.enums.EditAccountStatus
 import com.hy.group3_project.models.enums.EditPasswordStatus
 import com.hy.group3_project.models.enums.LoginStatus
 import com.hy.group3_project.models.enums.ResponseEnum
-import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
 import java.io.Serializable
+import java.util.UUID
 
 
 class User(
+    var id:String = UUID.randomUUID().toString(),
     var firstName: String,
     var lastName: String,
-    var email: String,
-    var role: Roles,
-    private var password: String
+    var role: String,
 
 ): Serializable {
+
     private var propertyList:MutableList<Property> = mutableListOf()
 
-    fun login(email: String, password: String): LoginStatus {
-        if (this.email == email && this.password == password) {
-            return LoginStatus.Success
-        } else {
-            return LoginStatus.PasswordError
-        }
-    }
+//    fun login(email: String, password: String): LoginStatus {
+//
+//        if (this.email == email && this.password == password) {
+//            return LoginStatus.Success
+//        } else {
+//            return LoginStatus.PasswordError
+//        }
+//    }
     fun changePassword(
         currPassword: String,
         newPassword: String,
@@ -44,15 +45,16 @@ class User(
         }
 
         //check password
-        if (currPassword != this.password) {
-            return EditPasswordStatus.CurrentPasswordWrong
-        }
-        if (newPassword != confirmPassword) {
-            return EditPasswordStatus.ConfirmPasswordDifferent
-        }
-
-        //save password
-        this.password = newPassword
+//        if (currPassword != this.password) {
+//            return EditPasswordStatus.CurrentPasswordWrong
+//        }
+//        if (newPassword != confirmPassword) {
+//            return EditPasswordStatus.ConfirmPasswordDifferent
+//        }
+//
+//        //save password
+//        this.password = newPassword
+//        return EditPasswordStatus.Success
         return EditPasswordStatus.Success
     }
 
@@ -63,9 +65,9 @@ class User(
         if (!lastName.isNullOrEmpty()) {
             this.lastName = lastName
         }
-        if (!email.isNullOrEmpty()) {
-            this.email = email
-        }
+//        if (!email.isNullOrEmpty()) {
+//            this.email = email
+//        }
         return EditAccountStatus.Success
     }
     fun showList(): MutableList<Property> {
@@ -74,9 +76,9 @@ class User(
 
     fun addList(item: Property): ResponseEnum {
         return try {
-            if(this.propertyList ==null){
-                this.propertyList = mutableListOf<Property>()
-            }
+//            if(this.propertyList ==null){
+//                this.propertyList = mutableListOf<Property>()
+//            }
             item.isFavourite = true
             this.propertyList.add(item)
             ResponseEnum.Success
@@ -99,6 +101,6 @@ class User(
     }
 
     override fun toString(): String {
-        return "User(firstName='$firstName', lastName='$lastName', email='$email', role=$role, password='$password', propertyList=$propertyList)"
+        return "User(firstName='$firstName', lastName='$lastName', propertyList=$propertyList)"
     }
 }
