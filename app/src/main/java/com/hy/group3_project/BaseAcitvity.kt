@@ -32,7 +32,7 @@ import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {
-    private var TAG = "BASE_ACTIVITY"
+    private var TAG = this.javaClass.simpleName
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
     var user: User? = null
@@ -286,10 +286,7 @@ open class BaseActivity : AppCompatActivity() {
             var userList = getUserList()
             var user = userList.find { it.id == user!!.id }
 
-            Log.d("UserList", "$user")
             user!!.addList(selectedProperty)
-
-            Log.d("UserList", "$user")
             updateData(user, userList)
         }
     }
@@ -300,11 +297,9 @@ open class BaseActivity : AppCompatActivity() {
             var userList = getUserList()
             var user = userList.find { it.id == user!!.id }
 
-            Log.d("UserList", "$user")
             val propertyId = propertyList[position].id
             user!!.removeList(propertyId)
 
-            Log.d("UserList", "$user")
             updateData(user, userList)
         }
     }
@@ -318,10 +313,9 @@ open class BaseActivity : AppCompatActivity() {
         prefEditor.putString("KEY_USERLIST", userListJson)
 
         prefEditor.apply()
-        Log.d("UserList", "$userJson")
     }
 
-    fun getLatLng(address: String): Address? {
+    fun getAddress(address: String): Address? {
         try {
             val geocoder = Geocoder(this, Locale.getDefault())
             val searchResults = geocoder.getFromLocationName(address, 1)

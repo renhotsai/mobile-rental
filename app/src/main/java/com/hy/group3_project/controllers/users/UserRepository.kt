@@ -8,7 +8,7 @@ import com.google.firebase.firestore.firestore
 import com.hy.group3_project.models.users.User
 
 class UserRepository(private val context: Context) {
-    private val TAG = "USER_REPOSITORY";
+    private val TAG = this.javaClass.simpleName
     private val db = Firebase.firestore
 
     private val COLLECTION_USERS = "Users"

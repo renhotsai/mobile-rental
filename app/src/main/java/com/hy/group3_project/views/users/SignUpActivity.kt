@@ -7,16 +7,15 @@ import android.widget.Toast
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.google.gson.Gson
+import com.hy.group3_project.BaseActivity
+import com.hy.group3_project.controllers.users.UserRepository
+import com.hy.group3_project.databinding.ActivitySignUpBinding
 import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.users.User
-import com.hy.group3_project.BaseActivity
-import com.hy.group3_project.databinding.ActivitySignUpBinding
-import com.hy.group3_project.controllers.users.UserRepository
 
 
 class SignUpActivity : BaseActivity() {
-    private val TAG = "SIGN_UP_ACTIVITY";
+    private val TAG = this.javaClass.simpleName
     lateinit var binding: ActivitySignUpBinding
 //    private lateinit var adapter: UserAdapter
 //    private var datasource:MutableList<User> = mutableListOf()

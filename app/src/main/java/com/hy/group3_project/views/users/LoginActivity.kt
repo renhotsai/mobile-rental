@@ -3,18 +3,15 @@ package com.hy.group3_project.views.users
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
-import android.widget.Toast
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.google.gson.Gson
-import com.hy.group3_project.models.enums.LoginStatus
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityLoginBinding
 
 
 class LoginActivity : BaseActivity() {
-    private val TAG = "LOGIN_ACTIVITY";
+    private val TAG = this.javaClass.simpleName
     lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
