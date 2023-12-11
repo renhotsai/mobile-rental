@@ -2,6 +2,8 @@ package com.hy.group3_project
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -27,6 +29,7 @@ import com.hy.group3_project.views.users.FavoriteActivity
 import com.hy.group3_project.views.users.LoginActivity
 import com.hy.group3_project.views.users.ShowAcctActivity
 import com.hy.group3_project.views.users.SignUpActivity
+import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {
     private var TAG = "BASE_ACTIVITY"
@@ -66,7 +69,7 @@ open class BaseActivity : AppCompatActivity() {
 
         this.propertyRepository = PropertyRepository(applicationContext)
 
-        createTestUser()
+        //createTestUser()
         checkLogin()
     }
 
@@ -316,5 +319,25 @@ open class BaseActivity : AppCompatActivity() {
 
         prefEditor.apply()
         Log.d("UserList", "$userJson")
+    }
+
+    fun getLatLng(address: String): Address? {
+        try {
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val searchResults = geocoder.getFromLocationName(address, 1)
+            if (searchResults == null) {
+                Log.d(TAG, "searchResults is null")
+                return null
+            }
+            if (searchResults.size > 0) {
+                val foundLocation = searchResults[0]
+                Log.d(TAG, "Coordinates are: ${foundLocation.latitude}, ${foundLocation.longitude}")
+                return foundLocation
+            }
+            return null
+        } catch (ex: Exception) {
+            Log.e(TAG, ex.toString())
+            return null
+        }
     }
 }

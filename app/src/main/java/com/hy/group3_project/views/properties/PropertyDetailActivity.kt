@@ -3,17 +3,16 @@ package com.hy.group3_project.views.properties
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
-import com.hy.group3_project.models.enums.Roles
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 
 class PropertyDetailActivity : BaseActivity() {
+    val TAG = this.localClassName
     lateinit var binding: ActivityPropertyDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,24 +34,10 @@ class PropertyDetailActivity : BaseActivity() {
         setSupportActionBar(this.binding.tbOptionMenu)
 
         val propertyId = intent.getStringExtra("PROPERTY_ID")!!
-        Log.d("FUCK", propertyId)
-        Log.d("FUCK", propertyList.toString())
         lifecycleScope.launch {
             val selectedProperty = propertyRepository.findProperty(propertyId)
 
-            if (isLogin) {
-                val property = user!!.showList().find {
-                    it.id == propertyId
-                }
-                if (property != null && user!!.role == Roles.Landlord) {
-                    binding.btnUpdate.visibility = View.VISIBLE
-                    binding.btnDelete.visibility = View.VISIBLE
-                }
-            }
-
-
             if (selectedProperty != null) {
-
                 val formattedPrice =
                     NumberFormat.getCurrencyInstance().format(selectedProperty.price)
                 binding.propertyPrice.text = formattedPrice
@@ -73,6 +58,10 @@ class PropertyDetailActivity : BaseActivity() {
                     binding.availability.text = "Available"
                 } else {
                     binding.availability.text = "Not available"
+                }
+                val latLng = getLatLng(selectedProperty.address)
+                if (latLng != null) {
+
                 }
             }
         }
