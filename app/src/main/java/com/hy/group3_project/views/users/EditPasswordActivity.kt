@@ -58,7 +58,7 @@ class EditPasswordActivity : BaseActivity() {
         // find user list
         val userList = getUserList()
         //find user in user list
-        user = userList.find { it.email == user!!.email }!!
+        user = userList.find { it.id == user!!.id }!!
 
         val changePasswordStatus = user!!.changePassword(
             etCurrPassword.text.toString(),

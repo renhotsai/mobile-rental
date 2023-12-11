@@ -1,18 +1,28 @@
 package com.hy.group3_project.views.users
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.users.User
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivitySignUpBinding
+import com.hy.group3_project.controllers.users.UserRepository
 
 
 class SignUpActivity : BaseActivity() {
+    private val TAG = "SIGN_UP_ACTIVITY";
     lateinit var binding: ActivitySignUpBinding
+//    private lateinit var adapter: UserAdapter
+//    private var datasource:MutableList<User> = mutableListOf()
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userRepository: UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -20,9 +30,11 @@ class SignUpActivity : BaseActivity() {
 
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
-
+        this.userRepository = UserRepository(applicationContext)
+        auth = Firebase.auth
         binding.btnSignUp.setOnClickListener {
             signup()
+
         }
         binding.tvLogin.setOnClickListener {
             redirectLogin()
@@ -38,7 +50,7 @@ class SignUpActivity : BaseActivity() {
     }
 
     private fun signup() {
-        val gson = Gson()
+//        val gson = Gson()
         val role = findViewById<RadioButton>(binding.rgRoles.checkedRadioButtonId).text.toString()
         val etFirstName = binding.etFirstName
         val etLastName = binding.etLastName
@@ -46,6 +58,7 @@ class SignUpActivity : BaseActivity() {
         val etPassword = binding.etPassword
         val etConfirmPassword = binding.etConfirmPassword
         val isReadPrivacy = binding.cbPrivacy.isChecked
+
 
         //check privacy
         if (!isReadPrivacy) {
@@ -67,19 +80,7 @@ class SignUpActivity : BaseActivity() {
         }
 
         //check email exist
-        var userList: MutableList<User> = mutableListOf()
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-        if (userListFromSP != null) {
-            val typeToken = object : TypeToken<MutableList<User>>() {}.type
-            userList = gson.fromJson<MutableList<User>>(userListFromSP, typeToken)
-            val user = userList.find {
-                it.email == etEmail.text.toString()
-            }
-            if (user != null) {
-                Toast.makeText(this@SignUpActivity, "Email exist.", Toast.LENGTH_LONG).show()
-                return
-            }
-        }
+
 
         //check password == confirmPassword
         if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
@@ -98,26 +99,40 @@ class SignUpActivity : BaseActivity() {
             Roles.Tenant
         }
 
-        val newUser = User(
-            etFirstName.text.toString(),
-            etLastName.text.toString(),
-            etEmail.text.toString(),
-            roleAsEnum,
-            etPassword.text.toString(),
-        )
-        userList.add(newUser)
 
-        // storage list
-        val userListJson = gson.toJson(userList)
-        prefEditor.putString("KEY_USERLIST", userListJson)
+        auth.createUserWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
+            .addOnSuccessListener { authResult ->
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(TAG, "createUserWithEmail:success")
+                val user = authResult.user
+                val newUser = User(
+                    user!!.uid,
+                    etFirstName.text.toString(),
+                    etLastName.text.toString(),
+                    roleAsEnum.toString(),
+                )
 
-        // storage user
-        newUser.login(etEmail.text.toString(), etPassword.text.toString())
-        val userJson = gson.toJson(newUser)
-        prefEditor.putString("KEY_USER", userJson)
-        prefEditor.apply()
+                userRepository.addUserToDB(newUser)
+                Log.d(TAG, "signup: signup succeed")
+            }
+            .addOnFailureListener { exception ->
+
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "createUserWithEmail:failure", exception)
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed: ${exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+
+
+
+
 
         Toast.makeText(this@SignUpActivity, "Success.", Toast.LENGTH_LONG)
         finish()
     }
+
 }

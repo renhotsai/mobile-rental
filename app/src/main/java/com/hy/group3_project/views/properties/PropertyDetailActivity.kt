@@ -50,6 +50,7 @@ class PropertyDetailActivity : BaseActivity() {
                 }
             }
 
+
             if (selectedProperty != null) {
 
                 val formattedPrice =
