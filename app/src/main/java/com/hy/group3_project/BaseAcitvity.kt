@@ -216,14 +216,6 @@ open class BaseActivity : AppCompatActivity() {
         propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
 
         // Assuming you have a method to get the user's role, replace "getUserRole()" with the actual method call.
-
-        // Pass some item to PropertyDetailActivity based on user role
-        propertyDetailIntent.putExtra(
-            "BLOCK_UPDATE_DELETE",
-            "Main page block access update and delete"
-        )
-
-
         startActivity(propertyDetailIntent)
     }
 

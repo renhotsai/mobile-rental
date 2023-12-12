@@ -84,6 +84,6 @@ class User : Serializable {
     }
 
     override fun toString(): String {
-        return "User(firstName='$firstName', lastName='$lastName', propertyList=$properties)"
+        return "User(id='$id', firstName='$firstName', lastName='$lastName', role='$role', properties=$properties)"
     }
 }
