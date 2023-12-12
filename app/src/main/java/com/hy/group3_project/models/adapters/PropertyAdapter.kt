@@ -122,9 +122,9 @@ class PropertyAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateUserPropertyList(list:MutableList<Property>){
+    fun updateUserPropertyList(list: List<Property>){
         Log.d(TAG,"list: $list")
-        propertyList = list
+        propertyList = list.toMutableList()
         notifyDataSetChanged()
     }
 }
