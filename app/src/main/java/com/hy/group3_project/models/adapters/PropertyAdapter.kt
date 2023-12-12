@@ -1,5 +1,6 @@
 package com.hy.group3_project.models.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,21 +9,26 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.hy.group3_project.R
+import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
+import com.hy.group3_project.models.users.User
 import java.text.NumberFormat
 
 
 class PropertyAdapter(
-    private var propertyList: MutableList<Property>,
+    var propertyList: MutableList<Property>,
     var addFavHandler: (Int) -> Unit,
     var removeFavHandler: (Int) -> Unit,
     var showDetailViewHandler: (Int) -> Unit,
-    var isLandlord: Boolean,
-    var isLogin: Boolean,
     var redirectLogin: () -> Unit,
-    private var favoriteList: MutableList<Property>?,
+    var user: User?,
 ) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+    val TAG = this.javaClass.simpleName
+    var auth = Firebase.auth
+
     inner class PropertyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
@@ -83,40 +89,42 @@ class PropertyAdapter(
             favToggle.isChecked = true
         }
 
-        if (favoriteList != null) {
-            if (favoriteList!!.find { it.id == propertyList[position].id } != null) {
+        if (user != null) {
+            if (user!!.showList()!!.find { it == propertyList[position].id } != null) {
                 favToggle.isChecked = true
             }
         }
 
 
-        if (isLandlord) {
-            favToggle.isVisible = false
-        } else {
-            favToggle.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    if (!isLogin) {
-                        redirectLogin()
-                    } else {
-                        addFavHandler(position)
-                    }
+        favToggle.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                Log.d(TAG, auth.currentUser.toString())
+                if (auth.currentUser == null) {
+                    redirectLogin()
                 } else {
-                    removeFavHandler(position)
+                    addFavHandler(position)
                 }
+            } else {
+                removeFavHandler(position)
+            }
+        }
+
+        if (auth.currentUser != null) {
+            Log.d(TAG, "$user")
+            if (user!!.role == Roles.Landlord.toString()) {
+                favToggle.isVisible = false
             }
         }
     }
 
-    fun updatePropertyDataset(newList: List<Property>?, newFavoriteList:List<Property>?) {
-        propertyList.clear()
-        newList?.let {
-            propertyList.addAll(it)
-        }
+    fun updateUser(newUser: User?) {
+        user = newUser
+        notifyDataSetChanged()
+    }
 
-        favoriteList?.clear()
-        newFavoriteList?.let{
-            favoriteList?.addAll(it)
-        }
+    fun updateUserPropertyList(list:MutableList<Property>){
+        Log.d(TAG,"list: $list")
+        propertyList = list
         notifyDataSetChanged()
     }
 }

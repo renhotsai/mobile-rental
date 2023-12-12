@@ -22,7 +22,6 @@ import java.text.NumberFormat
 
 
 class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
-    val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityPropertyDetailBinding
     private var mMap: GoogleMap? = null
     private var selectedProperty: Property? = null

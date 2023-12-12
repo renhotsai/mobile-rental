@@ -3,35 +3,35 @@ package com.hy.group3_project.models.users
 import android.util.Log
 import com.hy.group3_project.models.enums.EditAccountStatus
 import com.hy.group3_project.models.enums.EditPasswordStatus
-import com.hy.group3_project.models.enums.LoginStatus
 import com.hy.group3_project.models.enums.ResponseEnum
-import com.hy.group3_project.models.properties.Property
 import java.io.Serializable
-import java.util.UUID
 
 
-class User(
-    var id:String = UUID.randomUUID().toString(),
-    var firstName: String,
-    var lastName: String,
-    var role: String,
+class User : Serializable {
 
-): Serializable {
+    lateinit var id: String
+    lateinit var firstName: String
+    lateinit var lastName: String
+    lateinit var role: String
+    private var propertyList: MutableList<String> = mutableListOf()
 
-    private var propertyList:MutableList<Property> = mutableListOf()
+    constructor()
+    constructor(
+        id: String,
+        firstName: String,
+        lastName: String,
+        role: String,
+        ){
+        this.id= id
+        this.firstName = firstName
+        this.lastName = lastName
+        this.role = role
+    }
 
-//    fun login(email: String, password: String): LoginStatus {
-//
-//        if (this.email == email && this.password == password) {
-//            return LoginStatus.Success
-//        } else {
-//            return LoginStatus.PasswordError
-//        }
-//    }
     fun changePassword(
         currPassword: String,
         newPassword: String,
-        confirmPassword: String
+        confirmPassword: String,
     ): EditPasswordStatus {
         //check password is empty or null
         if (currPassword.isNullOrEmpty()) {
@@ -70,32 +70,29 @@ class User(
 //        }
         return EditAccountStatus.Success
     }
-    fun showList(): MutableList<Property> {
+
+    fun showList(): MutableList<String> {
         return this.propertyList
     }
 
-    fun addList(item: Property): ResponseEnum {
+    fun addList(item: String): ResponseEnum {
         return try {
-//            if(this.propertyList ==null){
-//                this.propertyList = mutableListOf<Property>()
-//            }
-            item.isFavourite = true
             this.propertyList.add(item)
             ResponseEnum.Success
-        } catch (ex:Exception){
-            Log.e("Tenant","$ex")
+        } catch (ex: Exception) {
+            Log.e("Tenant", "$ex")
             ResponseEnum.Fail
         }
     }
 
-    fun removeList(propertyId:String): ResponseEnum {
-        try{
-            val property = propertyList.find { it.id == propertyId }
+    fun removeList(propertyId: String): ResponseEnum {
+        try {
+            val property = propertyList.find { it == propertyId }
             val index = propertyList.indexOf(property)
             this.propertyList.removeAt(index)
             return ResponseEnum.Success
-        }catch (ex:Exception){
-            Log.e("Tenant","$ex")
+        } catch (ex: Exception) {
+            Log.e("Tenant", "$ex")
             return ResponseEnum.Fail
         }
     }

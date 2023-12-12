@@ -4,10 +4,10 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import com.google.gson.Gson
-import com.hy.group3_project.models.enums.EditAccountStatus
-import com.hy.group3_project.models.users.User
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityEditAcctInfoBinding
+import com.hy.group3_project.models.enums.EditAccountStatus
+import com.hy.group3_project.models.users.User
 
 
 class EditAcctInfoActivity : BaseActivity() {
@@ -48,10 +48,6 @@ class EditAcctInfoActivity : BaseActivity() {
         val etEmail = binding.etEmail.text.toString()
 
         val gson = Gson()
-        // find user list
-        val userList = getUserList()
-        //find user in user list
-        user = userList.find { it.id == user!!.id }!!
 
         //update user in user list
         val changeAcctInfoStatus =
@@ -66,8 +62,6 @@ class EditAcctInfoActivity : BaseActivity() {
             val userJson = gson.toJson(user)
             prefEditor.putString("KEY_USER", userJson)
 
-            val userListJson = gson.toJson(userList)
-            prefEditor.putString("KEY_USERLIST", userListJson)
             prefEditor.apply()
             finish()
         }else{
