@@ -1,6 +1,6 @@
 package com.hy.group3_project.models.properties
 
-class FilterData(
+data class FilterData(
     val propertyType: String?,
     val beds: String?,
     val baths: String?,

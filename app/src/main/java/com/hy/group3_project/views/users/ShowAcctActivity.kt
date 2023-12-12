@@ -2,9 +2,9 @@ package com.hy.group3_project.views.users
 
 import android.os.Build
 import android.os.Bundle
-import com.hy.group3_project.models.users.User
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowAcctBinding
+import com.hy.group3_project.models.users.User
 
 class ShowAcctActivity : BaseActivity() {
     private lateinit var binding: ActivityShowAcctBinding

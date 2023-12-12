@@ -2,11 +2,13 @@ package com.hy.group3_project.views.properties
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowPropertyBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
+import com.hy.group3_project.models.properties.Property
 
 class ShowPropertyActivity : BaseActivity() {
 
@@ -21,16 +23,19 @@ class ShowPropertyActivity : BaseActivity() {
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
+        Log.d(TAG, user.toString())
+
+        val userPropertyList = user!!.showList()
+        var mutableListOf: MutableList<Property> = mutableListOf()
+        propertyRepository.getPropertiesWithId(userPropertyList)
         // Setup adapter
         adapter = PropertyAdapter(
-            user!!.showList(),
-            {pos-> addFav(pos) },
-            {pos-> removeFav(pos)},
-            {pos->viewRowDetail(pos)},
-            isLandlord,
-            isLogin,
+            propertyList,
+            { pos -> addToUserList(pos) },
+            { pos -> removeFromUserList(pos) },
+            { pos -> viewRowDetail(pos) },
             { redirectLogin() },
-            user!!.showList()
+            user
         )
 
         // Setup RecyclerView
@@ -47,14 +52,10 @@ class ShowPropertyActivity : BaseActivity() {
     }
 
 
-
     // Helper function to retrieve properties from SharedPreferences
     override fun onResume() {
         super.onResume()
-
-        propertyList.clear()
-        propertyList.addAll(user!!.showList())
-        adapter.notifyDataSetChanged()
-
+        adapter.updateUser(user)
+        loadUserData()
     }
 }

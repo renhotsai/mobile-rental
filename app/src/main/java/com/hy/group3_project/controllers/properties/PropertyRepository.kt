@@ -36,6 +36,7 @@ class PropertyRepository(private val context: Context) {
     var FIELD_PROPERTY_LIST = "propertyList"
 
     var allProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
+    var userProperties:MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
 
 
 //    private var loggedInUserEmail = ""
@@ -150,8 +151,7 @@ class PropertyRepository(private val context: Context) {
         }
     }
 
-
-     suspend fun findProperty(propertyId: String):Property? {
+    suspend fun findProperty(propertyId: String):Property? {
         return try {
             val documentSnapshot = db.collection(COLLECTION_PROPERTIES)
                 .document(propertyId)
@@ -204,6 +204,67 @@ class PropertyRepository(private val context: Context) {
                 }
         } catch (ex: Exception) {
             Log.e(TAG, "deleteProperty: Unable to delete expense due to exception : $ex")
+        }
+    }
+
+    fun getPropertiesWithId(userPropertyList: MutableList<String>) {
+        try {
+            db.collection(COLLECTION_PROPERTIES)
+                .whereIn(FIELD_ID,userPropertyList)
+                .addSnapshotListener(EventListener { result, error ->
+                    if (error != null) {
+                        Log.e(
+                            TAG,
+                            "getPropertiesWithId: Listening to Expenses collection failed due to error : $error",
+                        )
+                        return@EventListener
+                    }
+
+                    if (result != null) {
+                        Log.d(
+                            TAG,
+                            "getPropertiesWithId: Number of documents retrieved : ${result.size()}"
+                        )
+
+                        val tempList: MutableList<Property> = ArrayList<Property>()
+
+                        for (docChanges in result.documentChanges) {
+
+                            val currentDocument: Property =
+                                docChanges.document.toObject(Property::class.java)
+                            Log.d(
+                                TAG, "getPropertiesWithId: currentDocument : $currentDocument."
+
+                            )
+
+                            when (docChanges.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    //do necessary changes to your local list of objects
+                                    tempList.add(currentDocument)
+                                }
+
+                                DocumentChange.Type.MODIFIED -> {
+
+                                }
+
+                                DocumentChange.Type.REMOVED -> {
+
+                                }
+                            }
+                        }//for
+                        Log.d(TAG, "getPropertiesWithId: tempList : $tempList")
+                        //replace the value in allExpenses
+
+                        userProperties.postValue(tempList)
+
+                    } else {
+                        Log.d(
+                            TAG, "getPropertiesWithId: No data in the result after retrieving"
+                        )
+                    }
+                })
+        } catch (ex: java.lang.Exception) {
+            Log.e(TAG, "getPropertiesWithId: Unable to retrieve all expenses : $ex")
         }
     }
 }
