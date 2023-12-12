@@ -13,7 +13,7 @@ import com.hy.group3_project.databinding.ActivityLoginBinding
 class LoginActivity : BaseActivity() {
     private val TAG = this.javaClass.simpleName
     lateinit var binding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
+//    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -45,6 +45,7 @@ class LoginActivity : BaseActivity() {
 
     }
     private fun login() {
+
         //check empty values
         val editTexts = listOf<EditText>(binding.etEmail, binding.etPassword)
         var hasEmptyValues = false
@@ -54,6 +55,7 @@ class LoginActivity : BaseActivity() {
                 hasEmptyValues = true
             }
         }
+
         if (hasEmptyValues) {
             return
         }
@@ -66,6 +68,7 @@ class LoginActivity : BaseActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 // Sign in success, update UI with signed-in user's information
+
                 Log.d(TAG, "login successful")
                 finish()
             }

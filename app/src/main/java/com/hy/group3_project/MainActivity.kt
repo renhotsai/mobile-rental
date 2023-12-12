@@ -1,25 +1,43 @@
 package com.hy.group3_project
 
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
 import com.hy.group3_project.views.MyPopup
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var navigationView: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        toolbar = binding.tbOptionMenu
+        setSupportActionBar(toolbar)
         // set option menu
-        setSupportActionBar(this.binding.tbOptionMenu)
+        drawerLayout = binding.rootLayout
+        navigationView = binding.navView
+        navigationView.setNavigationItemSelectedListener(this)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, new )
+//        }
         this.propertyRepository = PropertyRepository(applicationContext)
 
 //        if (user != null) {
@@ -40,21 +58,21 @@ class MainActivity : BaseActivity() {
         )
 
         // ----- data for recycle view
-        binding.rvProperties.adapter = adapter
-        binding.rvProperties.layoutManager = LinearLayoutManager(this)
-        binding.rvProperties.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-
-        // -- filter functionality
-        val myPopup = MyPopup(this)
-        binding.filterBtn.setOnClickListener() {
-            MyPopup(this)
-            myPopup.show()
-        }
+//        binding.rvProperties.adapter = adapter
+//        binding.rvProperties.layoutManager = LinearLayoutManager(this)
+//        binding.rvProperties.addItemDecoration(
+//            DividerItemDecoration(
+//                this,
+//                LinearLayoutManager.VERTICAL
+//            )
+//        )
+//
+//        // -- filter functionality
+//        val myPopup = MyPopup(this)
+//        binding.filterBtn.setOnClickListener() {
+//            MyPopup(this)
+//            myPopup.show()
+//        }
 
         // -- Search functionality
 //        binding.searchButton.setOnClickListener() {
@@ -71,5 +89,9 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadAllData()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        TODO("Not yet implemented")
     }
 }
