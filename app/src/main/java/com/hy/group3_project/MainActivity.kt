@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
@@ -13,27 +15,17 @@ import com.hy.group3_project.models.properties.FilterData
 import com.hy.group3_project.views.FilterApplyListener
 import com.hy.group3_project.views.MyPopup
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var navigationView: NavigationView
-    private lateinit var toggle: ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        toolbar = binding.tbOptionMenu
-        setSupportActionBar(toolbar)
-        // set option menu
-        drawerLayout = binding.rootLayout
-        navigationView = binding.navView
-        navigationView.setNavigationItemSelectedListener(this)
-        toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        setSupportActionBar(this.binding.tbOptionMenu)
+
 
 //        if (savedInstanceState == null) {
 //            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, new )
@@ -52,15 +44,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         )
 
         // ----- data for recycle view
-//        binding.rvProperties.adapter = adapter
-//        binding.rvProperties.layoutManager = LinearLayoutManager(this)
-//        binding.rvProperties.addItemDecoration(
-//            DividerItemDecoration(
-//                this,
-//                LinearLayoutManager.VERTICAL
-//            )
-//        )
-//
+        binding.rvProperties.adapter = adapter
+        binding.rvProperties.layoutManager = LinearLayoutManager(this)
+        binding.rvProperties.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                LinearLayoutManager.VERTICAL
+            )
+        )
+
         // -- filter functionality
         binding.filterBtn.setOnClickListener {
             val searchField = binding.searchText
@@ -96,7 +88,5 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         loadAllData()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("Not yet implemented")
-    }
+
 }

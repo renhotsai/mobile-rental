@@ -15,6 +15,8 @@ import com.hy.group3_project.models.users.User
 
 class SignUpActivity : BaseActivity() {
     lateinit var binding: ActivitySignUpBinding
+//    private lateinit var adapter: UserAdapter
+//    private var datasource:MutableList<User> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

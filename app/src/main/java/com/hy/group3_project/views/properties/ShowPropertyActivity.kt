@@ -12,6 +12,7 @@ import com.hy.group3_project.models.properties.Property
 
 class ShowPropertyActivity : BaseActivity() {
 
+
     lateinit var binding: ActivityShowPropertyBinding
 
     // Mutable list to store properties
