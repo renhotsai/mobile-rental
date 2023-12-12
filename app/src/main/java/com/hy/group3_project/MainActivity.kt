@@ -2,12 +2,8 @@ package com.hy.group3_project
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
@@ -64,6 +60,8 @@ class MainActivity : BaseActivity() {
                     val filteredPropertiesList = propertyRepository.filterProperties(filterData)
                     // update RV
                     Log.d("Filter", "$filteredPropertiesList")
+                    adapter.updateUserPropertyList(filteredPropertiesList)
+
                 }
             }
 
@@ -72,13 +70,13 @@ class MainActivity : BaseActivity() {
 
 
         // -- Search functionality
-        binding.searchButton.setOnClickListener() {
+        binding.searchButton.setOnClickListener {
             val searchText: String = binding.searchText.text.toString()
             val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
             // Update RV
             Log.d("Filter Search", "$searchedPropertiesList")
 
-//            adapter.updatePropertyDataset(displayedProperties,favoriteList)
+            adapter.updateUserPropertyList(searchedPropertiesList)
         }
     }
 
