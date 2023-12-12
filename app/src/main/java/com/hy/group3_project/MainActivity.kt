@@ -8,6 +8,7 @@ import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
+import com.hy.group3_project.views.MyPopup
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -57,12 +58,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //            )
 //        )
 //
-//        // -- filter functionality
-//        val myPopup = MyPopup(this)
-//        binding.filterBtn.setOnClickListener() {
-//            MyPopup(this)
-//            myPopup.show()
-//        }
+        // -- filter functionality
+        val myPopup = MyPopup(this)
+        binding.filterBtn.setOnClickListener() {
+            MyPopup(this)
+            myPopup.show()
+        }
 
         // -- Search functionality
 //        binding.searchButton.setOnClickListener() {
