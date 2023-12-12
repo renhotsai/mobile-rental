@@ -283,5 +283,16 @@ class PropertyRepository(private val context: Context) {
         return filteredProperties ?: emptyList()
     }
 
+    // for search
+
+    fun searchPropertiesByAddress(searchInput: String): List<Property> {
+        val filteredProperties = allProperties.value?.filter { property ->
+            property.address?.contains(searchInput, ignoreCase = true) == true
+        }
+
+        return filteredProperties ?: emptyList()
+    }
+
+
 
 }

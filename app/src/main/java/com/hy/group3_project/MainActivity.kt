@@ -69,8 +69,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             // listener to handle filter events
             myPopup.filterApplyListener = object : FilterApplyListener {
                 override fun onFilterApplied(filterData: FilterData) {
-                    val filterList = propertyRepository.filterProperties(filterData)
-                    Log.d("Filter", "$filterList")
+                    val filteredPropertiesList = propertyRepository.filterProperties(filterData)
+                    // update RV
+                    Log.d("Filter", "$filteredPropertiesList")
                 }
             }
 
@@ -79,15 +80,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
 
         // -- Search functionality
-//        binding.searchButton.setOnClickListener() {
-//            val searchText: String? = binding.searchText.text?.toString()
-//
-//            displayedProperties = displayedPropertyList.filter { property ->
-//                property.address?.contains(searchText ?: "", ignoreCase = true) == true
-//            }
-//
+        binding.searchButton.setOnClickListener() {
+            val searchText: String = binding.searchText.text.toString()
+            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
+            // Update RV
+            Log.d("Filter Search", "$searchedPropertiesList")
+
 //            adapter.updatePropertyDataset(displayedProperties,favoriteList)
-//        }
+        }
     }
 
     override fun onResume() {
