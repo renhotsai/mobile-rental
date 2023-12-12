@@ -23,4 +23,6 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
+    <string name="open_nav">Open Menu</string>
+    <string name="close_nav">Close Menu</string>
 </resources>
