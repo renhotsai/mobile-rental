@@ -19,6 +19,28 @@
         <item>2 baths</item>
         <item>2 baths+</item>
     </string-array>
+    <string-array name="property_types_with_default">
+        <item>Select Property Type</item>
+        <item>Condo</item>
+        <item>House</item>
+        <item>Basement</item>
+        <item>Apartment</item>
+    </string-array>
+    <string-array name="beds_with_default">
+        <item>Select Beds</item>
+        <item>Studio</item>
+        <item>1 bed</item>
+        <item>2 beds</item>
+        <item>3 beds</item>
+        <item>3 beds+</item>
+    </string-array>
+    <string-array name="baths_with_default">
+        <item>Select Baths</item>
+        <item>0 bath</item>
+        <item>1 bath</item>
+        <item>2 baths</item>
+        <item>2 baths+</item>
+    </string-array>
     <string-array name="pet">
         <item>Yes</item>
         <item>No</item>
