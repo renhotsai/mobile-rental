@@ -8,7 +8,12 @@ import android.widget.*
 import com.hy.group3_project.models.properties.FilterData
 import com.hy.group3_project.R
 
-class MyPopup(context: Context) {
+interface FilterApplyListener {
+    fun onFilterApplied(filterData: FilterData)
+}
+
+
+class MyPopup(context: Context, searchFieldMain: EditText) {
 
     private val dialog: AlertDialog
     private val view = LayoutInflater.from(context).inflate(R.layout.custom_popup, null)
@@ -19,23 +24,35 @@ class MyPopup(context: Context) {
     private val spinnerBaths: Spinner = view.findViewById(R.id.spinnerBaths)
     private val checkBoxPetFriendly: CheckBox = view.findViewById(R.id.checkBoxPetFriendly)
     private val checkBoxParking: CheckBox = view.findViewById(R.id.checkBoxParking)
+    private val searchFieldFilter: EditText = view.findViewById(R.id.filter_search_text)
+    private val searchFieldMain: EditText = searchFieldMain
+
     var isApplied = false
     lateinit var filterConfig: FilterData
+    var filterApplyListener: FilterApplyListener? = null
+
 
     init {
         val builder = AlertDialog.Builder(context)
 
         builder.setView(view)
+        searchFieldFilter.text = searchFieldMain.text
 
         // Handle positive button click
         builder.setPositiveButton("Apply") { _, _ ->
             isApplied = true
             filterConfig = getFilterData()
-            Log.d("Filter","${filterConfig.toString()}" )
+            filterApplyListener?.onFilterApplied(filterConfig)
         }
 
         // Handle negative button click
         builder.setNegativeButton("Cancel") { _, _ ->
+            isApplied = false
+            resetFilterFields()
+        }
+
+        // Set the OnDismissListener to handle dismiss events
+        builder.setOnDismissListener {
             isApplied = false
             resetFilterFields()
         }
@@ -54,6 +71,7 @@ class MyPopup(context: Context) {
         spinnerPropertyType.setSelection(0)
         spinnerBeds.setSelection(0)
         spinnerBaths.setSelection(0)
+        searchFieldFilter.text = null
     }
 
     // Function to retrieve filter data from UI elements
@@ -63,8 +81,9 @@ class MyPopup(context: Context) {
         val selectedBaths = getSelectedSpinnerItem(spinnerBaths)
         val isPetFriendly = checkBoxPetFriendly.isChecked
         val hasParking = checkBoxParking.isChecked
+        val searchInput = searchFieldFilter.text.toString()
 
-        return FilterData(selectedPropertyType, selectedBeds, selectedBaths, isPetFriendly, hasParking)
+        return FilterData(selectedPropertyType, selectedBeds, selectedBaths, isPetFriendly, hasParking,searchInput)
     }
 
     // Function to get selected item from a spinner

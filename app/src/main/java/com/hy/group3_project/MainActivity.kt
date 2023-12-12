@@ -1,6 +1,7 @@
 package com.hy.group3_project
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
@@ -8,6 +9,8 @@ import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
+import com.hy.group3_project.models.properties.FilterData
+import com.hy.group3_project.views.FilterApplyListener
 import com.hy.group3_project.views.MyPopup
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -59,11 +62,22 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        )
 //
         // -- filter functionality
-        val myPopup = MyPopup(this)
-        binding.filterBtn.setOnClickListener() {
-            MyPopup(this)
+        binding.filterBtn.setOnClickListener {
+            val searchField = binding.searchText
+            val myPopup = MyPopup(this, searchField)
+
+            // Set the filter apply listener to handle filter events
+            myPopup.filterApplyListener = object : FilterApplyListener {
+                override fun onFilterApplied(filterData: FilterData) {
+                    val filterList = propertyRepository.filterProperties(filterData)
+                    Log.d("Filter", "$filterList")
+
+                }
+            }
+
             myPopup.show()
         }
+
 
         // -- Search functionality
 //        binding.searchButton.setOnClickListener() {

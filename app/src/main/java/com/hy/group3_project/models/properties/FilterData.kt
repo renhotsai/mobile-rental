@@ -5,8 +5,9 @@ data class FilterData(
     val beds: String?,
     val baths: String?,
     val isPetFriendly: Boolean?,
-    val hasParking: Boolean?
+    val hasParking: Boolean?,
+    val searchField: String?
 ) {
     // Secondary constructor with default values
-    constructor() : this(null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null)
 }

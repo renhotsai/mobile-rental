@@ -7,6 +7,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.firestore
+import com.hy.group3_project.models.properties.FilterData
 import com.hy.group3_project.models.properties.Property
 import kotlinx.coroutines.tasks.await
 
@@ -267,4 +268,20 @@ class PropertyRepository(private val context: Context) {
             Log.e(TAG, "getPropertiesWithId: Unable to retrieve all expenses : $ex")
         }
     }
+
+    // for filter
+    fun filterProperties(filterData: FilterData): List<Property> {
+        val filteredProperties = allProperties.value?.filter { property ->
+            (filterData.propertyType.isNullOrBlank() || property.type == filterData.propertyType) &&
+                    (filterData.beds.isNullOrBlank() || property.beds == filterData.beds) &&
+                    (filterData.baths.isNullOrBlank() || property.baths == filterData.baths) &&
+                    (filterData.isPetFriendly == null || property.petFriendly == filterData.isPetFriendly) &&
+                    (filterData.hasParking == null || property.canParking == filterData.hasParking) &&
+                    (filterData.searchField.isNullOrBlank() || property.address?.contains(filterData.searchField, ignoreCase = true) == true)
+        }
+
+        return filteredProperties ?: emptyList()
+    }
+
+
 }

@@ -11,6 +11,13 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <EditText
+            android:id="@+id/filter_search_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:hint="Search by Location"/>
+
         <!-- Property Type -->
         <TextView
             android:layout_width="wrap_content"
