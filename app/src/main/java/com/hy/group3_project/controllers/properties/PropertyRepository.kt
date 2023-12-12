@@ -37,7 +37,7 @@ class PropertyRepository(private val context: Context) {
 
 
     var allProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
-    var userProperties:MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
+    var userProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
 
 
 //    private var loggedInUserEmail = ""
@@ -67,7 +67,6 @@ class PropertyRepository(private val context: Context) {
             data[FIELD_ADDRESS] = newProperty.address
             data[FIELD_CONTACT_INFO] = newProperty.contactInfo
             data[FIELD_AVAILABILITY] = newProperty.availability
-            data[FIELD_IS_FAVOURITE] = newProperty.isFavourite
 
             //for adding document to nested collection
             db.collection(COLLECTION_PROPERTIES).document(newProperty.id).set(data)
@@ -152,7 +151,7 @@ class PropertyRepository(private val context: Context) {
         }
     }
 
-    suspend fun findProperty(propertyId: String):Property? {
+    suspend fun findProperty(propertyId: String): Property? {
         return try {
             val documentSnapshot = db.collection(COLLECTION_PROPERTIES)
                 .document(propertyId)
@@ -181,7 +180,6 @@ class PropertyRepository(private val context: Context) {
         data[FIELD_ADDRESS] = propertyToUpdate.address
         data[FIELD_CONTACT_INFO] = propertyToUpdate.contactInfo
         data[FIELD_AVAILABILITY] = propertyToUpdate.availability
-        data[FIELD_IS_FAVOURITE] = propertyToUpdate.isFavourite
 
         try {
             db.collection(COLLECTION_PROPERTIES).document(propertyToUpdate.id).update(data)
@@ -209,63 +207,67 @@ class PropertyRepository(private val context: Context) {
     }
 
     fun getPropertiesWithId(userPropertyList: MutableList<String>) {
-        try {
-            db.collection(COLLECTION_PROPERTIES)
-                .whereIn(FIELD_ID,userPropertyList)
-                .addSnapshotListener(EventListener { result, error ->
-                    if (error != null) {
-                        Log.e(
-                            TAG,
-                            "getPropertiesWithId: Listening to Expenses collection failed due to error : $error",
-                        )
-                        return@EventListener
-                    }
+        if (userPropertyList.isNullOrEmpty()) {
+            userProperties.postValue(mutableListOf())
+        } else {
+            try {
+                db.collection(COLLECTION_PROPERTIES)
+                    .whereIn(FIELD_ID, userPropertyList)
+                    .addSnapshotListener(EventListener { result, error ->
+                        if (error != null) {
+                            Log.e(
+                                TAG,
+                                "getPropertiesWithId: Listening to Expenses collection failed due to error : $error",
+                            )
+                            return@EventListener
+                        }
 
-                    if (result != null) {
-                        Log.d(
-                            TAG,
-                            "getPropertiesWithId: Number of documents retrieved : ${result.size()}"
-                        )
-
-                        val tempList: MutableList<Property> = ArrayList<Property>()
-
-                        for (docChanges in result.documentChanges) {
-
-                            val currentDocument: Property =
-                                docChanges.document.toObject(Property::class.java)
+                        if (result != null) {
                             Log.d(
-                                TAG, "getPropertiesWithId: currentDocument : $currentDocument."
-
+                                TAG,
+                                "getPropertiesWithId: Number of documents retrieved : ${result.size()}"
                             )
 
-                            when (docChanges.type) {
-                                DocumentChange.Type.ADDED -> {
-                                    //do necessary changes to your local list of objects
-                                    tempList.add(currentDocument)
+                            val tempList: MutableList<Property> = ArrayList<Property>()
+
+                            for (docChanges in result.documentChanges) {
+
+                                val currentDocument: Property =
+                                    docChanges.document.toObject(Property::class.java)
+                                Log.d(
+                                    TAG, "getPropertiesWithId: currentDocument : $currentDocument."
+
+                                )
+
+                                when (docChanges.type) {
+                                    DocumentChange.Type.ADDED -> {
+                                        Log.d(TAG, "User property list add")
+                                        tempList.add(currentDocument)
+                                    }
+
+                                    DocumentChange.Type.MODIFIED -> {
+                                        Log.d(TAG, "User property list modified")
+                                    }
+
+                                    DocumentChange.Type.REMOVED -> {
+                                        Log.d(TAG, "User property list removed")
+                                    }
                                 }
+                            }//for
+                            Log.d(TAG, "getPropertiesWithId: tempList : $tempList")
+                            //replace the value in allExpenses
 
-                                DocumentChange.Type.MODIFIED -> {
+                            userProperties.postValue(tempList)
 
-                                }
-
-                                DocumentChange.Type.REMOVED -> {
-
-                                }
-                            }
-                        }//for
-                        Log.d(TAG, "getPropertiesWithId: tempList : $tempList")
-                        //replace the value in allExpenses
-
-                        userProperties.postValue(tempList)
-
-                    } else {
-                        Log.d(
-                            TAG, "getPropertiesWithId: No data in the result after retrieving"
-                        )
-                    }
-                })
-        } catch (ex: java.lang.Exception) {
-            Log.e(TAG, "getPropertiesWithId: Unable to retrieve all expenses : $ex")
+                        } else {
+                            Log.d(
+                                TAG, "getPropertiesWithId: No data in the result after retrieving"
+                            )
+                        }
+                    })
+            } catch (ex: java.lang.Exception) {
+                Log.e(TAG, "getPropertiesWithId: Unable to retrieve all expenses : $ex")
+            }
         }
     }
 
@@ -277,7 +279,10 @@ class PropertyRepository(private val context: Context) {
                     (filterData.baths.isNullOrBlank() || property.baths == filterData.baths) &&
                     (filterData.isPetFriendly == null || property.petFriendly == filterData.isPetFriendly) &&
                     (filterData.hasParking == null || property.canParking == filterData.hasParking) &&
-                    (filterData.searchField.isNullOrBlank() || property.address?.contains(filterData.searchField, ignoreCase = true) == true)
+                    (filterData.searchField.isNullOrBlank() || property.address?.contains(
+                        filterData.searchField,
+                        ignoreCase = true
+                    ) == true)
         }
 
         return filteredProperties ?: emptyList()
@@ -292,7 +297,6 @@ class PropertyRepository(private val context: Context) {
 
         return filteredProperties ?: emptyList()
     }
-
 
 
 }

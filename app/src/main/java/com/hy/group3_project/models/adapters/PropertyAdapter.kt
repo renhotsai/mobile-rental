@@ -85,12 +85,9 @@ class PropertyAdapter(
         propertyLocation.text = locationConcatenatedText
 
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
-        if (propertyList[position].isFavourite) {
-            favToggle.isChecked = true
-        }
 
         if (user != null) {
-            if (user!!.showList()!!.find { it == propertyList[position].id } != null) {
+            if (user!!.showList().contains(propertyList[position].id )) {
                 favToggle.isChecked = true
             }
         }
@@ -119,6 +116,7 @@ class PropertyAdapter(
 
     fun updateUser(newUser: User?) {
         user = newUser
+        Log.d(TAG,"updateUser: $user")
         notifyDataSetChanged()
     }
 

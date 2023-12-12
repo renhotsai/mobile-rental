@@ -2,12 +2,8 @@ package com.hy.group3_project
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
@@ -27,9 +23,6 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(this.binding.tbOptionMenu)
 
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, new )
-//        }
         this.propertyRepository = PropertyRepository(applicationContext)
 
         // Setup adapter
@@ -77,8 +70,6 @@ class MainActivity : BaseActivity() {
             val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
             // Update RV
             Log.d("Filter Search", "$searchedPropertiesList")
-
-//            adapter.updatePropertyDataset(displayedProperties,favoriteList)
         }
     }
 
