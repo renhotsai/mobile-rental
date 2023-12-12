@@ -19,7 +19,7 @@ class SignUpActivity : BaseActivity() {
     lateinit var binding: ActivitySignUpBinding
 //    private lateinit var adapter: UserAdapter
 //    private var datasource:MutableList<User> = mutableListOf()
-    private lateinit var auth: FirebaseAuth
+
     private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
