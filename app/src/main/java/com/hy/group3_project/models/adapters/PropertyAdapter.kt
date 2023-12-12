@@ -61,6 +61,8 @@ class PropertyAdapter(
             context.packageName
         )
 
+        val tvPropertyType = holder.itemView.findViewById<TextView>(R.id.type)
+        tvPropertyType.text = currProperty.type
 
         val ivProperty = holder.itemView.findViewById<ImageView>(R.id.listingImage)
         ivProperty.setImageResource(propertyImage)
