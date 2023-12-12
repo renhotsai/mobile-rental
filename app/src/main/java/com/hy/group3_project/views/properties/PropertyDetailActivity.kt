@@ -109,13 +109,18 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
         mMap = googleMap
     }
 
-    private fun addMarker(property:Property) {
+    private fun addMarker(property: Property) {
         if (mMap != null) {
-            val address = getAddress(property.address)!!
-            val latLng = LatLng(address.latitude, address.longitude)
-            Log.d(TAG, "Add marker $latLng")
-            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f))
-            mMap!!.addMarker(MarkerOptions().position(latLng).title(property.address))
+            val address = getAddress(property.address)
+            val latLng = address?.let { LatLng(it.latitude, it.longitude) }
+
+            if (latLng != null) {
+                Log.d(TAG, "Add marker $latLng")
+                mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f))
+                mMap!!.addMarker(MarkerOptions().position(latLng).title(property.address))
+            } else {
+                Log.e(TAG, "Failed to get valid LatLng for the address")
+            }
         }
     }
 }
