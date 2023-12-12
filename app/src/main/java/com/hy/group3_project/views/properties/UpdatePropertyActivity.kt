@@ -1,9 +1,11 @@
 package com.hy.group3_project.views.properties
 
 import android.os.Bundle
-import android.text.Editable
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
+import kotlinx.coroutines.launch
 
 class UpdatePropertyActivity : BaseActivity() {
     lateinit var binding: ActivityUpdatePropertyBinding
@@ -14,8 +16,11 @@ class UpdatePropertyActivity : BaseActivity() {
         setContentView(binding.root)
 
         val propertyId = intent.getStringExtra("PROPERTY_ID")!!
-        val selectedProperty = propertyList.find { it.id == propertyId }
-        if (selectedProperty != null) {
+
+        lifecycleScope.launch {
+            val selectedProperty = propertyRepository.findProperty(propertyId)
+
+            Log.d(TAG, selectedProperty.toString())
             if (selectedProperty != null) {
                 // Assuming you have a List of property types
                 val propertyTypesList = listOf("Condo", "House", "Basement", "Apartment")
@@ -39,18 +44,12 @@ class UpdatePropertyActivity : BaseActivity() {
                 binding.spinnerBaths.setSelection(indexOfPropertyBath)
                 binding.spinnerPet.setSelection(indexOfPropertyPet)
                 binding.spinnerParking.setSelection(indexOfPropertyParking)
+                binding.editPropertyCity.hint = selectedProperty.city
+                binding.editPropertyPrice.hint = selectedProperty.price.toString()
+                binding.editPropertyDesc.hint = selectedProperty.desc
+                binding.editPropertyAddress.hint = selectedProperty.address
+                binding.swRentAv.isChecked = selectedProperty.availability
             }
-
-
-            binding.editPropertyCity.text =
-                Editable.Factory.getInstance().newEditable(selectedProperty.city)
-            binding.editPropertyPrice.text =
-                Editable.Factory.getInstance().newEditable(selectedProperty.price.toString())
-            binding.editPropertyDesc.text =
-                Editable.Factory.getInstance().newEditable(selectedProperty.desc)
-            binding.editPropertyAddress.text =
-                Editable.Factory.getInstance().newEditable(selectedProperty.address)
-            binding.swRentAv.isChecked = selectedProperty.availability
         }
     }
 }

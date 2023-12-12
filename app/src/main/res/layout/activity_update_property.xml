@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add new property"
+            android:text="Update property"
             android:textSize="25sp"
             android:gravity="center"
             android:layout_marginTop="20dp"/>
