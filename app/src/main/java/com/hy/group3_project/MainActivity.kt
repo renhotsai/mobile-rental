@@ -66,12 +66,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             val searchField = binding.searchText
             val myPopup = MyPopup(this, searchField)
 
-            // Set the filter apply listener to handle filter events
+            // listener to handle filter events
             myPopup.filterApplyListener = object : FilterApplyListener {
                 override fun onFilterApplied(filterData: FilterData) {
                     val filterList = propertyRepository.filterProperties(filterData)
                     Log.d("Filter", "$filterList")
-
                 }
             }
 
