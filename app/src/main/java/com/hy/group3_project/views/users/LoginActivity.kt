@@ -6,6 +6,7 @@ import android.widget.EditText
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.gson.Gson
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityLoginBinding
 
@@ -68,8 +69,13 @@ class LoginActivity : BaseActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 // Sign in success, update UI with signed-in user's information
-
                 Log.d(TAG, "login successful")
+                val gson = Gson()
+                val userJson = gson.toJson(user)
+                prefEditor.putString("KEY_USER", userJson)
+                prefEditor.apply()
+
+                Log.d(TAG, "isLogin first: $isLogin")
                 finish()
             }
             .addOnFailureListener { exception ->

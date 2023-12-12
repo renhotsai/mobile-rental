@@ -34,7 +34,7 @@ import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {
-    private var TAG = this.javaClass.simpleName
+    private var TAG = "BASE_ACTIVITY"
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
     var user: User? = null
@@ -103,7 +103,7 @@ open class BaseActivity : AppCompatActivity() {
         if (firebaseUser != null) {
             // Retrieve user data from Firestore using the UID
             val userId = firebaseUser.uid
-            Log.d(TAG, "userId $userId")
+            Log.d(TAG, "isLogin second: $isLogin")
             // Replace "users" with the actual path to your users collection in Firestore
             val userDocument = FirebaseFirestore.getInstance().collection("Users").document(userId)
 
@@ -113,9 +113,7 @@ open class BaseActivity : AppCompatActivity() {
                     val role = documentSnapshot.getString("role")
                     Log.d(TAG, "Role: $role")
                     // Now you can use the role value
-                    if (!isLogin) {
-                        menuInflater.inflate(R.menu.option_menu_guest, menu)
-                    } else {
+
                         when (role) {
                             Roles.Tenant.toString() -> {
                                 menuInflater.inflate(R.menu.option_menu_tenant, menu)
@@ -125,7 +123,7 @@ open class BaseActivity : AppCompatActivity() {
                                 menuInflater.inflate(R.menu.option_menu_landlord, menu)
                             }
                         }
-                    }
+
                 } else {
                     Log.d(TAG, "It is in else ")
                 }
@@ -133,6 +131,8 @@ open class BaseActivity : AppCompatActivity() {
                 // Handle failures
                 Log.e(TAG, "Error getting document", exception)
             }
+        } else {
+            menuInflater.inflate(R.menu.option_menu_guest, menu)
         }
 //        if (isLogin) {
 //            when (user!!.role) {
@@ -233,6 +233,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        prefEditor.remove("KEY_USER")
+        prefEditor.apply()
         this.isLogin = false
         auth.signOut()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
@@ -245,9 +247,10 @@ open class BaseActivity : AppCompatActivity() {
         if (userFromSP != null) {
             this.user = gson.fromJson(userFromSP, User::class.java)
             this.isLogin = true
-            this.isLandlord = user!!.role == Roles.Landlord.toString()
+            this.isLandlord = user?.role == Roles.Landlord.toString()
         }
     }
+
 
     fun getUserList(): MutableList<User> {
         var userList = mutableListOf<User>()
