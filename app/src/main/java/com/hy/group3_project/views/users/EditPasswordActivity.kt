@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
-import com.hy.group3_project.models.enums.EditPasswordStatus
-import com.hy.group3_project.models.users.User
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityEditPasswordBinding
+import com.hy.group3_project.models.enums.EditPasswordStatus
+import com.hy.group3_project.models.users.User
 
 
 class EditPasswordActivity : BaseActivity() {
@@ -55,11 +55,6 @@ class EditPasswordActivity : BaseActivity() {
         }
 
         val gson = Gson()
-        // find user list
-        val userList = getUserList()
-        //find user in user list
-        user = userList.find { it.id == user!!.id }!!
-
         val changePasswordStatus = user!!.changePassword(
             etCurrPassword.text.toString(),
             etNewPassword.text.toString(),
@@ -68,9 +63,6 @@ class EditPasswordActivity : BaseActivity() {
         if (changePasswordStatus == EditPasswordStatus.Success) {
             val userJson = gson.toJson(user)
             prefEditor.putString("KEY_USER", userJson)
-
-            val userListJson = gson.toJson(userList)
-            prefEditor.putString("KEY_USERLIST", userListJson)
 
             prefEditor.apply()
             Toast.makeText(

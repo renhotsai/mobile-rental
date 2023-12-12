@@ -12,12 +12,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.hy.group3_project.controllers.properties.PropertyRepository
+import com.hy.group3_project.controllers.users.UserRepository
 import com.hy.group3_project.models.adapters.PropertyAdapter
 import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
@@ -34,34 +32,16 @@ import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {
-    private var TAG = this.javaClass.simpleName
+    var TAG = this.javaClass.simpleName
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
     var user: User? = null
-    var isLogin: Boolean = false
-    var isLandlord: Boolean = false
     lateinit var propertyRepository: PropertyRepository
+    lateinit var userRepository: UserRepository
     lateinit var auth: FirebaseAuth
     var propertyList: MutableList<Property> = mutableListOf()
 
     lateinit var adapter: PropertyAdapter
-
-    //test data
-//    private fun createTestUser() {
-//
-//        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-//        if (userListFromSP == null) {
-//            val userList = mutableListOf<User>(
-//                User("Judith", "Olivia", "judith@gmail.com", Roles.Tenant.toString(), "1234"),
-//                User("Michael", "Caine", "michael@gmail.com", Roles.Landlord.toString(), "1234"),
-//                User("Julie", "Andrews", "julie@gmail.com", Roles.Tenant.toString(), "1234")
-//            )
-//            val gson = Gson()
-//            val userListJson = gson.toJson(userList)
-//            prefEditor.putString("KEY_USERLIST", userListJson)
-//            prefEditor.apply()
-//        }
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -71,13 +51,16 @@ open class BaseActivity : AppCompatActivity() {
         this.prefEditor = this.sharedPreferences.edit()
 
         this.propertyRepository = PropertyRepository(applicationContext)
+        this.userRepository = UserRepository(applicationContext)
+
         auth = Firebase.auth
-        //createTestUser()
         checkLogin()
+
     }
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume")
         checkLogin()
         invalidateOptionsMenu()
     }
@@ -85,68 +68,38 @@ open class BaseActivity : AppCompatActivity() {
     fun loadAllData() {
         propertyRepository.retrieveAllProperties()
         propertyRepository.allProperties.observe(
-            this,
-            androidx.lifecycle.Observer { propertiesList ->
-                if (propertiesList != null) {
-                    propertyList.clear()
-                    propertyList.addAll(propertiesList)
-                    adapter.notifyDataSetChanged()
-                }
-            })
+            this
+        ) { propertiesList ->
+            propertyList.clear()
+            propertyList.addAll(propertiesList)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    fun loadUserData() {
+        propertyRepository.getPropertiesWithId(user!!.showList())
+        propertyRepository.userProperties.observe(this){ propertiesList ->
+            propertyList.clear()
+            propertyList.addAll(propertiesList)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        Log.d(TAG, "onCreateOptionsMenu: ")
-        Log.d(TAG, "firebase: $firebaseUser")
-
-        if (firebaseUser != null) {
-            // Retrieve user data from Firestore using the UID
-            val userId = firebaseUser.uid
-            Log.d(TAG, "userId $userId")
-            // Replace "users" with the actual path to your users collection in Firestore
-            val userDocument = FirebaseFirestore.getInstance().collection("Users").document(userId)
-
-
-            userDocument.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val role = documentSnapshot.getString("role")
-                    Log.d(TAG, "Role: $role")
-                    // Now you can use the role value
-                    if (!isLogin) {
-                        menuInflater.inflate(R.menu.option_menu_guest, menu)
-                    } else {
-                        when (role) {
-                            Roles.Tenant.toString() -> {
-                                menuInflater.inflate(R.menu.option_menu_tenant, menu)
-                            }
-
-                            Roles.Landlord.toString() -> {
-                                menuInflater.inflate(R.menu.option_menu_landlord, menu)
-                            }
-                        }
-                    }
-                } else {
-                    Log.d(TAG, "It is in else ")
+        checkLogin()
+        if (user != null) {
+            when (user!!.role) {
+                Roles.Tenant.toString() -> {
+                    menuInflater.inflate(R.menu.option_menu_tenant, menu)
                 }
-            }.addOnFailureListener { exception ->
-                // Handle failures
-                Log.e(TAG, "Error getting document", exception)
+
+                Roles.Landlord.toString() -> {
+                    menuInflater.inflate(R.menu.option_menu_landlord, menu)
+                }
             }
+        } else {
+            menuInflater.inflate(R.menu.option_menu_guest, menu)
         }
-//        if (isLogin) {
-//            when (user!!.role) {
-//                Roles.Tenant.toString() -> {
-//                    menuInflater.inflate(R.menu.option_menu_tenant, menu)
-//                }
-//
-//                Roles.Landlord.toString() -> {
-//                    menuInflater.inflate(R.menu.option_menu_landlord, menu)
-//                }
-//            }
-//        } else {
-//            menuInflater.inflate(R.menu.option_menu_guest, menu)
-//        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -233,8 +186,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        this.isLogin = false
         auth.signOut()
+        prefEditor.clear().apply()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
         redirectMain()
     }
@@ -243,21 +196,9 @@ open class BaseActivity : AppCompatActivity() {
         val gson = Gson()
         val userFromSP = sharedPreferences.getString("KEY_USER", null)
         if (userFromSP != null) {
-            this.user = gson.fromJson(userFromSP, User::class.java)
-            this.isLogin = true
-            this.isLandlord = user!!.role == Roles.Landlord.toString()
+            Log.d(TAG, "checkLogin : $userFromSP")
+            user = gson.fromJson(userFromSP, User::class.java)
         }
-    }
-
-    fun getUserList(): MutableList<User> {
-        var userList = mutableListOf<User>()
-        val gson = Gson()
-        val userListFromSP = sharedPreferences.getString("KEY_USERLIST", null)
-        if (userListFromSP != null) {
-            val typeToken = object : TypeToken<MutableList<User>>() {}.type
-            userList = gson.fromJson(userListFromSP, typeToken)
-        }
-        return userList
     }
 
     fun redirectMain() {
@@ -284,40 +225,39 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(propertyDetailIntent)
     }
 
-    fun addFav(position: Int) {
-        if (isLogin && !isLandlord) {
+    fun addToUserList(position: Int) {
+        if (auth.currentUser != null && user!!.role != Roles.Landlord.toString()) {
             Log.d("UserList", "Add FavList")
-            val selectedProperty: Property = propertyList[position]
-            var userList = getUserList()
-            var user = userList.find { it.id == user!!.id }
+            val propertyId = propertyList[position].id
+            user!!.addList(propertyId)
+            userRepository.updateUser(user!!)
 
-            user!!.addList(selectedProperty)
-            updateData(user, userList)
+            val gson = Gson()
+            val userJson = gson.toJson(user)
+            prefEditor.putString("KEY_USER", userJson)
+
+            prefEditor.apply()
         }
     }
 
-    fun removeFav(position: Int) {
-        if (isLogin && !isLandlord) {
+    fun removeFromUserList(position: Int) {
+        if (auth.currentUser != null && user!!.role != Roles.Landlord.toString()) {
             Log.d("UserList", "Remove FavList")
-            var userList = getUserList()
-            var user = userList.find { it.id == user!!.id }
 
             val propertyId = propertyList[position].id
-            user!!.removeList(propertyId)
+            user!!.addList(propertyId)
+            userRepository.updateUser(user!!)
 
-            updateData(user, userList)
+            val gson = Gson()
+            val userJson = gson.toJson(user)
+            prefEditor.putString("KEY_USER", userJson)
+
+            prefEditor.apply()
         }
     }
 
     fun updateData(user: User, userList: MutableList<User>) {
-        val gson = Gson()
-        val userJson = gson.toJson(user)
-        prefEditor.putString("KEY_USER", userJson)
 
-        val userListJson = gson.toJson(userList)
-        prefEditor.putString("KEY_USERLIST", userListJson)
-
-        prefEditor.apply()
     }
 
     fun getAddress(address: String): Address? {
@@ -338,5 +278,30 @@ open class BaseActivity : AppCompatActivity() {
             Log.e(TAG, ex.toString())
             return null
         }
+    }
+
+    fun userList(list: MutableList<Property>): MutableList<Property> {
+        Log.d(TAG, "user: ${user!!.showList()}, propertyList: $list ")
+        val userProperty: MutableList<Property> = mutableListOf()
+        if (!list.isNullOrEmpty()) {
+            for (id in user!!.showList()) {
+                val property = list.find { it.id == id }!!
+                userProperty.add(property)
+            }
+        }
+        return userProperty
+    }
+
+    fun prefEditorUser(user: User) {
+        val gson = Gson()
+        val userJson = gson.toJson(user)
+        prefEditor.putString("KEY_USER", userJson)
+        prefEditor.apply()
+    }
+
+    fun afterLoginAndSignup() {
+        val mainIntent = Intent(this, MainActivity::class.java)
+        startActivity(mainIntent)
+        finish()
     }
 }

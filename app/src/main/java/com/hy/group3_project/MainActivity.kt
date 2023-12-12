@@ -2,16 +2,12 @@ package com.hy.group3_project
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
-import com.hy.group3_project.views.MyPopup
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -40,21 +36,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        }
         this.propertyRepository = PropertyRepository(applicationContext)
 
-//        if (user != null) {
-//            favoriteList = user!!.showList()
-//        }
-
         // Setup adapter
 
         adapter = PropertyAdapter(
             propertyList,
-            { pos -> addFav(pos) },
-            { pos -> removeFav(pos) },
+            { pos -> addToUserList(pos) },
+            { pos -> removeFromUserList(pos) },
             { pos -> viewRowDetail(pos) },
-            isLandlord,
-            isLogin,
             { redirectLogin() },
-            propertyList
+            user
         )
 
         // ----- data for recycle view
@@ -88,6 +78,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onResume() {
         super.onResume()
+        adapter.updateUser(user)
         loadAllData()
     }
 

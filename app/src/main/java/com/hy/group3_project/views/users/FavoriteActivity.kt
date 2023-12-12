@@ -21,19 +21,17 @@ class FavoriteActivity : BaseActivity() {
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
 
+
+            propertyRepository.getPropertiesWithId(user!!.showList())
         // Setup adapter
-
-
-//        adapter = PropertyAdapter(
-//            user!!.showList(),
-//            { pos -> addFav(pos) },
-//            { pos -> removeFav(pos) },
-//            { pos -> viewRowDetail(pos) },
-//            isLandlord,
-//            isLogin,
-//            { redirectLogin() },
-//            user!!.showList()
-//        )
+        adapter = PropertyAdapter(
+            propertyList,
+            { pos -> addToUserList(pos) },
+            { pos -> removeFromUserList(pos) },
+            { pos -> viewRowDetail(pos) },
+            { redirectLogin() },
+            user
+        )
 
         // ----- data for recycle view
         binding.rvProperties.adapter = adapter
@@ -44,12 +42,14 @@ class FavoriteActivity : BaseActivity() {
                 LinearLayoutManager.VERTICAL
             )
         )
+
     }
 
     override fun onResume() {
         super.onResume()
-        propertyList.clear()
-        propertyList.addAll(user!!.showList())
-        adapter.notifyDataSetChanged()
+        adapter.updateUser(user)
+        loadUserData()
     }
+
+
 }
