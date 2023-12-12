@@ -33,7 +33,7 @@ class PropertyRepository(private val context: Context) {
     var FIELD_CONTACT_INFO = "contactInfo"
     var FIELD_AVAILABILITY = "availability"
     var FIELD_IS_FAVOURITE = "isFavourite"
-
+    var FIELD_PROPERTY_LIST = "propertyList"
 
     var allProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
     var userProperties:MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()

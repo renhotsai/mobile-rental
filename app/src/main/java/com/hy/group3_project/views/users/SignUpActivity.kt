@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.controllers.users.UserRepository
@@ -14,7 +15,12 @@ import com.hy.group3_project.models.users.User
 
 
 class SignUpActivity : BaseActivity() {
+    private val TAG = this.javaClass.simpleName
     lateinit var binding: ActivitySignUpBinding
+//    private lateinit var adapter: UserAdapter
+//    private var datasource:MutableList<User> = mutableListOf()
+
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +33,7 @@ class SignUpActivity : BaseActivity() {
         auth = Firebase.auth
         binding.btnSignUp.setOnClickListener {
             signup()
+
         }
         binding.tvLogin.setOnClickListener {
             redirectLogin()
@@ -36,7 +43,7 @@ class SignUpActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (auth.currentUser != null) {
+        if (isLogin) {
             redirectMain()
         }
     }
@@ -91,9 +98,8 @@ class SignUpActivity : BaseActivity() {
             Roles.Tenant
         }
 
-        val email = etEmail.text.toString()
-        val password = etPassword.text.toString()
-        auth.createUserWithEmailAndPassword(email, password)
+
+        auth.createUserWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
             .addOnSuccessListener { authResult ->
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "createUserWithEmail:success")
@@ -106,19 +112,27 @@ class SignUpActivity : BaseActivity() {
                 )
 
                 userRepository.addUserToDB(newUser)
-                prefEditorUser(newUser)
-                Log.d(TAG, "signup: signup succeed ${auth.currentUser}")
+                Log.d(TAG, "signup: signup succeed")
                 Toast.makeText(this@SignUpActivity, "Success.", Toast.LENGTH_LONG).show()
-                afterLoginAndSignup()
+                finish()
             }
             .addOnFailureListener { exception ->
                 // If sign in fails, display a message to the user.
-                Log.w(TAG, "createUserWithEmail:failure", exception)
+                Log.d(TAG, "createUserWithEmail:failure", exception)
                 Toast.makeText(
                     baseContext,
-                    "Authentication failed: ${exception.message}",
-                    Toast.LENGTH_LONG
+                    "${exception.message}",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
+
+
+
+
+
+
+        Toast.makeText(this@SignUpActivity, "Success.", Toast.LENGTH_LONG)
+        finish()
     }
+
 }
