@@ -13,7 +13,7 @@ class User : Serializable {
     lateinit var firstName: String
     lateinit var lastName: String
     lateinit var role: String
-    private var propertyList: MutableList<String> = mutableListOf()
+    var properties: MutableList<String> = mutableListOf()
 
     constructor()
     constructor(
@@ -44,17 +44,6 @@ class User : Serializable {
             return EditPasswordStatus.ConfirmPasswordEmpty
         }
 
-        //check password
-//        if (currPassword != this.password) {
-//            return EditPasswordStatus.CurrentPasswordWrong
-//        }
-//        if (newPassword != confirmPassword) {
-//            return EditPasswordStatus.ConfirmPasswordDifferent
-//        }
-//
-//        //save password
-//        this.password = newPassword
-//        return EditPasswordStatus.Success
         return EditPasswordStatus.Success
     }
 
@@ -65,19 +54,16 @@ class User : Serializable {
         if (!lastName.isNullOrEmpty()) {
             this.lastName = lastName
         }
-//        if (!email.isNullOrEmpty()) {
-//            this.email = email
-//        }
         return EditAccountStatus.Success
     }
 
     fun showList(): MutableList<String> {
-        return this.propertyList
+        return this.properties
     }
 
     fun addList(item: String): ResponseEnum {
         return try {
-            this.propertyList.add(item)
+            this.properties.add(item)
             ResponseEnum.Success
         } catch (ex: Exception) {
             Log.e("Tenant", "$ex")
@@ -87,9 +73,9 @@ class User : Serializable {
 
     fun removeList(propertyId: String): ResponseEnum {
         try {
-            val property = propertyList.find { it == propertyId }
-            val index = propertyList.indexOf(property)
-            this.propertyList.removeAt(index)
+            val property = properties.find { it == propertyId }
+            val index = properties.indexOf(property)
+            this.properties.removeAt(index)
             return ResponseEnum.Success
         } catch (ex: Exception) {
             Log.e("Tenant", "$ex")
@@ -98,6 +84,6 @@ class User : Serializable {
     }
 
     override fun toString(): String {
-        return "User(firstName='$firstName', lastName='$lastName', propertyList=$propertyList)"
+        return "User(id='$id', firstName='$firstName', lastName='$lastName', role='$role', properties=$properties)"
     }
 }

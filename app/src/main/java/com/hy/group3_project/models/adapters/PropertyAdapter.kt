@@ -61,6 +61,8 @@ class PropertyAdapter(
             context.packageName
         )
 
+        val tvPropertyType = holder.itemView.findViewById<TextView>(R.id.type)
+        tvPropertyType.text = currProperty.type
 
         val ivProperty = holder.itemView.findViewById<ImageView>(R.id.listingImage)
         ivProperty.setImageResource(propertyImage)
@@ -85,12 +87,9 @@ class PropertyAdapter(
         propertyLocation.text = locationConcatenatedText
 
         val favToggle = holder.itemView.findViewById<ToggleButton>(R.id.favToggle)
-        if (propertyList[position].isFavourite) {
-            favToggle.isChecked = true
-        }
 
         if (user != null) {
-            if (user!!.showList()!!.find { it == propertyList[position].id } != null) {
+            if (user!!.showList().contains(propertyList[position].id )) {
                 favToggle.isChecked = true
             }
         }
@@ -119,12 +118,13 @@ class PropertyAdapter(
 
     fun updateUser(newUser: User?) {
         user = newUser
+        Log.d(TAG,"updateUser: $user")
         notifyDataSetChanged()
     }
 
-    fun updateUserPropertyList(list:MutableList<Property>){
+    fun updateUserPropertyList(list: List<Property>){
         Log.d(TAG,"list: $list")
-        propertyList = list
+        propertyList = list.toMutableList()
         notifyDataSetChanged()
     }
 }

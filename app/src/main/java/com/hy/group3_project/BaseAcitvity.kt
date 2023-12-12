@@ -77,8 +77,10 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun loadUserData() {
+
         propertyRepository.getPropertiesWithId(user!!.showList())
         propertyRepository.userProperties.observe(this){ propertiesList ->
+            Log.d(TAG,"reload: $propertiesList")
             propertyList.clear()
             propertyList.addAll(propertiesList)
             adapter.notifyDataSetChanged()
@@ -214,14 +216,6 @@ open class BaseActivity : AppCompatActivity() {
         propertyDetailIntent.putExtra("PROPERTY_ID", selectedProperty.id)
 
         // Assuming you have a method to get the user's role, replace "getUserRole()" with the actual method call.
-
-        // Pass some item to PropertyDetailActivity based on user role
-        propertyDetailIntent.putExtra(
-            "BLOCK_UPDATE_DELETE",
-            "Main page block access update and delete"
-        )
-
-
         startActivity(propertyDetailIntent)
     }
 
@@ -242,17 +236,18 @@ open class BaseActivity : AppCompatActivity() {
 
     fun removeFromUserList(position: Int) {
         if (auth.currentUser != null && user!!.role != Roles.Landlord.toString()) {
-            Log.d("UserList", "Remove FavList")
+            Log.d(TAG, "Remove FavList")
 
             val propertyId = propertyList[position].id
-            user!!.addList(propertyId)
+            user!!.removeList(propertyId)
             userRepository.updateUser(user!!)
 
             val gson = Gson()
             val userJson = gson.toJson(user)
             prefEditor.putString("KEY_USER", userJson)
-
             prefEditor.apply()
+            adapter.updateUser(user)
+            loadUserData()
         }
     }
 

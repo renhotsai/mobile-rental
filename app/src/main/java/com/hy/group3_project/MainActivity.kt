@@ -55,9 +55,6 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, new )
-//        }
         this.propertyRepository = PropertyRepository(applicationContext)
         handleTextViewClick(binding.mapText)
         binding.mapText.setOnClickListener {
@@ -96,23 +93,29 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
 
 
         // -- filter functionality
-//        binding.filterBtn.setOnClickListener {
-//            val searchField = binding.searchText
-//            val myPopup = MyPopup(this, searchField)
-//
-//            // listener to handle filter events
-//            myPopup.filterApplyListener = object : FilterApplyListener {
-//                override fun onFilterApplied(filterData: FilterData) {
-//                    val filteredPropertiesList = propertyRepository.filterProperties(filterData)
-//                    // update RV
-//                    Log.d("Filter", "$filteredPropertiesList")
-//                }
-//            }
-//
-//            myPopup.show()
+        binding.filterBtn.setOnClickListener {
+            val searchField = binding.searchText
+            val myPopup = MyPopup(this, searchField)
+
+            // listener to handle filter events
+            myPopup.filterApplyListener = object : FilterApplyListener {
+                override fun onFilterApplied(filterData: FilterData) {
+                    val filteredPropertiesList = propertyRepository.filterProperties(filterData)
+                    // update RV
+                    adapter.updateUserPropertyList(filteredPropertiesList)
+
+                }
+            }
+
+            myPopup.show()
+        }
+
+//        binding.searchButton.setOnClickListener {
+//            val searchText: String = binding.searchText.text.toString()
+//            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
+//            // Update RV
+//            adapter.updateUserPropertyList(searchedPropertiesList)
 //        }
-
-
         // -- Search functionality
         binding.searchButton.setOnClickListener {
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
