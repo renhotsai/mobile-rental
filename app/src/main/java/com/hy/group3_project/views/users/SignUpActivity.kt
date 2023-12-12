@@ -113,14 +113,15 @@ class SignUpActivity : BaseActivity() {
 
                 userRepository.addUserToDB(newUser)
                 Log.d(TAG, "signup: signup succeed")
+                Toast.makeText(this@SignUpActivity, "Success.", Toast.LENGTH_LONG).show()
+                finish()
             }
             .addOnFailureListener { exception ->
-
                 // If sign in fails, display a message to the user.
-                Log.w(TAG, "createUserWithEmail:failure", exception)
+                Log.d(TAG, "createUserWithEmail:failure", exception)
                 Toast.makeText(
                     baseContext,
-                    "Authentication failed: ${exception.message}",
+                    "${exception.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
