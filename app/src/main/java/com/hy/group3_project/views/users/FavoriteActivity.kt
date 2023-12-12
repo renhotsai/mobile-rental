@@ -48,8 +48,6 @@ class FavoriteActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         adapter.updateUser(user)
-
+        loadUserData()
     }
-
-
 }

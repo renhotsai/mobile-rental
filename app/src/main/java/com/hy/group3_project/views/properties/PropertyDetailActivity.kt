@@ -16,6 +16,7 @@ import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.R
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityPropertyDetailBinding
+import com.hy.group3_project.models.enums.Roles
 import com.hy.group3_project.models.properties.Property
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -36,13 +37,7 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
         this.propertyRepository = PropertyRepository(applicationContext)
 //set option menu
 
-        val extraItem = intent.getStringExtra("BLOCK_UPDATE_DELETE")
 
-        if (extraItem != null) {
-            // Do something with the extra item, e.g., make a button invisible
-            binding.btnUpdate.visibility = View.INVISIBLE
-            binding.btnDelete.visibility = View.INVISIBLE
-        }
         //set option menu
 
         setSupportActionBar(this.binding.tbOptionMenu)
@@ -57,6 +52,15 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
             selectedProperty = propertyRepository.findProperty(propertyId)!!
 
             if (selectedProperty != null) {
+                if (user != null &&
+                    user?.role == Roles.Landlord.toString() &&
+                    user!!.showList().contains(selectedProperty?.id)
+                ) {
+                    // Do something with the extra item, e.g., make a button invisible
+                    binding.btnUpdate.visibility = View.VISIBLE
+                    binding.btnDelete.visibility = View.VISIBLE
+                }
+
                 val formattedPrice =
                     NumberFormat.getCurrencyInstance().format(selectedProperty!!.price)
                 binding.propertyPrice.text = formattedPrice

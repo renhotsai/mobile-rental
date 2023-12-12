@@ -16,7 +16,6 @@ class Property {
     lateinit var address: String
     lateinit var contactInfo: String
     var availability: Boolean = false
-    var isFavourite: Boolean = false
 
     constructor()
     constructor(imageFileName: String, propertyType:String, beds:String, baths:String, petFriendly:Boolean, propertyParking: Boolean,
@@ -36,6 +35,6 @@ class Property {
     }
 
     override fun toString(): String {
-        return "Property(imageName='$imageName', type='$type', beds='$beds', baths='$baths', petFriendly=$petFriendly, canParking=$canParking, price=$price, desc='$desc', city='$city', address='$address', contactInfo='$contactInfo', availability=$availability, isFavourite=$isFavourite)"
+        return "Property(id='$id', imageName='$imageName', type='$type', beds='$beds', baths='$baths', petFriendly=$petFriendly, canParking=$canParking, price=$price, desc='$desc', city='$city', address='$address', contactInfo='$contactInfo', availability=$availability)"
     }
 }

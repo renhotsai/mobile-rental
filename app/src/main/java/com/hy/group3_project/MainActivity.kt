@@ -23,9 +23,6 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(this.binding.tbOptionMenu)
 
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, new )
-//        }
         this.propertyRepository = PropertyRepository(applicationContext)
 
         // Setup adapter
