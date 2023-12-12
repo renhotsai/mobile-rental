@@ -10,8 +10,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -39,6 +41,7 @@ open class BaseActivity : AppCompatActivity() {
     var isLogin: Boolean = false
     var isLandlord: Boolean = false
     lateinit var propertyRepository: PropertyRepository
+    lateinit var auth: FirebaseAuth
     var propertyList: MutableList<Property> = mutableListOf()
 
     lateinit var adapter: PropertyAdapter
@@ -68,7 +71,7 @@ open class BaseActivity : AppCompatActivity() {
         this.prefEditor = this.sharedPreferences.edit()
 
         this.propertyRepository = PropertyRepository(applicationContext)
-
+        auth = Firebase.auth
         //createTestUser()
         checkLogin()
     }
@@ -100,28 +103,31 @@ open class BaseActivity : AppCompatActivity() {
         if (firebaseUser != null) {
             // Retrieve user data from Firestore using the UID
             val userId = firebaseUser.uid
-
+            Log.d(TAG, "userId $userId")
             // Replace "users" with the actual path to your users collection in Firestore
-            val userDocument = FirebaseFirestore.getInstance().collection("users").document(userId)
+            val userDocument = FirebaseFirestore.getInstance().collection("Users").document(userId)
+
 
             userDocument.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
-
                     val role = documentSnapshot.getString("role")
                     Log.d(TAG, "Role: $role")
                     // Now you can use the role value
-                    when (role) {
-                        Roles.Tenant.toString() -> {
-                            menuInflater.inflate(R.menu.option_menu_tenant, menu)
-                        }
+                    if (!isLogin) {
+                        menuInflater.inflate(R.menu.option_menu_guest, menu)
+                    } else {
+                        when (role) {
+                            Roles.Tenant.toString() -> {
+                                menuInflater.inflate(R.menu.option_menu_tenant, menu)
+                            }
 
-                        Roles.Landlord.toString() -> {
-                            menuInflater.inflate(R.menu.option_menu_landlord, menu)
+                            Roles.Landlord.toString() -> {
+                                menuInflater.inflate(R.menu.option_menu_landlord, menu)
+                            }
                         }
                     }
                 } else {
-
-                    menuInflater.inflate(R.menu.option_menu_guest, menu)
+                    Log.d(TAG, "It is in else ")
                 }
             }.addOnFailureListener { exception ->
                 // Handle failures
@@ -227,9 +233,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        prefEditor.remove("KEY_USER")
-        prefEditor.apply()
         this.isLogin = false
+        auth.signOut()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
         redirectMain()
     }

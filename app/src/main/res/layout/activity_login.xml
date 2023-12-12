@@ -17,33 +17,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
+        android:paddingTop="80dp"
         android:textAlignment="center"
         android:textSize="32sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/et_email"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/edtext_bg"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
         android:hint="Email"
         android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/et_password"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="PassWord"
+        android:background="@drawable/edtext_bg"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Password"
         android:inputType="textPassword" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/login_btn"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
         android:text="Login" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp">
 
         <TextView

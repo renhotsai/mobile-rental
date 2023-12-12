@@ -18,7 +18,7 @@ class UserRepository(private val context: Context) {
     private var FIELD_USER_EMAIL = "email"
     private var FIELD_USER_ROLE = "role"
     private var FIELD_USER_PASSWORD = "password"
-
+    private var FIELD_PROPERTY_LIST = "properties"
     var userAll : MutableLiveData<List<User>> = MutableLiveData<List<User>>()
 
     fun addUserToDB(user: User) {
@@ -29,6 +29,7 @@ class UserRepository(private val context: Context) {
             data[FIELD_USER_FIRST_NAME] = user.firstName
             data[FIELD_USER_LAST_NAME] = user.lastName
             data[FIELD_USER_ROLE] = user.role
+            data[FIELD_PROPERTY_LIST] = user.showList()
 
             db.collection(COLLECTION_USERS)
                 .document(user.id)
