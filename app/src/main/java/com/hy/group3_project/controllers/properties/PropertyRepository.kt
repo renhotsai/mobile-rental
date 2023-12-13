@@ -274,15 +274,16 @@ class PropertyRepository(private val context: Context) {
     // for filter
     fun filterProperties(filterData: FilterData): List<Property> {
         val filteredProperties = allProperties.value?.filter { property ->
+            val fullAddress = "${property.address} ${property.city}".trim()
             (filterData.propertyType.isNullOrBlank() || property.type == filterData.propertyType) &&
                     (filterData.beds.isNullOrBlank() || property.beds == filterData.beds) &&
                     (filterData.baths.isNullOrBlank() || property.baths == filterData.baths) &&
                     (filterData.isPetFriendly == null || property.petFriendly == filterData.isPetFriendly) &&
                     (filterData.hasParking == null || property.canParking == filterData.hasParking) &&
-                    (filterData.searchField.isNullOrBlank() || property.address?.contains(
+                    (filterData.searchField.isNullOrBlank() || fullAddress.contains(
                         filterData.searchField,
                         ignoreCase = true
-                    ) == true)
+                    ))
         }
 
         return filteredProperties ?: emptyList()
@@ -292,7 +293,8 @@ class PropertyRepository(private val context: Context) {
 
     fun searchPropertiesByAddress(searchInput: String): List<Property> {
         val filteredProperties = allProperties.value?.filter { property ->
-            property.address?.contains(searchInput, ignoreCase = true) == true
+            val fullAddress = "${property.address} ${property.city}".trim()
+            fullAddress.contains(searchInput ?: "", ignoreCase = true)
         }
 
         return filteredProperties ?: emptyList()
