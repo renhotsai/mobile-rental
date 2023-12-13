@@ -2,6 +2,7 @@ package com.hy.group3_project.views.properties
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
@@ -37,6 +38,17 @@ class UpdatePropertyActivity : BaseActivity() {
             }
 
             binding.btnUpdate.setOnClickListener {
+                val etAddress = binding.editPropertyAddress.text.toString()
+                if (etAddress.isNullOrEmpty()) {
+                    binding.editPropertyAddress.error = "address is empty"
+                    return@setOnClickListener
+                }
+
+                val address = getAddress(etAddress)
+                if(address == null){
+                    Toast.makeText(this@UpdatePropertyActivity,"Address doesn't exist.", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
                 saveData()
             }
         }
