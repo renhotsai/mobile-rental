@@ -61,12 +61,16 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             handleTextViewClick(binding.mapText)
             mapFragment.view?.visibility = View.VISIBLE
             binding.rvProperties.visibility = View.GONE
+            binding.searchButtonForMap.visibility = View.VISIBLE
+            binding.searchButtonForList.visibility = View.GONE
         }
 
         binding.mapList.setOnClickListener {
             handleTextViewClick(binding.mapList)
             mapFragment?.view?.visibility = View.GONE
             binding.rvProperties.visibility = View.VISIBLE
+            binding.searchButtonForMap.visibility = View.GONE
+            binding.searchButtonForList.visibility = View.VISIBLE
         }
 
         // Setup adapter
@@ -89,7 +93,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         )
 
         binding.rvProperties.visibility = View.GONE
-
+        binding.searchButtonForMap.visibility = View.VISIBLE
+        binding.searchButtonForList.visibility = View.GONE
 
 
         // -- filter functionality
@@ -110,14 +115,15 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             myPopup.show()
         }
 
-//        binding.searchButton.setOnClickListener {
-//            val searchText: String = binding.searchText.text.toString()
-//            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
-//            // Update RV
-//            adapter.updateUserPropertyList(searchedPropertiesList)
-//        }
+        binding.searchButtonForList.setOnClickListener {
+            val searchText: String = binding.searchText.text.toString()
+            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
+            // Update RV
+            adapter.updateUserPropertyList(searchedPropertiesList)
+        }
         // -- Search functionality
-        binding.searchButton.setOnClickListener {
+        binding.searchButtonForMap.setOnClickListener {
+
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
 
             try {
