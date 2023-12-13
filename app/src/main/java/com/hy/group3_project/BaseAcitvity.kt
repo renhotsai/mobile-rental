@@ -60,7 +60,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume")
         checkLogin()
         invalidateOptionsMenu()
     }
@@ -80,7 +79,6 @@ open class BaseActivity : AppCompatActivity() {
 
         propertyRepository.getPropertiesWithId(user!!.showList())
         propertyRepository.userProperties.observe(this){ propertiesList ->
-            Log.d(TAG,"reload: $propertiesList")
             propertyList.clear()
             propertyList.addAll(propertiesList)
             adapter.notifyDataSetChanged()
@@ -198,7 +196,6 @@ open class BaseActivity : AppCompatActivity() {
         val gson = Gson()
         val userFromSP = sharedPreferences.getString("KEY_USER", null)
         if (userFromSP != null) {
-            Log.d(TAG, "checkLogin : $userFromSP")
             user = gson.fromJson(userFromSP, User::class.java)
         }
     }
@@ -273,18 +270,6 @@ open class BaseActivity : AppCompatActivity() {
             Log.e(TAG, ex.toString())
             return null
         }
-    }
-
-    fun userList(list: MutableList<Property>): MutableList<Property> {
-        Log.d(TAG, "user: ${user!!.showList()}, propertyList: $list ")
-        val userProperty: MutableList<Property> = mutableListOf()
-        if (!list.isNullOrEmpty()) {
-            for (id in user!!.showList()) {
-                val property = list.find { it.id == id }!!
-                userProperty.add(property)
-            }
-        }
-        return userProperty
     }
 
     fun prefEditorUser(user: User) {

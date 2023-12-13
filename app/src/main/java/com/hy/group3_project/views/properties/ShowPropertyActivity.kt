@@ -2,7 +2,6 @@ package com.hy.group3_project.views.properties
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hy.group3_project.BaseActivity
@@ -22,8 +21,6 @@ class ShowPropertyActivity : BaseActivity() {
 
         //set option menu
         setSupportActionBar(this.binding.tbOptionMenu)
-
-        Log.d(TAG, user.toString())
 
         val userPropertyList = user!!.showList()
         propertyRepository.getPropertiesWithId(userPropertyList)

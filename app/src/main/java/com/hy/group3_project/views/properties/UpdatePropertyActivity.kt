@@ -2,7 +2,6 @@ package com.hy.group3_project.views.properties
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityUpdatePropertyBinding
@@ -25,7 +24,6 @@ class UpdatePropertyActivity : BaseActivity() {
         lifecycleScope.launch {
             val propertyFromDb = propertyRepository.findProperty(propertyId)
 
-            Log.d(TAG, propertyFromDb.toString())
             if (propertyFromDb != null) {
 
                 selectedProperty = propertyFromDb
@@ -102,8 +100,6 @@ class UpdatePropertyActivity : BaseActivity() {
             selectedProperty.contactInfo = binding.editContactInfo.text.toString()
         }
 
-
-        Log.d(TAG, "check update property: $selectedProperty")
         propertyRepository.addPropertyToDB(selectedProperty)
 
 
