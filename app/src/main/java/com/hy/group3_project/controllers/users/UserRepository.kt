@@ -25,7 +25,6 @@ class UserRepository(private val context: Context) {
 
     fun addUserToDB(user: User) {
         try {
-            Log.d(TAG, "addUserToDB: $user")
             val data: MutableMap<String, Any> = HashMap()
             data[FIELD_ID] = user.id
             data[FIELD_USER_FIRST_NAME] = user.firstName
@@ -61,13 +60,26 @@ class UserRepository(private val context: Context) {
             val documentSnapshot = db.collection(COLLECTION_USERS)
                 .document(userId)
                 .get().await()
-            val toObject = documentSnapshot.toObject(User::class.java)
-            Log.d(TAG, toObject.toString())
-            toObject
+            documentSnapshot.toObject(User::class.java)
 
         } catch (ex: java.lang.Exception) {
             Log.e(TAG, "filterUser: Unable to filter user : $ex")
             null
+        }
+    }
+
+    fun removeUserListWithPropertyId(propertyId: String) {
+        try {
+            db.collection(COLLECTION_USERS).whereArrayContains(FIELD_PROPERTY_LIST, propertyId)
+                .get().addOnSuccessListener { results ->
+                    for (result in results) {
+                        var user = result.toObject(User::class.java)
+                        val res = user.removeList(propertyId)
+                        addUserToDB(user)
+                    }
+                }
+        } catch (ex: Exception) {
+            Log.e(TAG, "findUserWithPropertyId: Unable to filter user : $ex")
         }
     }
 
