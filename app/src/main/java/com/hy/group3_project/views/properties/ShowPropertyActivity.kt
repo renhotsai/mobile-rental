@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityShowPropertyBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
-import com.hy.group3_project.models.properties.Property
 
 class ShowPropertyActivity : BaseActivity() {
 
@@ -27,7 +26,6 @@ class ShowPropertyActivity : BaseActivity() {
         Log.d(TAG, user.toString())
 
         val userPropertyList = user!!.showList()
-        var mutableListOf: MutableList<Property> = mutableListOf()
         propertyRepository.getPropertiesWithId(userPropertyList)
         // Setup adapter
         adapter = PropertyAdapter(
@@ -48,8 +46,6 @@ class ShowPropertyActivity : BaseActivity() {
                 LinearLayoutManager.VERTICAL
             )
         )
-
-
     }
 
 

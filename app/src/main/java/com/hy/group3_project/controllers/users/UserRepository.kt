@@ -71,6 +71,26 @@ class UserRepository(private val context: Context) {
         }
     }
 
+    fun removeUserListWithPropertyId(propertyId:String){
+        Log.d(TAG,"findUserWithPropertyId : Start!")
+        try{
+            db.collection(COLLECTION_USERS).whereArrayContains(FIELD_PROPERTY_LIST,propertyId)
+                .get().addOnSuccessListener {
+                    results->
+                    for (result in results){
+                        Log.d(TAG,"findUserWithPropertyId : ${result.id}")
+                        var user = result.toObject(User::class.java)
+                        val res= user.removeList(propertyId)
+
+                        Log.d(TAG,"findUserWithPropertyId : res:$res, user: $user")
+                        addUserToDB(user)
+                    }
+                }
+        }catch (ex:Exception){
+            Log.e(TAG, "findUserWithPropertyId: Unable to filter user : $ex")
+        }
+    }
+
 
     fun updateUser(userToUpdate: User) {
         val data: MutableMap<String, Any> = HashMap()
