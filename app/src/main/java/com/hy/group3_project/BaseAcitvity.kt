@@ -27,7 +27,6 @@ import com.hy.group3_project.views.users.EditAcctInfoActivity
 import com.hy.group3_project.views.users.EditPasswordActivity
 import com.hy.group3_project.views.users.FavoriteActivity
 import com.hy.group3_project.views.users.LoginActivity
-import com.hy.group3_project.views.users.ShowAcctActivity
 import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
@@ -145,13 +144,6 @@ open class BaseActivity : AppCompatActivity() {
                 return true
             }
 
-            R.id.menu_item_account_info -> {
-                val intent = Intent(this, ShowAcctActivity::class.java)
-                intent.putExtra("extra_user", user)
-                startActivity(intent)
-                return true
-            }
-
             R.id.menu_item_edit_account_info -> {
                 val intent = Intent(this, EditAcctInfoActivity::class.java)
                 intent.putExtra("extra_user", user)
@@ -185,7 +177,7 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun logout() {
+    fun logout() {
         auth.signOut()
         prefEditor.clear().apply()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()

@@ -23,7 +23,7 @@ class UserRepository(private val context: Context) {
 
     var userAll: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
 
-    fun addUserToDB(user: User) {
+    fun setUserToDB(user: User) {
         try {
             val data: MutableMap<String, Any> = HashMap()
             data[FIELD_ID] = user.id
@@ -75,7 +75,7 @@ class UserRepository(private val context: Context) {
                     for (result in results) {
                         var user = result.toObject(User::class.java)
                         val res = user.removeList(propertyId)
-                        addUserToDB(user)
+                        setUserToDB(user)
                     }
                 }
         } catch (ex: Exception) {

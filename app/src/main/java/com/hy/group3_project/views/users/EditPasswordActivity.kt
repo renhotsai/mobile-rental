@@ -2,9 +2,11 @@ package com.hy.group3_project.views.users
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
-import com.google.gson.Gson
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.EmailAuthProvider
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.databinding.ActivityEditPasswordBinding
 import com.hy.group3_project.models.enums.EditPasswordStatus
@@ -45,8 +47,8 @@ class EditPasswordActivity : BaseActivity() {
         val editTexts = listOf(etCurrPassword, etNewPassword, etConfirmPassword)
         var hasEmptyValues = false
         for (editText in editTexts) {
-            if (editText.text.toString().isNullOrEmpty()) {
-                editText.error = "Empty value"
+            if (editText.text.toString().isBlank()) {
+                editText.error = "Can not be blank"
                 hasEmptyValues = true
             }
         }
@@ -54,25 +56,48 @@ class EditPasswordActivity : BaseActivity() {
             return
         }
 
-        val gson = Gson()
-        val changePasswordStatus = user!!.changePassword(
-            etCurrPassword.text.toString(),
-            etNewPassword.text.toString(),
-            etConfirmPassword.text.toString()
-        )
-        if (changePasswordStatus == EditPasswordStatus.Success) {
-            val userJson = gson.toJson(user)
-            prefEditor.putString("KEY_USER", userJson)
+        val currPassword = etCurrPassword.text.toString()
+        val newPassword = etNewPassword.text.toString()
+        val confirmPassword = etConfirmPassword.text.toString()
 
-            prefEditor.apply()
-            Toast.makeText(
-                this@EditPasswordActivity, "$changePasswordStatus", Toast.LENGTH_LONG
-            ).show()
-            finish()
+        val firebaseUser = auth.currentUser
+        val email = firebaseUser?.email
+        val credential = EmailAuthProvider.getCredential(email!!, currPassword)
+        Log.d(TAG, "editPassword: new:$newPassword, confirm:$confirmPassword")
+        if (newPassword == confirmPassword) {
+            firebaseUser?.reauthenticate(credential)
+                ?.addOnCompleteListener { reauthTask ->
+                    if (reauthTask.isSuccessful) {
+                        firebaseUser.updatePassword(newPassword)
+                            .addOnCompleteListener { updateTask ->
+                                if (updateTask.isSuccessful) {
+                                    Toast.makeText(
+                                        this@EditPasswordActivity,
+                                        EditPasswordStatus.Success.toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    redirectMain()
+                                } else {
+                                    Log.e(TAG, "update ${updateTask.exception?.message}")
+                                    Snackbar.make(
+                                        binding.root,
+                                        updateTask.exception?.localizedMessage.toString(),
+                                        Snackbar.LENGTH_LONG
+                                    ).show()
+                                    cleanEditTextView(editTexts)
+                                }
+                            }
+                    } else {
+                        Log.w(TAG, "editPassword: reauth:${reauthTask.isSuccessful}")
+                        Snackbar.make(
+                            binding.root, "Current Password Wrong",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        cleanEditTextView(editTexts)
+                    }
+                }
         } else {
-            Toast.makeText(
-                this@EditPasswordActivity, "Error:$changePasswordStatus", Toast.LENGTH_LONG
-            ).show()
+            Log.d(TAG, "editPassword: n != c")
             cleanEditTextView(editTexts)
         }
     }
