@@ -5,14 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".views.users.LoginActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_option_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="4 Rent" />
+        app:title="4 Rent"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="@color/white"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +51,7 @@
         android:id="@+id/btn_login"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/login_btn"
+        android:background="?attr/colorPrimary"
         android:layout_marginTop="15dp"
         android:layout_gravity="center"
         android:textColor="@color/white"
