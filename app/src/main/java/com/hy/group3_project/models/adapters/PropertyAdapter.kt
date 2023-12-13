@@ -1,5 +1,6 @@
 package com.hy.group3_project.models.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,7 @@ class PropertyAdapter(
 
         favToggle.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                Log.d(TAG, auth.currentUser.toString())
                 if (auth.currentUser == null) {
                     redirectLogin()
                 } else {
@@ -107,6 +109,7 @@ class PropertyAdapter(
         }
 
         if (auth.currentUser != null) {
+            Log.d(TAG, "$user")
             if (user!!.role == Roles.Landlord.toString()) {
                 favToggle.isVisible = false
             }
@@ -115,6 +118,13 @@ class PropertyAdapter(
 
     fun updateUser(newUser: User?) {
         user = newUser
+        Log.d(TAG,"updateUser: $user")
+        notifyDataSetChanged()
+    }
+
+    fun updateUserPropertyList(list: List<Property>){
+        Log.d(TAG,"list: $list")
+        propertyList = list.toMutableList()
         notifyDataSetChanged()
     }
 }

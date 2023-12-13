@@ -56,7 +56,8 @@ class MainActivity : BaseActivity() {
                 override fun onFilterApplied(filterData: FilterData) {
                     val filteredPropertiesList = propertyRepository.filterProperties(filterData)
                     // update RV
-                    Log.d("Filter", "$filteredPropertiesList")
+                    adapter.updateUserPropertyList(filteredPropertiesList)
+
                 }
             }
 
@@ -65,11 +66,11 @@ class MainActivity : BaseActivity() {
 
 
         // -- Search functionality
-        binding.searchButton.setOnClickListener() {
+        binding.searchButton.setOnClickListener {
             val searchText: String = binding.searchText.text.toString()
             val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
             // Update RV
-            Log.d("Filter Search", "$searchedPropertiesList")
+            adapter.updateUserPropertyList(searchedPropertiesList)
         }
     }
 
