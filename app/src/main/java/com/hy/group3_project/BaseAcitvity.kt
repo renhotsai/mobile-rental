@@ -27,7 +27,6 @@ import com.hy.group3_project.views.users.EditAcctInfoActivity
 import com.hy.group3_project.views.users.EditPasswordActivity
 import com.hy.group3_project.views.users.FavoriteActivity
 import com.hy.group3_project.views.users.LoginActivity
-import com.hy.group3_project.views.users.ShowAcctActivity
 import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
@@ -142,13 +141,6 @@ open class BaseActivity : AppCompatActivity() {
 
             R.id.menu_item_login -> {
                 redirectLogin()
-                return true
-            }
-
-            R.id.menu_item_account_info -> {
-                val intent = Intent(this, ShowAcctActivity::class.java)
-                intent.putExtra("extra_user", user)
-                startActivity(intent)
                 return true
             }
 

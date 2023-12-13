@@ -107,7 +107,7 @@ class SignUpActivity : BaseActivity() {
                     roleAsEnum.toString(),
                 )
 
-                userRepository.addUserToDB(newUser)
+                userRepository.setUserToDB(newUser)
                 prefEditorUser(newUser)
                 Log.d(TAG, "signup: signup succeed ${auth.currentUser}")
                 Toast.makeText(this@SignUpActivity, "Success.", Toast.LENGTH_LONG).show()

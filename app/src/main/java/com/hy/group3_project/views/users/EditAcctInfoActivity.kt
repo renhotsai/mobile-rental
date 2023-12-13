@@ -38,21 +38,30 @@ class EditAcctInfoActivity : BaseActivity() {
     }
 
     private fun setEditTextHint(user: User) {
-//        binding.etEmail.hint = user.email
         binding.etFirstName.hint = user.firstName
         binding.etLastName.hint = user.lastName
     }
+
     private fun editAccountInfo() {
+        if (binding.etFirstName.text.toString().isBlank()) {
+            binding.etFirstName.error = "can not be blank"
+            return
+        }
+        if (binding.etLastName.text.toString().isBlank()) {
+            binding.etLastName.error = "can not be blank"
+            return
+        }
         val etFirstName = binding.etFirstName.text.toString()
         val etLastName = binding.etLastName.text.toString()
-        val etEmail = binding.etEmail.text.toString()
-
         val gson = Gson()
 
         //update user in user list
         val changeAcctInfoStatus =
-            user!!.changeAcctInfo(etFirstName, etLastName, etEmail)
+            user!!.changeAcctInfo(etFirstName, etLastName)
         if (changeAcctInfoStatus == EditAccountStatus.Success) {
+
+            userRepository.setUserToDB(user!!)
+
             Toast.makeText(
                 this@EditAcctInfoActivity,
                 changeAcctInfoStatus.toString(),
@@ -64,7 +73,7 @@ class EditAcctInfoActivity : BaseActivity() {
 
             prefEditor.apply()
             finish()
-        }else{
+        } else {
             Toast.makeText(
                 this@EditAcctInfoActivity,
                 changeAcctInfoStatus.toString(),

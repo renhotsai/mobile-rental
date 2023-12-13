@@ -47,7 +47,7 @@ class User : Serializable {
         return EditPasswordStatus.Success
     }
 
-    fun changeAcctInfo(firstName: String, lastName: String, email: String): EditAccountStatus {
+    fun changeAcctInfo(firstName: String, lastName: String): EditAccountStatus {
         if (!firstName.isNullOrEmpty()) {
             this.firstName = firstName
         }
