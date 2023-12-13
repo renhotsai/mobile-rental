@@ -2,7 +2,6 @@ package com.hy.group3_project.models.users
 
 import android.util.Log
 import com.hy.group3_project.models.enums.EditAccountStatus
-import com.hy.group3_project.models.enums.EditPasswordStatus
 import com.hy.group3_project.models.enums.ResponseEnum
 import java.io.Serializable
 
@@ -26,25 +25,6 @@ class User : Serializable {
         this.firstName = firstName
         this.lastName = lastName
         this.role = role
-    }
-
-    fun changePassword(
-        currPassword: String,
-        newPassword: String,
-        confirmPassword: String,
-    ): EditPasswordStatus {
-        //check password is empty or null
-        if (currPassword.isNullOrEmpty()) {
-            return EditPasswordStatus.CurrentPasswordEmpty
-        }
-        if (newPassword.isNullOrEmpty()) {
-            return EditPasswordStatus.NewPasswordEmpty
-        }
-        if (confirmPassword.isNullOrEmpty()) {
-            return EditPasswordStatus.ConfirmPasswordEmpty
-        }
-
-        return EditPasswordStatus.Success
     }
 
     fun changeAcctInfo(firstName: String, lastName: String): EditAccountStatus {

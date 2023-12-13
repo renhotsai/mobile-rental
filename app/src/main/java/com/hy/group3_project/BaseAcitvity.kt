@@ -177,7 +177,7 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun logout() {
+    fun logout() {
         auth.signOut()
         prefEditor.clear().apply()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
