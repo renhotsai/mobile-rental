@@ -1,15 +1,22 @@
 package com.hy.group3_project.views.properties
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityAddPropertyBinding
+import com.hy.group3_project.models.properties.GeocodingHandler
 import com.hy.group3_project.models.properties.Property
 import kotlin.random.Random
 
@@ -17,6 +24,69 @@ class AddPropertyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddPropertyBinding
     private var savedProperties: MutableList<Property> = mutableListOf()
+
+    // for GPS
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val APP_PERMISSIONS_LIST = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    private val multiplePermissionsResultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultsList ->
+
+            var allPermissionsGrantedTracker = true
+
+            for (item in resultsList.entries) {
+                if (item.key in APP_PERMISSIONS_LIST && item.value == false) {
+                    allPermissionsGrantedTracker = false
+                }
+            }
+
+            if (allPermissionsGrantedTracker) {
+                getDeviceLocation()
+            } else {
+                Snackbar.make(
+                    binding.root,
+                    "Please Allow permission in Setting for this app to fully function.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+
+    // get device location
+
+    private fun getDeviceLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location == null) {
+                    Log.d(TAG, "Location is null")
+                    return@addOnSuccessListener
+                }
+
+                val curLongitude = location.longitude
+                val curLatitude = location.latitude
+
+                val locationData = GeocodingHandler(this).getCity(curLatitude, curLongitude)
+                binding.editPropertyCity.setText(locationData.city)
+                binding.editPropertyAddress.setText(locationData.streetAddress)
+
+            }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +96,13 @@ class AddPropertyActivity : BaseActivity() {
         setSupportActionBar(binding.tbOptionMenu)
         this.propertyRepository = PropertyRepository(applicationContext)
         binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
+
+
+        binding.btnGetLocation.setOnClickListener{
+            // for location
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
+        }
 
         binding.btnCreate.setOnClickListener {
             val etAddress = binding.editPropertyAddress.text.toString()
@@ -38,6 +115,13 @@ class AddPropertyActivity : BaseActivity() {
             if(address == null){
                 Toast.makeText(this@AddPropertyActivity,"Address doesn't exist.",Toast.LENGTH_LONG).show()
                 return@setOnClickListener
+            }
+
+            // yet to save coordinates
+            val fullAddress = "${binding.editPropertyAddress.text}, ${binding.editPropertyCity.text}"
+            val locationCoordinates = GeocodingHandler(this).getCoordinates(fullAddress)
+            if(locationCoordinates != null){
+                // save Coordinates to database
             }
             saveData()
         }

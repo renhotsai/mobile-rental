@@ -56,6 +56,7 @@ class User : Serializable {
             val property = properties.find { it == propertyId }
             val index = properties.indexOf(property)
             this.properties.removeAt(index)
+            Log.d("Remove", "removeList: $propertyId")
             return ResponseEnum.Success
         } catch (ex: Exception) {
             Log.e("Tenant", "$ex")

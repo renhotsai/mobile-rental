@@ -47,6 +47,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     private var selectedTextView: TextView? = null
     private var mMap: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val markerList = mutableListOf<Marker>()
 
     private val APP_PERMISSIONS_LIST = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -143,6 +144,10 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                     // update RV
                     adapter.updateUserPropertyList(filteredPropertiesList)
 
+                    removeAllMarkers()
+                    for (property in filteredPropertiesList) {
+                        addMarker(property)
+                    }
                 }
             }
 
@@ -154,9 +159,64 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
             // Update RV
             adapter.updateUserPropertyList(searchedPropertiesList)
+
+            val geocoder = Geocoder(applicationContext, Locale.getDefault())
+
+            try {
+                val cityName = binding.searchText.text.toString()
+
+                if (cityName == "") {
+                    val snackbar =
+                        Snackbar.make(binding.root, "City name is empty!", Snackbar.LENGTH_LONG)
+                    snackbar.show()
+                } else {
+                    // Try to find the coordinates of the city using Geocoder
+                    val addressList: MutableList<Address>? =
+                        geocoder.getFromLocationName(cityName, 1)
+
+                    if (addressList != null) {
+                        if (addressList.isNotEmpty()) {
+                            val address = addressList[0]
+                            Log.d(TAG, "address: $address")
+                            val lat = address.latitude
+                            val lng = address.longitude
+
+                            // Move and zoom the camera on the map
+                            mMap?.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(lat, lng),
+                                    12.0f
+                                )
+                            )
+
+                            Log.d(TAG, "Latitude: $lat, Longitude: $lng")
+
+                            // Iterate through propertyList and add markers for each property
+                            for (property in propertyList) {
+                                addMarker(property)
+                            }
+                        } else {
+                            val snackbar = Snackbar.make(
+                                binding.root,
+                                "City name does not exist!",
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar.show()
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                Log.e(TAG, "Error encountered while getting coordinate location.")
+                Log.e(TAG, ex.toString())
+            }
+
         }
         // -- Search functionality
         binding.searchButtonForMap.setOnClickListener {
+            val searchText: String = binding.searchText.text.toString()
+            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
+            // Update RV
+            adapter.updateUserPropertyList(searchedPropertiesList)
 
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
 
@@ -246,7 +306,12 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                 }
         }
     }
-
+    private fun removeAllMarkers() {
+        for (marker in markerList) {
+            marker.remove()
+        }
+        markerList.clear()
+    }
     private fun addMarker(property: Property) {
         if (mMap != null) {
             val address = getAddress(property.address)
@@ -262,6 +327,11 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
 
                 // Set a unique tag for each marker
                 marker?.tag = property.id // Assuming property.id is unique
+
+                // Add the marker to the markerList
+                marker?.let {
+                    markerList.add(it)
+                }
 
                 // Set custom info window
                 mMap!!.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
@@ -312,6 +382,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             // You can display a message to the user or perform any other action here
         }
     }
+
+
 
     // Helper function to retrieve property by ID
     private fun getPropertyById(propertyId: String): Property {
