@@ -3,6 +3,7 @@ package com.hy.group3_project.views.properties
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -82,8 +83,9 @@ class AddPropertyActivity : BaseActivity() {
 
 
             user!!.addList(propertyToAdd.id)
+            Log.d(TAG,"check user add list ${user!!.showList()}")
             userRepository.updateUser(user!!)
-
+            prefEditorUser(user!!)
 
             val showPropertyIntent =
                 Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)
