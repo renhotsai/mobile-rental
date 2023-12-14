@@ -154,9 +154,64 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
             // Update RV
             adapter.updateUserPropertyList(searchedPropertiesList)
+
+            val geocoder = Geocoder(applicationContext, Locale.getDefault())
+
+            try {
+                val cityName = binding.searchText.text.toString()
+
+                if (cityName == "") {
+                    val snackbar =
+                        Snackbar.make(binding.root, "City name is empty!", Snackbar.LENGTH_LONG)
+                    snackbar.show()
+                } else {
+                    // Try to find the coordinates of the city using Geocoder
+                    val addressList: MutableList<Address>? =
+                        geocoder.getFromLocationName(cityName, 1)
+
+                    if (addressList != null) {
+                        if (addressList.isNotEmpty()) {
+                            val address = addressList[0]
+                            Log.d(TAG, "address: $address")
+                            val lat = address.latitude
+                            val lng = address.longitude
+
+                            // Move and zoom the camera on the map
+                            mMap?.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(lat, lng),
+                                    12.0f
+                                )
+                            )
+
+                            Log.d(TAG, "Latitude: $lat, Longitude: $lng")
+
+                            // Iterate through propertyList and add markers for each property
+                            for (property in propertyList) {
+                                addMarker(property)
+                            }
+                        } else {
+                            val snackbar = Snackbar.make(
+                                binding.root,
+                                "City name does not exist!",
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar.show()
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                Log.e(TAG, "Error encountered while getting coordinate location.")
+                Log.e(TAG, ex.toString())
+            }
+
         }
         // -- Search functionality
         binding.searchButtonForMap.setOnClickListener {
+            val searchText: String = binding.searchText.text.toString()
+            val searchedPropertiesList = propertyRepository.searchPropertiesByAddress(searchText)
+            // Update RV
+            adapter.updateUserPropertyList(searchedPropertiesList)
 
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
 
