@@ -63,16 +63,7 @@ open class BaseActivity : AppCompatActivity() {
         invalidateOptionsMenu()
     }
 
-    fun loadAllData() {
-        propertyRepository.retrieveAllProperties()
-        propertyRepository.allProperties.observe(
-            this
-        ) { propertiesList ->
-            propertyList.clear()
-            propertyList.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
-        }
-    }
+
 
     fun loadUserData() {
 

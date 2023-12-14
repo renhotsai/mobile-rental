@@ -357,16 +357,6 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         val defaultZoomLevel = 15.0f
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, defaultZoomLevel))
         loadUserCurrLocation()
-//        mMap?.setOnMarkerClickListener { marker ->
-//            // Handle marker click here
-//            // For now, let's just log the marker title
-//            Log.d(TAG, "Marker Clicked: ${marker.title}")
-//
-//            // TODO: Implement redirection to PropertyDetailActivity
-//
-//            // default behavior when does not do anything
-//            false
-//        }
     }
 
     override fun onResume() {
@@ -375,6 +365,17 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         adapter.updateUser(user)
         loadAllData()
     }
-
-
+    private fun loadAllData() {
+        propertyRepository.retrieveAllProperties()
+        propertyRepository.allProperties.observe(
+            this
+        ) { propertiesList ->
+            propertyList.clear()
+            propertyList.addAll(propertiesList)
+            adapter.notifyDataSetChanged()
+            for (property in propertyList) {
+                addMarker(property)
+            }
+        }
+    }
 }
