@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,6 +18,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="4 Rent"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="@color/white"
 
             />
 
@@ -50,13 +55,15 @@
 
         <TextView
             android:id="@+id/propertyType"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="20dp"
             android:drawableLeft="@android:drawable/ic_menu_view"
+            android:paddingBottom="4dp"
+            android:background="@drawable/border_bottom"
             android:drawablePadding="8dp"
-            android:textSize="20dp"
+            android:textSize="18sp"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,30 +78,33 @@
             android:layout_marginRight="16dp"
             android:drawableLeft="@android:drawable/ic_menu_info_details"
             android:drawablePadding="8dp"
-            android:textSize="20dp"
+            android:textSize="18sp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/border_bottom"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/propertyType" />
 
         <LinearLayout
             android:id="@+id/bedBathPetLayout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:background="@drawable/border_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/propertyDescription">
 
             <TextView
                 android:id="@+id/bedText"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@android:drawable/ic_menu_info_details"
                 android:drawablePadding="8dp"
                 android:text="Bed"
-                android:textSize="20dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/bathText"
@@ -102,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Bath"
-                android:textSize="20dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/petFriendlyText"
@@ -110,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Pet Friendly"
-                android:textSize="20dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parkingText"
@@ -118,20 +128,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Parking"
-                android:textSize="20dp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <!-- Address TextView -->
         <TextView
             android:id="@+id/addressCity"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="30dp"
+
             android:drawableLeft="@android:drawable/ic_menu_myplaces"
             android:drawablePadding="8dp"
-            android:textSize="20dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/border_bottom"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,15 +151,16 @@
 
         <TextView
             android:id="@+id/contactInfo"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="30dp"
             android:drawableLeft="@android:drawable/ic_menu_call"
             android:drawablePadding="8dp"
-            android:textSize="20dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:paddingBottom="4dp"
+            android:background="@drawable/border_bottom"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addressCity" />
@@ -158,26 +171,39 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="320dp"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="32dp"
             app:layout_constraintTop_toBottomOf="@+id/contactInfo" />
 
-
+        <Button
+            android:id="@+id/btnShowStreetView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Show Street View"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/map"
+            android:onClick="onShowStreetViewButtonClick"/>
         <TextView
             android:id="@+id/availability"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/border_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/colorPrimary"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="8dp"
             android:text="Contact Info"
-            android:textSize="20dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/map" />
+            app:layout_constraintTop_toBottomOf="@id/btnShowStreetView" />
 
         <!-- Buttons fixed at the bottom -->
         <LinearLayout

@@ -5,14 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".views.users.EditAcctInfoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_option_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="4 Rent" />
+        app:title="4 Rent"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="@color/white"/>
 
     <TextView
         android:id="@+id/tv_title"
@@ -20,12 +22,14 @@
         android:layout_height="wrap_content"
         android:text="Manage Profile"
         android:textAlignment="center"
+        android:padding="16dp"
         android:textSize="32sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/et_first_name"
         android:layout_width="match_parent"
+        android:padding="16dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:hint="First Name" />
@@ -33,6 +37,7 @@
     <EditText
         android:id="@+id/et_last_name"
         android:layout_width="match_parent"
+        android:padding="16dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:hint="Last Name" />
