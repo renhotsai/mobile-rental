@@ -1,5 +1,6 @@
 package com.hy.group3_project.views.users
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -43,7 +44,8 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun sendForgotPassword() {
-
+        val intent = Intent(this, ForgotPasswordActivity::class.java)
+        startActivity(intent)
     }
 
     private fun login() {
