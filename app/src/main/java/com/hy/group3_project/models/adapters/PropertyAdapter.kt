@@ -116,6 +116,7 @@ class PropertyAdapter(
         }
     }
 
+
     fun updateUserPropertyList(list: List<Property>){
         Log.d(TAG,"list: $list")
         propertyList = list.toMutableList()

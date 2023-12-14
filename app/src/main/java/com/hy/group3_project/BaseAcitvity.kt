@@ -214,25 +214,24 @@ open class BaseActivity : AppCompatActivity() {
             val gson = Gson()
             val userJson = gson.toJson(user)
             prefEditor.putString("KEY_USER", userJson)
-
             prefEditor.apply()
+
+
         }
     }
 
     fun removeFromUserList(position: Int) {
         if (auth.currentUser != null && user!!.role != Roles.Landlord.toString()) {
-            Log.d(TAG, "Remove FavList")
-
             val propertyId = propertyList[position].id
+
             user!!.removeList(propertyId)
             userRepository.updateUser(user!!)
-            loadUserData()
+
+            propertyList.removeAt(position)
+            adapter.notifyDataSetChanged()
         }
     }
 
-    fun updateData(user: User, userList: MutableList<User>) {
-
-    }
 
     fun getAddress(address: String): Address? {
         try {
