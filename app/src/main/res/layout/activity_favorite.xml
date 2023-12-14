@@ -12,7 +12,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:title="4 Rent" />
+        app:title="4 Rent"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProperties"

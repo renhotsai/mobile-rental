@@ -20,16 +20,10 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:title="4 Rent" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update property"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:layout_marginTop="20dp"/>
-
-
+            app:title="4 Rent"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="@color/white"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -168,6 +162,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter property address"
+            android:textSize="18sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="text"/>
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact Information"
+            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            />
+        <EditText
+            android:id="@+id/editContactInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter contact information"
             android:textSize="18sp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"

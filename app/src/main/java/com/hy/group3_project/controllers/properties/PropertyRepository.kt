@@ -39,17 +39,6 @@ class PropertyRepository(private val context: Context) {
     var allProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
     var userProperties: MutableLiveData<List<Property>> = MutableLiveData<List<Property>>()
 
-
-//    private var loggedInUserEmail = ""
-//    private var sharedPrefs : SharedPreferences
-
-    //    init {
-//        sharedPrefs = context.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
-//
-//        if (sharedPrefs.contains("USER_EMAIL")){
-//            loggedInUserEmail = sharedPrefs.getString("USER_EMAIL", "NA").toString()
-//        }
-//    }
     fun addPropertyToDB(newProperty: Property) {
         try {
             val data: MutableMap<String, Any> = HashMap();
@@ -164,38 +153,9 @@ class PropertyRepository(private val context: Context) {
         }
     }
 
-    fun updateProperty(propertyToUpdate: Property) {
-        val data: MutableMap<String, Any> = HashMap();
-
-        data[FIELD_ID] = propertyToUpdate.id
-        data[FIELD_IMAGE_NAME] = propertyToUpdate.imageName
-        data[FIELD_TYPE] = propertyToUpdate.type
-        data[FIELD_BEDS] = propertyToUpdate.beds
-        data[FIELD_BATHS] = propertyToUpdate.baths
-        data[FIELD_PET_FRIENDLY] = propertyToUpdate.petFriendly
-        data[FIELD_CAN_PARKING] = propertyToUpdate.canParking
-        data[FIELD_PRICE] = propertyToUpdate.price
-        data[FIELD_DESC] = propertyToUpdate.desc
-        data[FIELD_CITY] = propertyToUpdate.city
-        data[FIELD_ADDRESS] = propertyToUpdate.address
-        data[FIELD_CONTACT_INFO] = propertyToUpdate.contactInfo
-        data[FIELD_AVAILABILITY] = propertyToUpdate.availability
-
+    fun deleteProperty(propertyId: String) {
         try {
-            db.collection(COLLECTION_PROPERTIES).document(propertyToUpdate.id).update(data)
-                .addOnSuccessListener { docRef ->
-                    Log.d(TAG, "updateProperty: Document updated successfully : $docRef")
-                }.addOnFailureListener { ex ->
-                    Log.e(TAG, "updateProperty: Failed to update document : $ex")
-                }
-        } catch (ex: Exception) {
-            Log.e(TAG, "updateProperty: Unable to update property due to exception : $ex")
-        }
-    }
-
-    fun deleteProperty(propertyToDelete: Property) {
-        try {
-            db.collection(COLLECTION_PROPERTIES).document(propertyToDelete.id).delete()
+            db.collection(COLLECTION_PROPERTIES).document(propertyId).delete()
                 .addOnSuccessListener { docRef ->
                     Log.d(TAG, "deleteProperty: Document deleted successfully : $docRef")
                 }.addOnFailureListener { ex ->
@@ -243,6 +203,7 @@ class PropertyRepository(private val context: Context) {
                                     DocumentChange.Type.ADDED -> {
                                         Log.d(TAG, "User property list add")
                                         tempList.add(currentDocument)
+                                        userProperties.postValue(tempList)
                                     }
 
                                     DocumentChange.Type.MODIFIED -> {
@@ -257,7 +218,6 @@ class PropertyRepository(private val context: Context) {
                             Log.d(TAG, "getPropertiesWithId: tempList : $tempList")
                             //replace the value in allExpenses
 
-                            userProperties.postValue(tempList)
 
                         } else {
                             Log.d(
@@ -274,15 +234,16 @@ class PropertyRepository(private val context: Context) {
     // for filter
     fun filterProperties(filterData: FilterData): List<Property> {
         val filteredProperties = allProperties.value?.filter { property ->
+            val fullAddress = "${property.address} ${property.city}".trim()
             (filterData.propertyType.isNullOrBlank() || property.type == filterData.propertyType) &&
                     (filterData.beds.isNullOrBlank() || property.beds == filterData.beds) &&
                     (filterData.baths.isNullOrBlank() || property.baths == filterData.baths) &&
                     (filterData.isPetFriendly == null || property.petFriendly == filterData.isPetFriendly) &&
                     (filterData.hasParking == null || property.canParking == filterData.hasParking) &&
-                    (filterData.searchField.isNullOrBlank() || property.address?.contains(
+                    (filterData.searchField.isNullOrBlank() || fullAddress.contains(
                         filterData.searchField,
                         ignoreCase = true
-                    ) == true)
+                    ))
         }
 
         return filteredProperties ?: emptyList()
@@ -292,11 +253,10 @@ class PropertyRepository(private val context: Context) {
 
     fun searchPropertiesByAddress(searchInput: String): List<Property> {
         val filteredProperties = allProperties.value?.filter { property ->
-            property.address?.contains(searchInput, ignoreCase = true) == true
+            val fullAddress = "${property.address} ${property.city}".trim()
+            fullAddress.contains(searchInput ?: "", ignoreCase = true)
         }
 
         return filteredProperties ?: emptyList()
     }
-
-
 }

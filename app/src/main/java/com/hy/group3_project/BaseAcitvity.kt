@@ -27,7 +27,6 @@ import com.hy.group3_project.views.users.EditAcctInfoActivity
 import com.hy.group3_project.views.users.EditPasswordActivity
 import com.hy.group3_project.views.users.FavoriteActivity
 import com.hy.group3_project.views.users.LoginActivity
-import com.hy.group3_project.views.users.ShowAcctActivity
 import com.hy.group3_project.views.users.SignUpActivity
 import java.util.Locale
 
@@ -60,7 +59,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume")
         checkLogin()
         invalidateOptionsMenu()
     }
@@ -80,7 +78,6 @@ open class BaseActivity : AppCompatActivity() {
 
         propertyRepository.getPropertiesWithId(user!!.showList())
         propertyRepository.userProperties.observe(this){ propertiesList ->
-            Log.d(TAG,"reload: $propertiesList")
             propertyList.clear()
             propertyList.addAll(propertiesList)
             adapter.notifyDataSetChanged()
@@ -147,13 +144,6 @@ open class BaseActivity : AppCompatActivity() {
                 return true
             }
 
-            R.id.menu_item_account_info -> {
-                val intent = Intent(this, ShowAcctActivity::class.java)
-                intent.putExtra("extra_user", user)
-                startActivity(intent)
-                return true
-            }
-
             R.id.menu_item_edit_account_info -> {
                 val intent = Intent(this, EditAcctInfoActivity::class.java)
                 intent.putExtra("extra_user", user)
@@ -187,7 +177,7 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun logout() {
+    fun logout() {
         auth.signOut()
         prefEditor.clear().apply()
         Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
@@ -198,7 +188,6 @@ open class BaseActivity : AppCompatActivity() {
         val gson = Gson()
         val userFromSP = sharedPreferences.getString("KEY_USER", null)
         if (userFromSP != null) {
-            Log.d(TAG, "checkLogin : $userFromSP")
             user = gson.fromJson(userFromSP, User::class.java)
         }
     }
@@ -273,18 +262,6 @@ open class BaseActivity : AppCompatActivity() {
             Log.e(TAG, ex.toString())
             return null
         }
-    }
-
-    fun userList(list: MutableList<Property>): MutableList<Property> {
-        Log.d(TAG, "user: ${user!!.showList()}, propertyList: $list ")
-        val userProperty: MutableList<Property> = mutableListOf()
-        if (!list.isNullOrEmpty()) {
-            for (id in user!!.showList()) {
-                val property = list.find { it.id == id }!!
-                userProperty.add(property)
-            }
-        }
-        return userProperty
     }
 
     fun prefEditorUser(user: User) {

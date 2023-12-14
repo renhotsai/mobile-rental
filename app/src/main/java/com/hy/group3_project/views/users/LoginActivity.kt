@@ -1,5 +1,6 @@
 package com.hy.group3_project.views.users
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -16,7 +17,6 @@ class LoginActivity : BaseActivity() {
     lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "Login Start")
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,7 +44,8 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun sendForgotPassword() {
-
+        val intent = Intent(this, ForgotPasswordActivity::class.java)
+        startActivity(intent)
     }
 
     private fun login() {

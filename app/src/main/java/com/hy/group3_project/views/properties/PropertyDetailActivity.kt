@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.Gson
 import com.hy.group3_project.BaseActivity
 import com.hy.group3_project.R
 import com.hy.group3_project.controllers.properties.PropertyRepository
@@ -103,10 +104,13 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
         binding.btnDelete.setOnClickListener {
             val propertyId = intent.getStringExtra("PROPERTY_ID")!!
             lifecycleScope.launch {
-                val deleteProperty = propertyList.find { it.id == propertyId }
-                if (deleteProperty != null) {
-                    propertyRepository.deleteProperty(deleteProperty)
-                }
+                userRepository.removeUserListWithPropertyId(propertyId)
+                propertyRepository.deleteProperty(propertyId)
+                val gson = Gson()
+                val userJson = gson.toJson(user)
+                prefEditor.putString("KEY_USER", userJson)
+                prefEditor.apply()
+                loadUserData()
                 finish()
             }
         }

@@ -3,6 +3,7 @@ package com.hy.group3_project.views.properties
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.hy.group3_project.BaseActivity
@@ -26,6 +27,17 @@ class AddPropertyActivity : BaseActivity() {
         binding.btnCreate.setBackgroundColor(Color.parseColor("#05a6fc"))
 
         binding.btnCreate.setOnClickListener {
+            val etAddress = binding.editPropertyAddress.text.toString()
+            if (etAddress.isNullOrEmpty()) {
+                binding.editPropertyAddress.error = "address is empty"
+                return@setOnClickListener
+            }
+
+            val address = getAddress(etAddress)
+            if(address == null){
+                Toast.makeText(this@AddPropertyActivity,"Address doesn't exist.",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             saveData()
         }
     }
@@ -42,7 +54,6 @@ class AddPropertyActivity : BaseActivity() {
         val propertyAddress = binding.editPropertyAddress.text.toString()
         val propertyContactInfo = binding.editContactInfo.text.toString()
         val propertyAvailability = binding.swRentAv.isChecked
-
 
         if (propertyBeds != "" && propertyPrice != 0 &&
             propertyBaths != "" && propertyDesc != "" && propertyAddress != ""

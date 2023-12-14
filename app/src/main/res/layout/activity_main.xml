@@ -15,10 +15,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:title="4 Rent">
-
-    </androidx.appcompat.widget.Toolbar>
+        app:title="4 Rent"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="@color/white"/>
 
 
     <LinearLayout
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tb_option_menu"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginVertical="8dp"
         >
         <EditText
             android:id="@+id/search_text"
@@ -75,7 +75,7 @@
     <LinearLayout
         android:id="@+id/search_layout_two"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/search_layout"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,6 @@
         android:layout_marginBottom="8dp"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
-        android:background="#FAF3F3"
         >
         <TextView
             android:id="@+id/map_text"
