@@ -1,7 +1,6 @@
 package com.hy.group3_project
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -31,8 +30,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.integrity.internal.l
-import com.google.firebase.firestore.FirebaseFirestore
 import com.hy.group3_project.controllers.properties.PropertyRepository
 import com.hy.group3_project.databinding.ActivityMainBinding
 import com.hy.group3_project.models.adapters.PropertyAdapter
@@ -41,7 +38,6 @@ import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.views.FilterApplyListener
 import com.hy.group3_project.views.MyPopup
 import com.hy.group3_project.views.properties.PropertyDetailActivity
-import java.text.NumberFormat
 import java.util.Locale
 
 class MainActivity : BaseActivity(), OnMapReadyCallback {
@@ -56,8 +52,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     )
 
     private val multiplePermissionsResultLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) {
-            resultsList ->
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { resultsList ->
         Log.d(TAG, resultsList.toString())
 
         var allPermissionsGrantedTracker = true
@@ -69,14 +65,43 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         if (allPermissionsGrantedTracker) {
-            var snackbar = Snackbar.make(binding.root, "All permissions granted", Snackbar.LENGTH_LONG)
-            snackbar.show()
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        if (location == null) {
+                            Log.d(TAG, "Location is null")
+                            return@addOnSuccessListener
+                        }
 
+
+                        // later handle null
+                        val lat = location.latitude
+                        val lng = location.longitude
+
+                        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
+
+                        // Iterate through propertyList and add markers for each property
+                        for (property in propertyList) {
+                            addMarker(property)
+                        }
+
+                    }
+            }
         } else {
-            var snackbar = Snackbar.make(binding.root, "Some permissions NOT granted", Snackbar.LENGTH_LONG)
+            var snackbar =
+                Snackbar.make(binding.root, "Some permissions NOT granted", Snackbar.LENGTH_LONG)
             snackbar.show()
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -93,36 +118,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         handleTextViewClick(binding.mapText)
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
+        multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
 
-            // permission denied message
-            var snackbar = Snackbar.make(binding.root, "You have to allow location permission of the app first", Snackbar.LENGTH_LONG)
-            snackbar.show()
-            return
-        }
-
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                if (location == null) {
-                    Log.d(TAG, "Location is null")
-                    return@addOnSuccessListener
-                }
-
-
-                // later handle null
-                val lat = location.latitude
-                val lng = location.longitude
-
-                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
-
-                // Iterate through propertyList and add markers for each property
-                for (property in propertyList) {
-                    addMarker(property)
-                }
-
-            }
 
         binding.mapText.setOnClickListener {
             handleTextViewClick(binding.mapText)
@@ -197,11 +194,13 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                 val cityName = binding.searchText.text.toString()
 
                 if (cityName == "") {
-                    val snackbar = Snackbar.make(binding.root, "City name is empty!", Snackbar.LENGTH_LONG)
+                    val snackbar =
+                        Snackbar.make(binding.root, "City name is empty!", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 } else {
                     // Try to find the coordinates of the city using Geocoder
-                    val addressList: MutableList<Address>? = geocoder.getFromLocationName(cityName, 1)
+                    val addressList: MutableList<Address>? =
+                        geocoder.getFromLocationName(cityName, 1)
 
                     if (addressList != null) {
                         if (addressList.isNotEmpty()) {
@@ -211,7 +210,12 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                             val lng = address.longitude
 
                             // Move and zoom the camera on the map
-                            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
+                            mMap?.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(lat, lng),
+                                    12.0f
+                                )
+                            )
 
                             Log.d(TAG, "Latitude: $lat, Longitude: $lng")
 
@@ -220,7 +224,11 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                                 addMarker(property)
                             }
                         } else {
-                            val snackbar = Snackbar.make(binding.root, "City name does not exist!", Snackbar.LENGTH_LONG)
+                            val snackbar = Snackbar.make(
+                                binding.root,
+                                "City name does not exist!",
+                                Snackbar.LENGTH_LONG
+                            )
                             snackbar.show()
                         }
                     }
@@ -232,8 +240,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         }
 
 
-
     }
+
     private fun addMarker(property: Property) {
         if (mMap != null) {
             val address = getAddress(property.address)
@@ -261,7 +269,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
 
                         val homeTitle = infoView.findViewById<TextView>(R.id.home_address)
                         val homePrice = infoView.findViewById<TextView>(R.id.home_price)
-                        val detailActivityLink = infoView.findViewById<TextView>(R.id.link_to_details)
+                        val detailActivityLink =
+                            infoView.findViewById<TextView>(R.id.link_to_details)
 
                         // Retrieve the property based on the unique tag
                         val propertyId = marker.tag as String
@@ -279,7 +288,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                         detailActivityLink.text = content
 
                         mMap!!.setOnInfoWindowClickListener {
-                            val intent = Intent(this@MainActivity, PropertyDetailActivity::class.java)
+                            val intent =
+                                Intent(this@MainActivity, PropertyDetailActivity::class.java)
                             // Pass property data to the PropertyDetailActivity using intent
                             intent.putExtra("PROPERTY_ID", property.id)
                             startActivity(intent)
@@ -352,6 +362,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             false
         }
     }
+
     override fun onResume() {
         super.onResume()
         adapter.updateUser(user)
