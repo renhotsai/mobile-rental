@@ -22,7 +22,7 @@ class FavoriteActivity : BaseActivity() {
         setSupportActionBar(this.binding.tbOptionMenu)
 
 
-            propertyRepository.getPropertiesWithId(user!!.showList())
+        propertyRepository.getPropertiesWithId(user!!.showList())
         // Setup adapter
         adapter = PropertyAdapter(
             propertyList,

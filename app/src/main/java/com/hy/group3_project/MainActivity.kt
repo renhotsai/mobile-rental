@@ -47,6 +47,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     private var selectedTextView: TextView? = null
     private var mMap: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val markerList = mutableListOf<Marker>()
 
     private val APP_PERMISSIONS_LIST = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -143,6 +144,10 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                     // update RV
                     adapter.updateUserPropertyList(filteredPropertiesList)
 
+                    removeAllMarkers()
+                    for (property in filteredPropertiesList) {
+                        addMarker(property)
+                    }
                 }
             }
 
@@ -301,7 +306,12 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                 }
         }
     }
-
+    private fun removeAllMarkers() {
+        for (marker in markerList) {
+            marker.remove()
+        }
+        markerList.clear()
+    }
     private fun addMarker(property: Property) {
         if (mMap != null) {
             val address = getAddress(property.address)
@@ -317,6 +327,11 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
 
                 // Set a unique tag for each marker
                 marker?.tag = property.id // Assuming property.id is unique
+
+                // Add the marker to the markerList
+                marker?.let {
+                    markerList.add(it)
+                }
 
                 // Set custom info window
                 mMap!!.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
@@ -367,6 +382,8 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             // You can display a message to the user or perform any other action here
         }
     }
+
+
 
     // Helper function to retrieve property by ID
     private fun getPropertyById(propertyId: String): Property {
