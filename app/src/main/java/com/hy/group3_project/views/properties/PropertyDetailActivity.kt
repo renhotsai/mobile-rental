@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -83,8 +84,10 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
 
                 if (selectedProperty!!.availability) {
                     binding.availability.text = "Available"
+                    binding.availability.setBackgroundResource(R.drawable.border_green)
                 } else {
                     binding.availability.text = "Not available"
+                    binding.availability.setBackgroundResource(R.drawable.border_red)
                 }
                 addMarker(selectedProperty!!)
             }
