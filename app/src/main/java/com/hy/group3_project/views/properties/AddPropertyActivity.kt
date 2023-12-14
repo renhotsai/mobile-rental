@@ -167,8 +167,9 @@ class AddPropertyActivity : BaseActivity() {
 
 
             user!!.addList(propertyToAdd.id)
+            Log.d(TAG,"check user add list ${user!!.showList()}")
             userRepository.updateUser(user!!)
-
+            prefEditorUser(user!!)
 
             val showPropertyIntent =
                 Intent(this@AddPropertyActivity, ShowPropertyActivity::class.java)

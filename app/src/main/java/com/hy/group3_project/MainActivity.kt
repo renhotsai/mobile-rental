@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -38,6 +39,7 @@ import com.hy.group3_project.models.properties.Property
 import com.hy.group3_project.views.FilterApplyListener
 import com.hy.group3_project.views.MyPopup
 import com.hy.group3_project.views.properties.PropertyDetailActivity
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class MainActivity : BaseActivity(), OnMapReadyCallback {
@@ -65,40 +67,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         if (allPermissionsGrantedTracker) {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        if (location == null) {
-                            Log.d(TAG, "Location is null")
-                            return@addOnSuccessListener
-                        }
-
-
-                        // later handle null
-                        val lat = location.latitude
-                        val lng = location.longitude
-
-                        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
-
-                        // Iterate through propertyList and add markers for each property
-                        for (property in propertyList) {
-                            addMarker(property)
-                        }
-
-                    }
-            }
-        } else {
-            var snackbar =
-                Snackbar.make(binding.root, "Some permissions NOT granted", Snackbar.LENGTH_LONG)
-            snackbar.show()
+            loadUserCurrLocation()
         }
     }
 
@@ -113,9 +82,10 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         this.propertyRepository = PropertyRepository(applicationContext)
         handleTextViewClick(binding.mapText)
+
 
 
         multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
@@ -242,6 +212,41 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
 
     }
 
+    private fun loadUserCurrLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
+            return
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        lifecycleScope.launch {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                    if (location == null) {
+                        Log.d(TAG, "Location is null")
+                        return@addOnSuccessListener
+                    }
+                    // later handle null
+                    val lat = location.latitude
+                    val lng = location.longitude
+
+                    mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
+
+                    // Iterate through propertyList and add markers for each property
+                    for (property in propertyList) {
+
+                        addMarker(property)
+                    }
+                }
+        }
+    }
+
     private fun addMarker(property: Property) {
         if (mMap != null) {
             val address = getAddress(property.address)
@@ -346,28 +351,31 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
         mMap = googleMap
         val defaultLatLng = LatLng(50.000000, -85.000000)
         val defaultZoomLevel = 15.0f
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, defaultZoomLevel))
-
-        mMap?.setOnMarkerClickListener { marker ->
-            // Handle marker click here
-            // For now, let's just log the marker title
-            Log.d(TAG, "Marker Clicked: ${marker.title}")
-
-            // TODO: Implement redirection to PropertyDetailActivity
-
-            // default behavior when does not do anything
-            false
-        }
+        loadUserCurrLocation()
     }
 
     override fun onResume() {
         super.onResume()
-        adapter.updateUser(user)
+        loadUserCurrLocation()
         loadAllData()
     }
-
-
+    private fun loadAllData() {
+        propertyRepository.retrieveAllProperties()
+        propertyRepository.allProperties.observe(
+            this
+        ) { propertiesList ->
+            propertyList.clear()
+            propertyList.addAll(propertiesList)
+            adapter.notifyDataSetChanged()
+            mMap?.clear()
+            for (property in propertyList) {
+                addMarker(property)
+            }
+        }
+    }
 }

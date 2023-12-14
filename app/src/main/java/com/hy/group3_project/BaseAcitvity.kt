@@ -63,19 +63,15 @@ open class BaseActivity : AppCompatActivity() {
         invalidateOptionsMenu()
     }
 
-    fun loadAllData() {
-        propertyRepository.retrieveAllProperties()
-        propertyRepository.allProperties.observe(
-            this
-        ) { propertiesList ->
-            propertyList.clear()
-            propertyList.addAll(propertiesList)
-            adapter.notifyDataSetChanged()
-        }
-    }
+
 
     fun loadUserData() {
-
+        userRepository.getUserFromDB(user!!.id)
+        userRepository.userFromDB.observe(this){userFromDB->
+            user = userFromDB
+            prefEditorUser(user!!)
+        }
+        Log.d(TAG,"loadUserData: $user")
         propertyRepository.getPropertiesWithId(user!!.showList())
         propertyRepository.userProperties.observe(this){ propertiesList ->
             propertyList.clear()
@@ -230,12 +226,6 @@ open class BaseActivity : AppCompatActivity() {
             val propertyId = propertyList[position].id
             user!!.removeList(propertyId)
             userRepository.updateUser(user!!)
-
-            val gson = Gson()
-            val userJson = gson.toJson(user)
-            prefEditor.putString("KEY_USER", userJson)
-            prefEditor.apply()
-            adapter.updateUser(user)
             loadUserData()
         }
     }
