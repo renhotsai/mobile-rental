@@ -49,7 +49,6 @@ class ShowPropertyActivity : BaseActivity() {
     // Helper function to retrieve properties from SharedPreferences
     override fun onResume() {
         super.onResume()
-        adapter.updateUser(user)
         loadUserData()
     }
 }

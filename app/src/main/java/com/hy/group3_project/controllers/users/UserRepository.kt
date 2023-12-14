@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.firestore
 import com.hy.group3_project.models.users.User
 import kotlinx.coroutines.tasks.await
@@ -22,6 +23,30 @@ class UserRepository(private val context: Context) {
 //    private var FIELD_USER_EMAIL = "email"
 
     var userAll: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
+    var userFromDB: MutableLiveData<User> = MutableLiveData()
+
+
+    fun getUserFromDB(userId: String) {
+        try {
+            db.collection(COLLECTION_USERS).document(userId)
+                .addSnapshotListener(EventListener { value, error ->
+                    if (error != null) {
+                        Log.e(TAG, error.toString())
+                        return@EventListener
+                    }
+
+                    if (value != null) {
+                        val user = value.toObject(User::class.java)
+                        if (user != null) {
+                            userFromDB.postValue(user)
+                        }
+                        Log.d(TAG, user.toString())
+                    }
+                })
+        } catch (ex: Exception) {
+            Log.e(TAG, ex.toString())
+        }
+    }
 
     fun setUserToDB(user: User) {
         try {

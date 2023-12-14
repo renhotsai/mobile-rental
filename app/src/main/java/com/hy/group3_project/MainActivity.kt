@@ -362,7 +362,6 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         loadUserCurrLocation()
-        adapter.updateUser(user)
         loadAllData()
     }
     private fun loadAllData() {
@@ -373,6 +372,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             propertyList.clear()
             propertyList.addAll(propertiesList)
             adapter.notifyDataSetChanged()
+            mMap?.clear()
             for (property in propertyList) {
                 addMarker(property)
             }

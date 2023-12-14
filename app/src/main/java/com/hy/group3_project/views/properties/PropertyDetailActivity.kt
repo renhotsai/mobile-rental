@@ -106,11 +106,14 @@ class PropertyDetailActivity : BaseActivity(), OnMapReadyCallback {
             lifecycleScope.launch {
                 userRepository.removeUserListWithPropertyId(propertyId)
                 propertyRepository.deleteProperty(propertyId)
+                user!!.removeList(propertyId)
                 val gson = Gson()
                 val userJson = gson.toJson(user)
                 prefEditor.putString("KEY_USER", userJson)
                 prefEditor.apply()
                 loadUserData()
+                val intent = Intent(this@PropertyDetailActivity, ShowPropertyActivity::class.java)
+                startActivity(intent)
                 finish()
             }
         }
