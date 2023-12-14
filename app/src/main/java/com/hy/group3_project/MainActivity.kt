@@ -1,11 +1,14 @@
 package com.hy.group3_project
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -14,8 +17,12 @@ import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -41,8 +48,35 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
     private var selectedTextView: TextView? = null
     private var mMap: GoogleMap? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private val APP_PERMISSIONS_LIST = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
+    private val multiplePermissionsResultLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) {
+            resultsList ->
+        Log.d(TAG, resultsList.toString())
+
+        var allPermissionsGrantedTracker = true
+
+        for (item in resultsList.entries) {
+            if (item.key in APP_PERMISSIONS_LIST && !item.value) {
+                allPermissionsGrantedTracker = false
+            }
+        }
+
+        if (allPermissionsGrantedTracker) {
+            var snackbar = Snackbar.make(binding.root, "All permissions granted", Snackbar.LENGTH_LONG)
+            snackbar.show()
+
+        } else {
+            var snackbar = Snackbar.make(binding.root, "Some permissions NOT granted", Snackbar.LENGTH_LONG)
+            snackbar.show()
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,9 +88,42 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         this.propertyRepository = PropertyRepository(applicationContext)
         handleTextViewClick(binding.mapText)
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            multiplePermissionsResultLauncher.launch(APP_PERMISSIONS_LIST)
+
+            // permission denied message
+            var snackbar = Snackbar.make(binding.root, "You have to allow location permission of the app first", Snackbar.LENGTH_LONG)
+            snackbar.show()
+            return
+        }
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location == null) {
+                    Log.d(TAG, "Location is null")
+                    return@addOnSuccessListener
+                }
+
+
+                // later handle null
+                val lat = location.latitude
+                val lng = location.longitude
+
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 12.0f))
+
+                // Iterate through propertyList and add markers for each property
+                for (property in propertyList) {
+                    addMarker(property)
+                }
+
+            }
+
         binding.mapText.setOnClickListener {
             handleTextViewClick(binding.mapText)
             mapFragment.view?.visibility = View.VISIBLE
@@ -139,6 +206,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                     if (addressList != null) {
                         if (addressList.isNotEmpty()) {
                             val address = addressList[0]
+                            Log.d(TAG, "address: $address")
                             val lat = address.latitude
                             val lng = address.longitude
 
@@ -179,8 +247,10 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                         .title(property.address)
                 )
 
+                // Set a unique tag for each marker
+                marker?.tag = property.id // Assuming property.id is unique
+
                 // Set custom info window
-                marker?.tag = property // You can set any data you want to pass to the info window
                 mMap!!.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
                     override fun getInfoWindow(marker: Marker): View? {
                         return null
@@ -192,7 +262,10 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                         val homeTitle = infoView.findViewById<TextView>(R.id.home_address)
                         val homePrice = infoView.findViewById<TextView>(R.id.home_price)
                         val detailActivityLink = infoView.findViewById<TextView>(R.id.link_to_details)
-                        // Set the content of the info window
+
+                        // Retrieve the property based on the unique tag
+                        val propertyId = marker.tag as String
+                        val property = getPropertyById(propertyId)
 
                         val formattedNumber = String.format("%,d", property.price)
 
@@ -205,12 +278,6 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                         content.setSpan(ForegroundColorSpan(Color.BLUE), 0, content.length, 0)
                         detailActivityLink.text = content
 
-
-//                        detailActivityLink.setOnClickListener {
-//                            Log.d(TAG, "click the detail, linked clicked")
-//                             val intent = Intent(this@MainActivity, PropertyDetailActivity::class.java)
-//                             startActivity(intent)
-//                        }
                         mMap!!.setOnInfoWindowClickListener {
                             val intent = Intent(this@MainActivity, PropertyDetailActivity::class.java)
                             // Pass property data to the PropertyDetailActivity using intent
@@ -219,8 +286,6 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
                         }
                         return infoView
                     }
-
-
                 })
 
                 marker?.showInfoWindow()
@@ -231,6 +296,13 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
             Log.e(TAG, "Google Map is not available")
             // You can display a message to the user or perform any other action here
         }
+    }
+
+    // Helper function to retrieve property by ID
+    private fun getPropertyById(propertyId: String): Property {
+        // Implement logic to retrieve the property from your data source based on propertyId
+        // For example, you can iterate through your propertyList
+        return propertyList.first { it.id == propertyId }
     }
 
 
